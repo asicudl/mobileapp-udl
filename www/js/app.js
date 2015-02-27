@@ -4,7 +4,7 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers','starter.agendaevents'])
+angular.module('starter', ['ionic', 'starter.controllers','starter.agendaevents','starter.offeredservices','starter.messages'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -49,12 +49,12 @@ angular.module('starter', ['ionic', 'starter.controllers','starter.agendaevents'
       }
     }
   })
-
-/*  .state('app.messages', {
+  
+  .state('app.messages', {
     url: "/messages",
     views: {
       'menuContent': {
-        templateUrl: "templates/messages.html",
+        templateUrl: "modules/messages/templates/messagesList.html",
         controller: 'MessagesCtrl'
       }
     }
@@ -64,31 +64,31 @@ angular.module('starter', ['ionic', 'starter.controllers','starter.agendaevents'
     url: "/messages/:messageId",
     views: {
       'menuContent': {
-        templateUrl: "templates/message.html",
+        templateUrl: "modules/messages/templates/messagesView.html",
         controller: 'MessagesCtrl'
       }
     }
   })
     
-  .state('app.offeredServices', {
-      url: "/offeredServices",
+  .state('app.offeredservices', {
+      url: "/offeredservices",
       views: {
         'menuContent': {
-          templateUrl: "templates/offeredServices.html",
+          templateUrl: "modules/offeredServices/templates/offeredServicesList.html",
           controller: 'OfferedServicesCtrl'
         }
       }
     })
 
-  .state('app.offeredService', {
-    url: "/offeredService/:offeredServiceId",
+  .state('app.offeredservice', {
+    url: "/offeredservices/:offeredServiceId",
     views: {
       'menuContent': {
-        templateUrl: "templates/offeredServic.html",
+        templateUrl: "modules/offeredServices/templates/offeredServicesView.html",
         controller: 'OfferedServicesCtrl'
       }
     }
-  })*/;
+  });
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/app/agendaevents');
 });
