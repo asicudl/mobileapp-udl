@@ -4,3 +4,6 @@
 node_modules/
 platforms/
 plugins/
+
+#Ignore this folder used to store local configuration files or mockup images
+www/modules/customBuildService/*
