@@ -34,7 +34,7 @@ angular.module('starter', ['ionic', 'starter.controllers','starter.agendaevents'
     url: "/agendaevents",
     views: {
       'menuContent': {
-        templateUrl: "templates/agendaEvents/agendaEventsList.html",
+        templateUrl: "modules/agendaEvents/templates/agendaEventsList.html",
         controller: "AgendaEventsCtrl"
       }
     }
@@ -44,13 +44,13 @@ angular.module('starter', ['ionic', 'starter.controllers','starter.agendaevents'
     url: "/agendaevents/:agendaEventId",
     views: {
       'menuContent': {
-        templateUrl: "templates/agendaEvents/agendaEventsView.html",
+        templateUrl: "modules/agendaEvents/templates/agendaEventsView.html",
         controller: "AgendaEventsCtrl"
       }
     }
   })
 
-  /*.state('app.messages', {
+/*  .state('app.messages', {
     url: "/messages",
     views: {
       'menuContent': {
@@ -88,7 +88,7 @@ angular.module('starter', ['ionic', 'starter.controllers','starter.agendaevents'
         controller: 'OfferedServicesCtrl'
       }
     }
-  });*/
+  })*/;
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/app/agendaevents');
 });
