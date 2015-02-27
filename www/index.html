@@ -11,6 +11,7 @@
 
     <!-- ionic/angularjs js -->
     <script src="lib/ionic/js/ionic.bundle.js"></script>
+    <script src="lib/angular-underscore-module/angular-underscore-module.js"></script>  
 
     <!-- cordova script (this will be a 404 during development) -->
     <script src="cordova.js"></script>
@@ -18,13 +19,22 @@
     <!-- your app's js -->
     <script src="js/app.js"></script>
    
-      <!-- AgendaEvents angular Module dependencies--> 
+    <!-- Configuration service dependencies -->
+    <script src="modules/appConfigService/app-config-service.js"></script>  
+      
+    <!-- AgendaEvents angular Module dependencies--> 
     <script src="modules/agendaEvents/js/agenda_events_service.js"></script>  
     <script src="modules/agendaEvents/js/agenda_events_ctrl.js"></script>
+    
+     <!-- Offered Services angular Module dependencies--> 
     <script src="modules/offeredServices/js/offered_services_service.js"></script>  
     <script src="modules/offeredServices/js/offered_services_ctrl.js"></script>
+    
+     <!-- Messages angular Module dependencies-->   
     <script src="modules/messages/js/messages_service.js"></script>  
     <script src="modules/messages/js/messages_ctrl.js"></script>
+    
+    <!-- Other -->  
     <script src="js/controllers.js"></script>
       
   </head>

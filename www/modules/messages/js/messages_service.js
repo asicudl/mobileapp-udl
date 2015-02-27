@@ -1,5 +1,5 @@
 angular.module('starter.messages', [])
-.service('MessagesService',[function (){
+.service('MessagesService',['AppConfigService',function (AppConfigService){
  
     this.getMessages = function (){
         var items = [
@@ -10,4 +10,10 @@ angular.module('starter.messages', [])
         ];
         return items;
     };
+            
+    this.init = function (){
+        var config = AppConfigService.getConfig('dev');
+        //TODO
+    }
+            
 }]);

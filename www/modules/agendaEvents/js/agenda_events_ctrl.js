@@ -4,8 +4,6 @@ angular.module('starter.agendaevents')
     
     $scope.title = "Agenda Events"; 
     
-    
-    
     $scope.initList = function (){
          $scope.agendaEventsList  = AgendaEventsService.getAgendaEvents();
     };
@@ -25,7 +23,6 @@ angular.module('starter.agendaevents')
             }
         }
     };
-    
     
 }]);
 

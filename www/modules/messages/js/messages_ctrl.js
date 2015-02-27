@@ -3,6 +3,8 @@ angular.module('starter.messages')
 .controller('MessagesCtrl',['$scope','$ionicModal','$timeout','MessagesService','$stateParams', function($scope, $ionicModal, $timeout,MessagesService,$stateParams) {
     
     $scope.title = "Messages"; 
+    MessagesService.init ();
+    
     
     $scope.initList = function (){
          $scope.messagesList  = MessagesService.getMessages();
