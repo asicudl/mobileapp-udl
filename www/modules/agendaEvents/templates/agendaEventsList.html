@@ -1,9 +1,11 @@
 <ion-view view-title="{{title}}" ng-init="initList()" >
   <ion-content>
     <ion-list>
-      <ion-item ng-repeat="agendaEvent in agendaEventsList" href="#/app/agendaevents/{{agendaEvent.id}}">
-        {{agendaEvent.title}}
-      </ion-item>
+      <a class="item item-thumbnail-left" ng-repeat="agendaEvent in agendaEventsList" href="#/app/agendaevents/{{agendaEvent.id}}">
+          <img style="height: 80px" src="{{agendaEvent.imgSrc}}" />  
+          <h2>{{agendaEvent.title}}</h2>
+          <p>{{agendaEvent.date}}</p>
+      </a>
     </ion-list>
   </ion-content>
 </ion-view>
