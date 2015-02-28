@@ -5,7 +5,7 @@ This app will be used as communication channel beetwen LMS Sakai and students. T
 
 ## Technology
 
-We'll use IONIC stack to this app. That uses:
+We use IONIC stack to build this app. That's based on:
 * AngularJS
 * Phonegap
 * SASS
