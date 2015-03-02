@@ -1,27 +1,27 @@
 {
-    profiles: [
+    "profiles": [
         {
-            id: 'dev',
+            "id": "dev",
 
-            authenticationService :{
-                name: 'Authentication development Service',
-                config: {
-                    url: ''
+            "authenticationService" :{
+                "name": "Authentication development Service",
+                "config": {
+                    "url": ""
                 }
             },
             
-            pushService: {
-                name: 'Aerogear development PUSH service',
-                config: {
-                    pushServerURL: '',
-                    alias: '',
-                    android: {
-                        senderID: '',
-                        variantID: '',
-                        variantSecret: ''
+            "pushService": {
+                "name": "Aerogear development PUSH service",
+                "config": {
+                    "pushServerURL": "",
+                    "alias": "",
+                    "android": {
+                        "senderID": "",
+                        "variantID": "",
+                        "variantSecret": ""
                     }
                 }
             }
         }
-    ];
+    ]
 }
