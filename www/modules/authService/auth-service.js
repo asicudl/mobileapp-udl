@@ -1,4 +1,4 @@
-angular.module('starter.auth', ['underscore']).factory('AuthzService',['$http','$q','_',function ($http,$q,_){
+angular.module('starter.auth', ['underscore']).factory('AuthService',['$http','$q','_',function ($http,$q,_){
    
     var authConfig = {};
     
@@ -7,7 +7,7 @@ angular.module('starter.auth', ['underscore']).factory('AuthzService',['$http','
                 //simulate a external request
                 var deferred = $q.defer();
                 setTimeout (function (){
-                     deferred.resolve(true);   
+                     deferred.resolve({'username':'alex',name: 'Alex'});   
                 },1000);
                 
                 return deferred.promise;   

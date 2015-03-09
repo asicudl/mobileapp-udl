@@ -2,11 +2,14 @@ angular.module('starter.config', ['underscore']).factory('AppConfigService',['$h
                                                                                                                                
      var loadConfig = function (){
         var deferred = $q.defer();
+        var referenceURL = (window.cordova) ? '' : '/'; 
          
-        $http.get('/modules/appConfigService/config.json').success(function(data) {
+         
+         
+        $http.get(referenceURL + 'modules/appConfigService/config.json').success(function(data) {
              deferred.resolve(data);
         }).error (function (msg,code) {
-            $http.get('/modules/appConfigService/default-config.json').success(function(data) {
+            $http.get(referenceURL + 'modules/appConfigService/default-config.json').success(function(data) {
                 deferred.resolve(data);
             }).error (function(msg2,code2){
                 console.log ("Error loading data");
@@ -28,7 +31,11 @@ angular.module('starter.config', ['underscore']).factory('AppConfigService',['$h
                 
             });
             return deferred.promise;   
-        }   
+        },
+        getUserConfig: function (){
+         
+            
+        }
     };
     
 }]); 

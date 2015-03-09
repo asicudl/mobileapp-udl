@@ -4,24 +4,39 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers','starter.config','starter.auth','starter.agendaevents','starter.offeredservices','starter.messages'])
+angular.module('starter', ['ionic','ngCordova', 'starter.controllers','starter.config','starter.auth','starter.agendaevents','starter.offeredservices','starter.messages'])
 
-.run(function($ionicPlatform,AppConfigService,AuthzService,MessagesService) {
+.run(function($ionicPlatform,AppConfigService,AuthService,MessagesService) {
   
-    AppConfigService.getConfig('dev').then (function (result){
-      //Configure each service with the configuration
-    
-        AuthzService.init (result.authenticationService);
-        MessagesService.init (result.pushService);
-        
-    });
+
 
     
     $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
-      
-      
+    
+
+        AppConfigService.getConfig('dev').then (function (result){
+            //Configure each service with the configuration
+            AuthService.init (result.authenticationService);
+            MessagesService.init (result.pushService);
+
+            //Register the device services
+            MessagesService.registerDevice('user','password', onRegistrationSuccess, onRegistrationFailure);
+                  
+
+        });
+        
+    var onRegistrationSuccess = function () {
+            alert ("Initializaton success");
+    }
+    
+    var onRegistrationFailure = function (error) {
+            //show the error on screen 
+            alert ("Initialization failure");
+    }
+            
+            
     if (window.cordova && window.cordova.plugins.Keyboard) {
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
     }
