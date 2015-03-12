@@ -14,7 +14,6 @@
                 "name": "Aerogear development PUSH service",
                 "config": {
                     "pushServerURL": "",
-                    //"alias": "",
                     "android": {
                         "senderID": "",
                         "variantID": "",
