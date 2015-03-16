@@ -8,6 +8,7 @@
 
     <!-- compiled css output -->
     <link href="css/ionic.app.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
 
     <!-- ionic/angularjs js -->
     <script src="lib/ionic/js/ionic.bundle.js"></script>
@@ -25,6 +26,10 @@
    
     <!-- Configuration service dependencies -->
     <script src="modules/appConfigService/app-config-service.js"></script>  
+      
+    <!-- DB service dependencies -->
+    <script src="modules/dataBaseService/database-service.js"></script>  
+   
    
     <!-- Configuration for authentication service -->
     <script src="modules/authService/auth-service.js"></script>  
@@ -46,7 +51,7 @@
       
   </head>
 
-  <body ng-app="starter">
-    <ion-nav-view></ion-nav-view>
+  <body class="udlapp" ng-app="starter">
+    <ion-nav-view ></ion-nav-view>
   </body>
 </html>

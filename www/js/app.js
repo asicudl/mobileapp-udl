@@ -4,12 +4,9 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic','ngCordova', 'starter.controllers','starter.config','starter.auth','starter.agendaevents','starter.offeredservices','starter.messages'])
+angular.module('starter', ['ionic','ngCordova',  'starter.controllers','starter.config','starter.db','starter.auth','starter.agendaevents','starter.offeredservices','starter.messages'])
 
-.run(function($ionicPlatform,AppConfigService,AuthService,MessagesService) {
-  
-
-
+.run(function($ionicPlatform,AppConfigService,DBService,AuthService,MessagesService) {
     
     $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -19,6 +16,7 @@ angular.module('starter', ['ionic','ngCordova', 'starter.controllers','starter.c
         AppConfigService.getConfig('dev').then (function (result){
             //Configure each service with the configuration
             AuthService.init (result.authenticationService);
+            DBService.init (result.dbService);
             MessagesService.init (result.pushService);
 
             //Register the device services
@@ -28,12 +26,12 @@ angular.module('starter', ['ionic','ngCordova', 'starter.controllers','starter.c
         });
         
     var onRegistrationSuccess = function () {
-            alert ("Initializaton success");
+            console.log ("Device registerd");
     }
     
     var onRegistrationFailure = function (error) {
             //show the error on screen 
-            alert ("Initialization failure");
+            alert ("Device failure registering");
     }
             
             

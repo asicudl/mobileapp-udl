@@ -1,9 +1,19 @@
-<ion-view view-title="{{title}}" ng-init="initList()" >
-  <ion-content>
-    <ion-list>
-      <ion-item ng-repeat="message in messagesList" href="#/app/messages/{{message.id}}">
-            <strong>{{message.from}}</strong>: {{message.subject}}
-      </ion-item>
+<ion-view class="udlapp-background" view-title="{{title}}" ng-init="initList()" >
+   <ion-content>
+    
+    <ion-toggle ng-model="showDeleteButton">
+        Show delete?
+    </ion-toggle>   
+    <ion-list show-delete="showDeleteButton">
+        <ion-item ng-hide="message.hide" class="item udlapp-item item-thumbnail-left" ng-repeat="message in messagesList" href="#/app/messages/{{message.id}}">
+          <ion-delete-button ng-click="deleteMessage($index)"  class="ion-trash-b"></ion-delete-button>
+          <div class="udlapp-category-av udlapp-category-av-cv"><span>{{message.category}}</span></div>
+          <h2>{{message.subject}}</h2>
+          <p>{{message.site}}</p>
+          <p>{{message.date}}</p>
+        </ion-item>
     </ion-list>
+       
   </ion-content>
+    
 </ion-view>

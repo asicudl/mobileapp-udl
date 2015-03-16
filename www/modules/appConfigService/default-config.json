@@ -9,6 +9,12 @@
                     "url": ""
                 }
             },
+            "dbService" :{
+                "name": "DataBase Development Service",
+                "config": {
+                    "filename": "udlapp.db"
+                }
+            },
             
             "pushService": {
                 "name": "Aerogear development PUSH service",

@@ -1,1 +1,74 @@
 /* Empty. Add your own CSS if you like */
+
+.udlapp-background{
+   background: url(../img/back-halos.png) no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+.udlapp-item{
+    margin: 6px;
+    opacity: 0.90;
+    border-radius: 5px;   
+}
+
+.udlapp .bar{
+    background: none;
+    color: #FFF;
+    border 0px;
+}
+
+.udlapp .bar.bar-stable{
+    background: none;
+    border: none;
+}
+
+.udlapp .bar.bar-stable .title{
+    color: #FAFAFA;
+}
+
+.udlapp .menu-left{
+
+
+    background: rgba(17,212,186,1);
+    background: -moz-linear-gradient(top, rgba(17,212,186,1) 0%, rgba(117,189,209,1) 59%, rgba(147,206,222,1) 100%);
+    background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(17,212,186,1)), color-stop(59%, rgba(117,189,209,1)), color-stop(100%, rgba(147,206,222,1)));
+    background: -webkit-linear-gradient(top, rgba(17,212,186,1) 0%, rgba(117,189,209,1) 59%, rgba(147,206,222,1) 100%);
+    background: -o-linear-gradient(top, rgba(17,212,186,1) 0%, rgba(117,189,209,1) 59%, rgba(147,206,222,1) 100%);
+    background: -ms-linear-gradient(top, rgba(17,212,186,1) 0%, rgba(117,189,209,1) 59%, rgba(147,206,222,1) 100%);
+    background: linear-gradient(to bottom, rgba(17,212,186,1) 0%, rgba(117,189,209,1) 59%, rgba(147,206,222,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#11d4ba', endColorstr='#93cede', GradientType=0 );
+
+
+}
+
+.udlapp .udlapp-category-av{
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 80px;
+    height: 80px;
+    text-align: center;
+    border: 1px solid: #ccc;
+    border-radius: 4px;
+}
+
+.udlapp .udlapp-category-av span{
+    position: absolute;
+    top:28px;
+    left:28px;
+}
+    
+.udlapp .udlapp-category-av.udlapp-category-av-cv{
+    background: rgba(17,212,186,1);
+    background: -moz-linear-gradient(top, rgba(17,212,186,1) 0%, rgba(117,189,209,1) 59%, rgba(147,206,222,1) 100%);
+    background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(17,212,186,1)), color-stop(59%, rgba(117,189,209,1)), color-stop(100%, rgba(147,206,222,1)));
+    background: -webkit-linear-gradient(top, rgba(17,212,186,1) 0%, rgba(117,189,209,1) 59%, rgba(147,206,222,1) 100%);
+    background: -o-linear-gradient(top, rgba(17,212,186,1) 0%, rgba(117,189,209,1) 59%, rgba(147,206,222,1) 100%);
+    background: -ms-linear-gradient(top, rgba(17,212,186,1) 0%, rgba(117,189,209,1) 59%, rgba(147,206,222,1) 100%);
+    background: linear-gradient(to bottom, rgba(17,212,186,1) 0%, rgba(117,189,209,1) 59%, rgba(147,206,222,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#11d4ba', endColorstr='#93cede', GradientType=0 );
+
+}

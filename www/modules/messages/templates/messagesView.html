@@ -1,8 +1,23 @@
-<ion-view view-title="Message" ng-init="initMessage()">
+<ion-view class="udlapp-background" view-title="Message" ng-init="initMessage()">
+ 
   <ion-content>
-    <h3>{{currentMessage.subject}}</h3>
-      <p><strong>From:</strong> {{currentMessage.from}}</p>
-    <p><strong>Message:</strong></p>  
-    <p>{{currentMessage.body}}</p>
+   <div class="list card">
+       <div class="item">
+           <h2>{{currentMessage.subject}}</h2>
+           <p>{{currentMessage.date}}</p>
+       </div>
+       <div class="item item-body">
+           <h3>{{currentMessage.sitename}}</h3> 
+           <p>{{currentMessage.body}}</p>
+           <p> Per llegir el missatge complet obre'l al <a href="" target="_blank" ng-click="navigator.app.loadUrl(currentMessage.url,{openExterna:true})">Campus Virtual</a></p> 
+           
+       </div>
+       <div class="item tabs tabs-secondary tabs-icon-left">
+            <a class="tab-item" href="#" ng-click="deleteMessage(currentMessage.id)">
+              <i class="icon ion-trash-b"></i>
+              Delete
+            </a>
+        </div>
+      </div>      
   </ion-content>
 </ion-view>
