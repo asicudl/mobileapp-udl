@@ -1,19 +1,23 @@
-<ion-view class="udlapp-background" view-title="{{title}}" ng-init="initList()" >
+<ion-view class="udlapp-background" view-title="<i class='icon ion-android-mail'></i> {{title}}" ng-init="initList()" >
    <ion-content>
     
-    <ion-toggle ng-model="showDeleteButton">
+    <!-- <ion-toggle ng-model="showDeleteButton">
         Show delete?
-    </ion-toggle>   
-    <ion-list show-delete="showDeleteButton">
-        <ion-item ng-hide="message.hide" class="item udlapp-item item-thumbnail-left" ng-repeat="message in messagesList" href="#/app/messages/{{message.id}}">
-          <ion-delete-button ng-click="deleteMessage($index)"  class="ion-trash-b"></ion-delete-button>
-          <div class="udlapp-category-av udlapp-category-av-cv"><span>{{message.category}}</span></div>
-          <h2>{{message.subject}}</h2>
+    </ion-toggle>   -->
+    <ion-list can-swipe="true" show-delete="false">
+        <ion-item on-swipe-left="deleteMessage($index)" ng-hide="message.hide" class="item udlapp-item item-thumbnail-left" ng-repeat="message in messagesList" href="#/app/messages/{{message.id}}">
+          <ion-delete-button ng-click=""  class="ion-trash-b"></ion-delete-button>
+          <div class="udlapp-category-av udlapp-category-av-cv {{message.state}}"><span>{{message.category}}</span></div>
+          <h2 class="{{message.state}}">{{message.subject}}</h2>
           <p>{{message.site}}</p>
-          <p>{{message.date}}</p>
+          <p>{{message.date.toLocaleString()}}</p>
+        
+            <ion-option-button class="button-energized" ng-click="">
+                <div style="text-align: right;min-width:200px"> Delete <i class="ion-trash-b"></i></div>
+            </ion-option-button>
         </ion-item>
+
     </ion-list>
-       
   </ion-content>
     
 </ion-view>

@@ -70,7 +70,7 @@ angular.module('starter.messages', [])
             category: data["udl-noti-category"],
             url: data["udl-noti-url"],
             date: new Date (),
-            state: 'new'
+            state: data["udl-noti-state"]
         };
 
         DBService.getDb().then (function (db){

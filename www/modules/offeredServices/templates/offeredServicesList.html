@@ -1,7 +1,7 @@
-<ion-view view-title="{{title}}" ng-init="initList()" >
+<ion-view  class="udlapp-background" view-title="<i class='icon ion-paper-airplane'></i> {{title}}" ng-init="initList()" >
   <ion-content>
     <ion-list>
-      <ion-item ng-repeat="offeredService in offeredServicesList" href="#/app/offeredservices/{{offeredService.id}}">
+      <ion-item class="udlapp-item" ng-repeat="offeredService in offeredServicesList" href="#/app/offeredservices/{{offeredService.id}}">
         {{offeredService.title}}
       </ion-item>
     </ion-list>

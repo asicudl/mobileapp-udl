@@ -2,11 +2,8 @@ angular.module('starter.offeredservices', [])
 .service('OfferedServicesService',[function (){
  
     this.getAOfferedServices = function (){
-        var items = [{ title: 'La UdL lider en recerca biomèdica', id: '2', description:'qweip' },
-                { title: 'Acte d\'entrega de premis al millor', id: '3', description:'qweip' },
-                { title: 'Una noticia molt important', id: '4', description:'qweip'},
-                { title: 'totes les coses van com a sempre', id: '5', description:'qweip' },
-                { title: 'Les altres noticies també en portada', id: '6', description:'qweip' }];
+        var items = [{ title: 'Serveis informàtics', id: '2', description:'L\'estudiantat pot tenir suport infomàtic adreçant-se als punts d\'atenció en cada campus, a través del telèfon o bé ' },
+                { title: 'Servei d\'atenció a l\'estudiantat', id: '3', description:'Aquest servei pot rebre peticions dels usuaris qui formalitzaran les seves peticions en el bé de que es una petició contrastada i ...' }];
         return items;
     };
 }]);
