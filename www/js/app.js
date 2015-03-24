@@ -6,12 +6,14 @@
 // 'starter.controllers' is found in controllers.js
 angular.module('starter', ['ionic','ngCordova',  'starter.controllers','starter.config','starter.db','starter.auth','starter.agendaevents','starter.offeredservices','starter.messages'])
 
-.run(function($ionicPlatform,AppConfigService,DBService,AuthService,MessagesService) {
+.run(function($ionicPlatform,$ionicLoading,AppConfigService,DBService,AuthService,MessagesService) {
     
     $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
-    
+     $ionicLoading.show({
+        template: 'loading'
+    });
 
         AppConfigService.getConfig('dev').then (function (result){
             //Configure each service with the configuration
@@ -27,13 +29,14 @@ angular.module('starter', ['ionic','ngCordova',  'starter.controllers','starter.
         
     var onRegistrationSuccess = function () {
             console.log ("Device registerd");
+            $ionicLoading.hide();
     }
     
     var onRegistrationFailure = function (error) {
             //show the error on screen 
-            alert ("Device failure registering");
+            console.log ("Device failure registering");
+            $ionicLoading.hide();
     }
-            
             
     if (window.cordova && window.cordova.plugins.Keyboard) {
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
