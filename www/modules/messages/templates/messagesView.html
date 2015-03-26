@@ -2,20 +2,25 @@
  
   <ion-content>
    <div class="list card">
-       <div class="item">
-           <h2>{{currentMessage.subject}}</h2>
-           <p>{{currentMessage.date}}</p>
+       <div class="item item udlapp-item item-avatar">
+           <div class="udlapp-category-av udlapp-category-av-cv {{buttonClassNumber(currentMessage.sitename)}}"><span>{{currentMessage.sitename.substr(0,1)}}</span></div>
+           <h3>{{currentMessage.sitename}}</h3>
+           <p>{{currentMessage.date | amDateFormat:'dddd, MMMM Do YYYY, HH:mm'}}</p>
        </div>
        <div class="item item-body">
-           <h3>{{currentMessage.sitename}}</h3> 
+           <h2>{{currentMessage.subject}}</h2>
            <p>{{currentMessage.body}}</p>
            <p> Per llegir el missatge complet obre'l al <a href="" target="_blank" ng-click="navigator.app.loadUrl(currentMessage.url,{openExterna:true})">Campus Virtual</a></p> 
            
        </div>
        <div class="item tabs tabs-secondary tabs-icon-left">
-            <a class="tab-item" href="#" ng-click="deleteMessage(currentMessage.id)">
+            <a class="tab-item" href="#/app/messages" ng-click="deleteMessage(currentMessage.id)">
               <i class="icon ion-trash-b"></i>
               Delete
+            </a>
+            <a class="tab-item" href="#/app/messages" ng-click="markAs(currentMessage.id,'unread')">
+              <i class="icon ion-eye-disabled"></i>
+              Mark as unread
             </a>
         </div>
       </div>      

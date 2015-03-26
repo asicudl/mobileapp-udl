@@ -27,9 +27,10 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ededed', end
     font-size: 1.2em;
 }
 
-.udlapp-item h2.new{
+.udlapp-item h2.new, .udlapp-item h2.unread{
     font-weight: bolder
 }
+
 .udlapp .bar{
     background: none;
     color: rgb(208, 7, 133);
@@ -66,33 +67,78 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b0006f', end
     position: absolute;
     top: 10px;
     left: 10px;
-    width: 80px;
-    height: 80px;
+    width: 50px;
+    height: 50px;
     text-align: center;
     border: 1px solid: #ccc;
     border-radius: 50%;
 }
 
-.udlapp .udlapp-category-av.new{
+.udlapp .udlapp-category-av.new, .udlapp .udlapp-category-av.unread{
     border: 3px solid #3aaaa1;
 }
+
 .udlapp .udlapp-category-av span{
     position: absolute;
-    font-size: 1.8em;
+    font-size: 1.7em;
     color: #FFF;
-    top:26px;
-    left:23px;
+    top:15px;
+    left:17px;
 }
     
-.udlapp .udlapp-category-av.udlapp-category-av-cv{
-   
-background: rgba(176,0,111,1);
-background: -moz-radial-gradient(center, ellipse cover, rgba(176,0,111,1) 0%, rgba(131,0,81,1) 100%);
-background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%, rgba(176,0,111,1)), color-stop(100%, rgba(131,0,81,1)));
-background: -webkit-radial-gradient(center, ellipse cover, rgba(176,0,111,1) 0%, rgba(131,0,81,1) 100%);
-background: -o-radial-gradient(center, ellipse cover, rgba(176,0,111,1) 0%, rgba(131,0,81,1) 100%);
-background: -ms-radial-gradient(center, ellipse cover, rgba(176,0,111,1) 0%, rgba(131,0,81,1) 100%);
-background: radial-gradient(ellipse at center, rgba(176,0,111,1) 0%, rgba(131,0,81,1) 100%);
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b0006f', endColorstr='#830051', GradientType=1 );
+.udlapp .udlapp-category-av.btn_0 {
+    background:  #009688;
+}
+.udlapp .udlapp-category-av.btn_1 {
+    background:  #ff9800;
+    color: #222;
+}
+.udlapp .udlapp-category-av.btn_2{
+    background: #4caf50;
+}
+.udlapp .udlapp-category-av.btn_3{
+    background: #03a9f4;
+}
+.udlapp .udlapp-category-av.btn_4 {
+    background:  #cddc39;
+    color: #222;
+}
+.udlapp .udlapp-category-av.btn_5{
+    background: #ffeb3b;
+    color: #222;
+}
+.udlapp .udlapp-category-av.btn_6{
+    background: #9c27b0;
+}
+.udlapp .udlapp-category-av.btn_7 {
+    background:  #e91e63;
+}
+.udlapp .udlapp-category-av.btn_8{
+    background: #795548;
+}
+.udlapp .udlapp-category-av.btn_9{
+    background: #00bcd4;
+}
 
+.udlapp .udlapp-options-menu .popup-buttons{
+    position: relative;
+    width: 100%;
+    text-align: center;
+    display: block;
+}
+
+.udlapp .udlapp-options-menu button {
+    width: 90%;
+    margin-top: 10px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.udlapp .udlapp-options-menu button:last-child {
+    margin-top: 20px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.udlapp .udlapp-inlist-message-option {
+       min-width: 64px;
 }

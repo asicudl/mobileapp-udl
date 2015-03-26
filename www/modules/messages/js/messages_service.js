@@ -5,11 +5,11 @@ angular.module('starter.messages', [])
     this.messages = [];
     var msg = this;
 
-    var CREATE_TABLE = 'CREATE TABLE IF NOT EXISTS messages (id text primary key, subject text, body text, site text, sitename textdate date,category text,url text,state text)';
+    var CREATE_TABLE = 'CREATE TABLE IF NOT EXISTS messages (id text primary key, subject text, body text, site text, sitename text,date date,category text,url text,state text)';
     var SELECT_MESSAGES = 'SELECT * FROM messages';
-    var INSERT_MESSAGE = 'INSERT INTO messages (id,subject,body,site,sitename,category,url,state) VALUES (?,?,?,?,?,?,?,?)';
+    var INSERT_MESSAGE = 'INSERT INTO messages (id,subject,body,site,sitename,date,category,url,state) VALUES (?,?,?,?,?,?,?,?,?)';
     var DELETE_MESSAGE = 'DELETE FROM messages WHERE id=?';
-
+    var CHANGE_STATE = 'UPDATE messages set state=? WHERE id=?';
 
     var loadAll = function (success,failure){
      
@@ -31,7 +31,8 @@ angular.module('starter.messages', [])
                             action: 'open',
                             category: row.category,
                             url: row.url,
-                            //date: row.date,
+                            date: row.date,
+                            fromnowdate: moment(row.date, "YYYYMMDD").fromNow(),
                             state: row.state
                         };
 
@@ -60,7 +61,7 @@ angular.module('starter.messages', [])
     
     
     this.createMessage = function (data,success,failure){
-          var message = {
+        var message = {
             id: '' + Math.floor(Math.random()* 10000),
             subject: data["udl-noti-subject"],
             body: data["udl-noti-body"],
@@ -70,12 +71,13 @@ angular.module('starter.messages', [])
             category: data["udl-noti-category"],
             url: data["udl-noti-url"],
             date: new Date (),
+            fromnowdate: "Now",
             state: data["udl-noti-state"]
         };
 
         DBService.getDb().then (function (db){
             db.transaction(function(tx) {
-                tx.executeSql(INSERT_MESSAGE, [message.id,message.subject,message.body,message.site,message.sitename,message.category,message.url,message.state],
+                tx.executeSql(INSERT_MESSAGE, [message.id,message.subject,message.body,message.site,message.sitename,message.date,message.category,message.url,message.state],
                       function (tx,res) {
                           success(message);
                       },
@@ -108,7 +110,7 @@ angular.module('starter.messages', [])
     /** Return the exposed methods*/
     
     return {
-
+        
         init: function (pushServiceDef){
             pushConfig = pushServiceDef.config;
             console.log (pushServiceDef.name + ' initialized');
@@ -168,29 +170,58 @@ angular.module('starter.messages', [])
             // Simple index lookup
             var deferred = $q.defer();
 
-            getMessages().then(function (messages){
+            this.getMessages().then(function (messages){
                     deferred.resolve (_.findWhere (messages,{id:messageid}));    
             });
 
             return deferred.promise;
         },
-
+        askToDelete : function (messageid){
+             this.getMessage(messageid).then(function (message){
+                 //We assume that is in the list  
+                 message.todelete =true;
+             });
+        },
         delete : function (messageid){
-            for (var i=0; i< msg.messages.length; i++){
-                if (messageid == msg.messages[i].id){
-                    msg.messages.splice(i,1);
-                     DBService.getDb().then(function (db){
-                        db.transaction(function(tx) {
-                            tx.executeSql (DELETE_MESSAGE,[messageid],function(tx,res){
-                            },function (tx,error){
-                                alert (" error" + error);   
-                            });
+            var index = _.findIndex(msg.messages,{id:messageid});
+            msg.messages.splice (index,1);
+
+             DBService.getDb().then(function (db){
+                db.transaction(function(tx) {
+                    tx.executeSql (DELETE_MESSAGE,[messageid],function(tx,res){
+                    },function (tx,error){
+                        alert (" error" + error);   
+                    });
+                });
+            });
+
+            $rootScope.$apply ();
+
+        },
+        changeState : function (messageid,state){
+            this.getMessage(messageid).then(function (message){
+                message.state = state;
+                DBService.getDb().then(function (db){
+                    db.transaction(function(tx) {
+                        tx.executeSql (CHANGE_STATE,[state,messageid],function(tx,res){
+                        },function (tx,error){
+                            alert (" error" + error);   
                         });
                     });
-
-                    $rootScope.$apply ();
-                    break;
-                }
+                });
+            });
+        },
+        undoMessage: {
+            'show': false,
+            'currentMessage': undefined
+        },
+        setToUndo: function (currentMessage){
+            if (currentMessage){
+                this.undoMessage.currentMessage = currentMessage;
+                this.undoMessage.show= true;
+            }else{
+                this.undoMessage.currentMessage = undefined;
+                this.undoMessage.show= false;
             }
         }
     }
