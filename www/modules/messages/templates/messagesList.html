@@ -4,7 +4,7 @@
     <!-- <ion-toggle ng-model="showDeleteButton">
         Show delete?
     </ion-toggle>   -->
-    <ion-list can-swipe="true" show-delete="false" ng-repeat="(key, value) in messagesList | groupBy: 'fromnowdate'  | orderBy: maxdate">
+    <ion-list can-swipe="true" show-delete="false" ng-repeat="(key, value) in messagesList | groupBy: 'prettyDateFormat'  | orderBy: min" ng-show="messagesList.length > 0"> 
         
         <div class="item item-divider">
             <h2> {{key}}</h2>
@@ -29,8 +29,17 @@
         </ion-item>
 
     </ion-list>
+    <div ng-hide="messagesList.length > 0" class="udlapp-emptymessages">
+        <p><i class="ion-archive" ></i><br />
+        <span>There are no messages</span>
+        </p>
+    </div>
+       
+       
+    </div>
+       
   </ion-content>
-    <div class="bar bar-footer bar-stable sub-footer item-animate" ng-show="undoMessage && undoMessage.show" ng-click="applyUndo()">
-        <div class="title" ><i span="ion-undo"></i>Undo delete</div>
+    <div class="bar bar-footer bar-stable udlapp-undobar {{undoAnimated}}" ng-show="undoMessage && undoMessage.show" ng-click="applyUndo()">
+        <button class="button button-energized" ><i class="ion-arrow-return-left"></i> Undo delete</button>
     </div>
 </ion-view>

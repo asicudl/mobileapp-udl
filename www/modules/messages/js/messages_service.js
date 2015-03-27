@@ -22,6 +22,8 @@ angular.module('starter.messages', [])
 
                     for (var i=0;i < res.rows.length; i++){
                         var row = res.rows.item(i);
+                        var pdate = getPrettyDate(row.date);
+                        
                         var message = {
                             id: row.id,
                             subject: row.subject,
@@ -32,7 +34,8 @@ angular.module('starter.messages', [])
                             category: row.category,
                             url: row.url,
                             date: row.date,
-                            fromnowdate: moment(row.date, "YYYYMMDD").fromNow(),
+                            prettyDateFormat: pdate.name,
+                            prettyDateOrder : pdate.order,
                             state: row.state
                         };
 
@@ -45,6 +48,38 @@ angular.module('starter.messages', [])
             });
 
         });
+    };
+    
+     var prettyDates = [
+            {name:'Today',order:0},
+            {name:'Yesterday',order:1},
+            {name:'This Week',order:2},
+            {name:'Last Week',order:3},
+            {name:'This Month',order:4},
+            {name:'Later',order:5}
+        ];
+    
+    var getPrettyDate = function (date){
+        var nowdate = moment();
+        var yesterday = moment().subtract(1,'days');
+        var lastweek = moment().subtract(1,'weeks');
+        var mdate = moment(date,'YYYYMMDD');
+        
+        if (mdate.isSame(nowdate,'month')){
+            if (mdate.isSame(nowdate,'week')){
+                if (mdate.isSame(nowdate,'day')){
+                       return prettyDates[0];
+                }else if (mdate.isSame (yesterday,day)){
+                    return prettyDates[1];   
+                }
+                return prettyDates[2];
+            }else if (mdate.isSame(lastweek,'day')){
+                return prettyDates[3];
+            }
+            return prettyDates[4];
+        }else{
+            return prettyDates[5];  
+        }
     };
     
    var successHandler = function () {
@@ -61,6 +96,8 @@ angular.module('starter.messages', [])
     
     
     this.createMessage = function (data,success,failure){
+        var nowdate = new Date();
+        
         var message = {
             id: '' + Math.floor(Math.random()* 10000),
             subject: data["udl-noti-subject"],
@@ -70,8 +107,9 @@ angular.module('starter.messages', [])
             action: 'open',
             category: data["udl-noti-category"],
             url: data["udl-noti-url"],
-            date: new Date (),
-            fromnowdate: "Now",
+            date: nowdate,
+            prettyDateFormat: getPrettyDate(nowdate).name,
+            prettyDateOrder : getPrettyDate(nowdate).order,
             state: data["udl-noti-state"]
         };
 

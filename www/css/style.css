@@ -142,3 +142,51 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b0006f', end
 .udlapp .udlapp-inlist-message-option {
        min-width: 64px;
 }
+
+.udlapp-undobar {
+    height: 65px;
+}
+
+.udlapp-undobar button{
+    width: 100%;
+    font-size: 1.1em;
+    opacity: 0.85;  
+    height: 65px;
+}
+
+.udlapp-undobar.animated{
+    transition: 0.5s linear all;   
+    opacity: 1;
+}
+
+.udlapp-undobar.animated.ng-hide{
+    opacity: 0;
+}
+
+.udlapp-undobar.animated.ng-hide-add, .udlapp-undobar.animated.ng-hide-remove {
+    display: block !important;
+    height: 65px;
+}
+
+.udlapp .udlapp-emptymessages{
+    width: 100%;
+    position: absolute;
+    top: 60px;
+￼    font-size: 1.5em;
+    text-align: center;
+}
+
+.udlapp .udlapp-emptymessages p{
+    width:100%;
+    text-align: center;
+    color: #D5D1D3;
+}
+
+.udlapp .udlapp-emptymessages p i{
+    font-size: 2.5em;
+}
+
+.udlapp .udlapp-emptymessages p span{
+    font-size: 1.5em;
+}
+

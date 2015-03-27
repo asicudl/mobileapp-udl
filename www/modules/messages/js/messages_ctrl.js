@@ -1,8 +1,9 @@
-angular.module('starter.messages').controller('MessagesCtrl',['$scope','$ionicPopup','$ionicListDelegate','$timeout','MessagesService','$stateParams','_','$location','$filter',function($scope, $ionicPopup,$ionicListDelegate, $timeout,MessagesService,$stateParams,_,$location,$filter) {
+angular.module('starter.messages').controller('MessagesCtrl',['$scope','$ionicPopup','$ionicListDelegate','$timeout','MessagesService','$stateParams','_','$location','$filter','$timeout',function($scope, $ionicPopup,$ionicListDelegate, $timeout,MessagesService,$stateParams,_,$location,$filter,$timeout) {
     
     $scope.title = "Messages"; 
     $scope.currentMessage = {};
     $scope.popover = {};
+    $scope.undoAnimated = '';
 
     $scope.initList = function (onmessages){
         //Clear any undo action
@@ -19,15 +20,6 @@ angular.module('starter.messages').controller('MessagesCtrl',['$scope','$ionicPo
                                             
     $scope.initMessage = function (){
         //Clear any undo action
-        //In the case we access directly from event 
-        /*MessagesService.getMessage($stateParams.messageId).then(function (message){
-            $scope.currentMessage = message;
-            MessagesService.changeState($scope.currentMessage.id,'read');
-        });*/
-        
-        //We init the list so we update the list from service
-        
-        //Clear any undo action
         MessagesService.setToUndo();
         
         $scope.initList(function (){
@@ -43,6 +35,9 @@ angular.module('starter.messages').controller('MessagesCtrl',['$scope','$ionicPo
         if (typeof index ==='string'){ // Is an string call the main view to delete it
             var index = _.findIndex($scope.messagesList,{id: index});
         }
+
+        //We activate it to apply the animations now
+       $scope.undoAnimated = 'animated';
         
         var messageId = $scope.messagesList[index].id;
 
@@ -50,21 +45,20 @@ angular.module('starter.messages').controller('MessagesCtrl',['$scope','$ionicPo
         $scope.messagesList[index].hide = true;
         MessagesService.setToUndo($scope.messagesList[index]);
 
-        setTimeout (function (){
-            if ($scope.messagesList[index].hide){
-                $scope.apply (function (){
-                    //if the undo message is the current deleted message then we hide the undo button
-                    if ($scope.undoMessage.currentMessage && $scope.undoMessage.currentMessage.id === $scope.messagesList[index].id){
-                        MessagesService.setToUndo();
-                    }
-                    MessagesService.delete(messageId);
-                    
-                    
-                });
+        $timeout(function (){
+            //We look the message again because the position maybe changed for a previous delete
+            var deleteMessage = _.findWhere ($scope.messagesList,{id: messageId});
+            
+            if (deleteMessage && deleteMessage.hide) {
+                //if the undo message is the current deleted message then we hide the undo button
+                if ($scope.undoMessage.currentMessage && 
+                    $scope.undoMessage.currentMessage.id === deleteMessage.id){
+                    MessagesService.setToUndo();
+                }
+            MessagesService.delete(messageId);
             }
-        },5000);
-        
-        
+            
+        }, 5000);
     };
     
     $scope.markAs = function (index,state){
@@ -135,10 +129,11 @@ angular.module('starter.messages').controller('MessagesCtrl',['$scope','$ionicPo
         return 'btn_' + number;
     };
     
-    $scope.maxdate = function(arr) {
+    $scope.min = function(arr) {
         return $filter('min')
-        ($filter('map')(arr, 'date'));
+        ($filter('map')(arr, 'prettyDateOrder'));
     } ;
+    
     
     $scope.applyUndo = function (){
         if ($scope.undoMessage.currentMessage){
