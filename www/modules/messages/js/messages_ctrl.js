@@ -11,7 +11,8 @@ angular.module('starter.messages').controller('MessagesCtrl',['$scope','$ionicPo
         $scope.undoMessage = MessagesService.undoMessage;
         
         MessagesService.getMessages().then(function (messagesList){
-           $scope.messagesList  = messagesList; 
+            $scope.messagesList= messagesList;
+            
             if (onmessages){
                 onmessages();   
             }
@@ -129,7 +130,7 @@ angular.module('starter.messages').controller('MessagesCtrl',['$scope','$ionicPo
         return 'btn_' + number;
     };
     
-    $scope.min = function(arr) {
+    $scope.byPrettyDate = function(arr) {
         return $filter('min')
         ($filter('map')(arr, 'prettyDateOrder'));
     } ;

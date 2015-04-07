@@ -63,13 +63,13 @@ angular.module('starter.messages', [])
         var nowdate = moment();
         var yesterday = moment().subtract(1,'days');
         var lastweek = moment().subtract(1,'weeks');
-        var mdate = moment(date,'YYYYMMDD');
+        var mdate = moment(date);
         
         if (mdate.isSame(nowdate,'month')){
             if (mdate.isSame(nowdate,'week')){
                 if (mdate.isSame(nowdate,'day')){
                        return prettyDates[0];
-                }else if (mdate.isSame (yesterday,day)){
+                }else if (mdate.isSame (yesterday,'day')){
                     return prettyDates[1];   
                 }
                 return prettyDates[2];
@@ -96,7 +96,12 @@ angular.module('starter.messages', [])
     
     
     this.createMessage = function (data,success,failure){
-        var nowdate = new Date();
+        var nowdate;
+        if (data["udl-noti-date"]){
+            nowdate = new Date (parseInt(data["udl-noti-date"]));
+        }else{
+            nowdate = new Date ();
+        }
         
         var message = {
             id: '' + Math.floor(Math.random()* 10000),
