@@ -8,6 +8,11 @@
   <ion-content>
     <form ng-submit="doLogin()">
       <div class="list">
+        <div class="item" ng-show="loginError">
+            <button class="button button-outline button-assertive">
+                {{loginError}}
+            </button>
+        </div>
         <label class="item item-input">
           <span class="input-label">Username</span>
           <input type="text" ng-model="loginData.username">

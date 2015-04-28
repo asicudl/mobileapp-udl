@@ -5,8 +5,11 @@
 
             "authenticationService" :{
                 "name": "Authentication development Service",
-                "config": {
-                    "url": ""
+               "config": {
+                    "auth_api_url": "",
+                    "credentialsEP": "",
+                    "tokenEP": "",
+                    "createTokenEP": ""
                 }
             },
             "dbService" :{

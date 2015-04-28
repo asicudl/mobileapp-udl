@@ -18,7 +18,7 @@
         <h2 class="title" style="float:left; left: 50px; margin-right:10px;">App Mòbil UdL</h2>
     </ion-header-bar>
     <ion-content>
-      <ion-list>
+      <ion-list >
         <ion-item class="udlapp-item" nav-clear menu-close href="#/app/agendaevents">
           <i class="icon ion-calendar"></i> Agenda Events
         </ion-item>
@@ -28,9 +28,13 @@
         <ion-item class="udlapp-item" nav-clear menu-close href="#/app/messages">
             <i class="icon ion-android-mail"></i> Messages
         </ion-item>
-      <!--  <ion-item class="udlapp-item" nav-clear menu-close ng-click="login()">
+
+        <ion-item ng-show="isAuth" class="udlapp-item" nav-clear menu-close ng-click="logout()">
             <i class="icon ion-log-out"></i> Logout
-        </ion-item>-->
+        </ion-item>
+        <ion-item ng-hide="isAuth" class="udlapp-item" nav-clear menu-close ng-click="login()">
+            <i class="icon ion-log-out"></i> Login
+       </ion-item>     
           
       </ion-list>
     </ion-content>

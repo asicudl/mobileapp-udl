@@ -135,13 +135,16 @@ angular.module('starter.messages', [])
 
     this.add = function(pushmessage) {
         if (pushmessage && pushmessage.payload){
-            msg.createMessage (pushmessage.payload,function (message){
-                msg.messages.unshift (message);
-                $rootScope.$apply ();    
-            },function (error){
-                alert ("Message could not be inserted " + JSON.stringify(error)); 
+            
+            //We ensure that we load all the messages before to add it
+            factoryObject.getMessages().then (function (){
+                msg.createMessage (pushmessage.payload,function (message){
+                    msg.messages.unshift (message);
+                    $rootScope.$apply ();    
+                },function (error){
+                    alert ("Message could not be inserted " + JSON.stringify(error)); 
+                });
             });
-
         }
     };
     
@@ -152,7 +155,7 @@ angular.module('starter.messages', [])
 
     /** Return the exposed methods*/
     
-    return {
+    var factoryObject = {
         
         init: function (pushServiceDef){
             pushConfig = pushServiceDef.config;
@@ -171,7 +174,7 @@ angular.module('starter.messages', [])
         
         registerDevice : function (username, password, success, failure){
             
-            AuthService.authenticate (username,password).then(   
+            AuthService.isTokenAuth().then(   
                 function (profile){
                      //setup the push service
                     try{
@@ -268,4 +271,5 @@ angular.module('starter.messages', [])
             }
         }
     }
+    return factoryObject;
 });
