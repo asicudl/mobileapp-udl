@@ -4,11 +4,14 @@ angular.module('starter.appcontroller',['underscore'])
 .controller('AppCtrl', function($scope, $ionicModal, $timeout, AuthService,$cordovaDevice,$ionicLoading) {
  $scope.loginData = {};
 
-  $scope.init = function (){
-    //We set the authentication options here
-    $scope.isAuth = AuthService.isTokenAuth();
-  }
     
+ //Just show loggin button
+  AuthService.isTokenAuth().then(function (data){
+      $scope.isAuth = data;
+  }).catch (function (data){
+      $scope.isAuth = false;
+  });
+
     
   // Create the login modal that we will use later
   $ionicModal.fromTemplateUrl('modules/authentication/templates/login.html', {
@@ -27,6 +30,11 @@ angular.module('starter.appcontroller',['underscore'])
     $scope.loginModal.show();
   };
 
+   $scope.logout = function() {
+       AuthService.logout ();
+       $scope.isAuth = false;
+   };
+    
   // Perform the login action when the user submits the login form
   $scope.doLogin = function() {
     $scope.closeLogin ();  
@@ -53,13 +61,15 @@ angular.module('starter.appcontroller',['underscore'])
                     template: 'Setting account'
                 });
                 
-                //Store the apitoken to perform API calls
+                // Store the apitoken to perform API calls
                 window.sessionStorage.apiToken = data.token;
+                $scope.isAuth = true;
             
-                AuthService.requestNewToken(username,device).then (function (data){
-                        window.localStorage.authtoken = data.token;
+                AuthService.requestNewToken(username,device).then (function (token){
+                        window.localStorage.authtoken = token;
                         window.localStorage.username = username;
                         window.localStorage.device = device;
+                        
                         delete $scope.loginError;
                         $scope.closeLogin();
                     }).catch (function (data){
@@ -68,7 +78,8 @@ angular.module('starter.appcontroller',['underscore'])
                     });
 
         }).catch (function (data){
-            $scope.loginError = 'Username or password are wrong, try it again';
+            $scope.loginError = 'Username and/or password are wrong, try it again please';
+            $scope.isAuth = false;
             delete window.sessionStorage.apiToken;
             $scope.login ();
         }).finally (function (data){
@@ -77,10 +88,10 @@ angular.module('starter.appcontroller',['underscore'])
     
     }else{
         console.log ('Can\'t access to device ID');
+        $scope.isAuth = false;
         delete window.sessionStorage.apiToken;
         $ionicLoading.hide();  
     }
-
   };
         
         

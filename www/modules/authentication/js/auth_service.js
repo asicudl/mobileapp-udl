@@ -8,7 +8,7 @@ angular.module('starter.auth', ['underscore']).factory('AuthService',['$http','$
          //simulate a external request
             var deferred = $q.defer();
 
-           $http.post(url,authObject).success(function(data) {
+           $http.post(url,authObject).success(function(data){
                 deferred.resolve(data);
             }).error (function (msg,status) {
                console.log ("Error authenticating data " + status);
@@ -48,6 +48,12 @@ angular.module('starter.auth', ['underscore']).factory('AuthService',['$http','$
                 
                     return token.promise;
             },
+            logout: function (){
+                    delete window.sessionStorage.apiToken;
+                    delete window.localStorage.token;
+                    delete window.localStorage.username;
+                    delete window.localStorage.device;
+            },
             init: function (authServiceDef){
                 authConfig = authServiceDef.config;
                 
@@ -65,7 +71,7 @@ angular.module('starter.auth', ['underscore']).factory('AuthService',['$http','$
                             
                             //In the case of token validation we can store apitoken directly here
                             window.sessionStorage.apiToken = data.token;
-                            auth.apiToken.resolve(data.token);
+                            auth.apiToken.resolve(true);
                         }
                     ).catch (function(data) {
                         //Auth error implies that this token is no valid
@@ -91,6 +97,7 @@ angular.module('starter.auth', ['underscore']).factory('AuthService',['$http','$
     
 .factory('authInterceptor', function ($rootScope, $q) {
   return {
+    
     request: function (config) {
       config.headers = config.headers || {};
       if (window.sessionStorage.apiToken) {
@@ -98,6 +105,7 @@ angular.module('starter.auth', ['underscore']).factory('AuthService',['$http','$
       }
       return config;
     },
+    
     response: function (response) {
       if (response.status === 401) {
         // handle the case where the user is not authenticated
@@ -105,6 +113,7 @@ angular.module('starter.auth', ['underscore']).factory('AuthService',['$http','$
       return response || $q.when(response);
     }
   };
+
 }).config (function ($httpProvider) {
     $httpProvider.interceptors.push('authInterceptor');
 });
