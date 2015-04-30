@@ -11,9 +11,9 @@ angular.module('starter', ['ionic','ngCordova',  ,'starter.appcontroller','start
     $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
-     $ionicLoading.show({
+    /* $ionicLoading.show({
         template: 'loading'
-    });
+    });*/
 
         AppConfigService.getConfig('dev').then (function (result){
             //Configure each service with the configuration
@@ -22,6 +22,7 @@ angular.module('starter', ['ionic','ngCordova',  ,'starter.appcontroller','start
             
             
             MessagesService.init (result.pushService);
+            
             //Register the device services
             MessagesService.registerDevice('user','password', onRegistrationSuccess, onRegistrationFailure);
                   

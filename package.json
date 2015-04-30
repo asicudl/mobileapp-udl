@@ -16,6 +16,7 @@
   },
   "cordovaPlugins": [
     "org.jboss.aerogear.cordova.push",
-    "org.apache.cordova.device"
+    "org.apache.cordova.device",
+    "com.ionic.keyboard"
   ]
 }

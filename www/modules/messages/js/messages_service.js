@@ -1,7 +1,8 @@
 angular.module('starter.messages', [])
-.factory('MessagesService',function (AppConfigService,$rootScope,AuthService,$q,DBService){
+.factory('MessagesService',function (AppConfigService,$rootScope,AuthService,$q,DBService,$http){
 
     var pushConfig = {};
+
     this.messages = [];
     var msg = this;
 
@@ -91,31 +92,31 @@ angular.module('starter.messages', [])
    };
 
     var onNotification = function(event) {
-            msg.add(event);
+            var lastMessageDate = window.localStorage.lastMessageDate || new Date();
+            factoryObject.retrieveNewMessages();
     };
     
     
     this.createMessage = function (data,success,failure){
         var nowdate;
-        if (data["udl-noti-date"]){
-            nowdate = new Date (parseInt(data["udl-noti-date"]));
+        if (data.created){
+            nowdate = new Date (parseInt(data.created));
         }else{
             nowdate = new Date ();
         }
         
         var message = {
             id: '' + Math.floor(Math.random()* 10000),
-            subject: data["udl-noti-subject"],
-            body: data["udl-noti-body"],
-            site: data["udl-noti-site"],
-            sitename: data["udl-noti-sitename"],
-            action: 'open',
-            category: data["udl-noti-category"],
-            url: data["udl-noti-url"],
-            date: nowdate,
+            subject: data.subject,
+            body: data.content,
+            site: data.siteId,
+            sitename: data.siteTitle,
+            category: 'cv',
+            url: data.notiURL,
+            date: data.created,
             prettyDateFormat: getPrettyDate(nowdate).name,
             prettyDateOrder : getPrettyDate(nowdate).order,
-            state: data["udl-noti-state"]
+            state: 'new'
         };
 
         DBService.getDb().then (function (db){
@@ -134,7 +135,7 @@ angular.module('starter.messages', [])
     };
 
     this.add = function(pushmessage) {
-        if (pushmessage && pushmessage.payload){
+        if (pushmessage){
             
             //We ensure that we load all the messages before to add it
             factoryObject.getMessages().then (function (){
@@ -166,6 +167,8 @@ angular.module('starter.messages', [])
                 db.transaction(function(tx) {
                     //create a table it doesn't exist
                     tx.executeSql(CREATE_TABLE, [], function (tx,res) {
+                        //Get a refresh 
+                        msg.retrieveNewMessages
                         console.log ('TABLE CREATED');
                     });
                 });
@@ -195,8 +198,8 @@ angular.module('starter.messages', [])
                 failure(error);
             });
         },
-
-        getMessages : function (){
+        //get all messages from db
+        getMessages: function (){
             var deferred = $q.defer();
 
             if (msg.messages.length === 0){
@@ -211,7 +214,7 @@ angular.module('starter.messages', [])
             }
             return deferred.promise;
         },
-        
+        //get an stored message
         getMessage : function(messageid) {
             // Simple index lookup
             var deferred = $q.defer();
@@ -222,13 +225,31 @@ angular.module('starter.messages', [])
 
             return deferred.promise;
         },
-        askToDelete : function (messageid){
+        //Look at the server for new messages
+        retrieveNewMessages: function (date){
+            var numMessages = $q.defer();
+
+            $http.get (pushConfig.msg_api_url + pushConfig.messagesEP).success(function (data){
+                var newMessages = data;
+                for (messageIdx in newMessages){
+                    msg.add (newMessages[messageIdx]);
+                }
+                window.localStorage['lastMessageDate'] = new Date();
+                
+                numMessages.resolve(newMessages.lenght)
+            }).error (function (msg,status){
+                numMessages.reject();
+            });
+
+            return numMessages.promise;
+        },
+        askToDelete: function (messageid){
              this.getMessage(messageid).then(function (message){
                  //We assume that is in the list  
                  message.todelete =true;
              });
         },
-        delete : function (messageid){
+        delete: function (messageid){
             var index = _.findIndex(msg.messages,{id:messageid});
             msg.messages.splice (index,1);
 

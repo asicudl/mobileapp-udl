@@ -144,6 +144,14 @@ angular.module('starter.messages').controller('MessagesCtrl',['$scope','$ionicPo
             MessagesService.setToUndo();
         }
     };
+    
+    $scope.refreshMessages = function (){
+        MessagesService.retrieveNewMessages.then (function (numMessages){
+            $scope.newMessages = numMessages;
+        }).catch (function (data){
+           console.log ('error'); 
+        });
+    }
 
 }]);
 
