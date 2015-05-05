@@ -20,7 +20,6 @@ angular.module('starter', ['ionic','ngCordova',  ,'starter.appcontroller','start
             DBService.init (result.dbService);
             AuthService.init (result.authenticationService);
             
-            
             MessagesService.init (result.pushService);
             
             //Register the device services

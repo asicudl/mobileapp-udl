@@ -3,7 +3,8 @@ angular.module('starter.messages', [])
 
     var pushConfig = {};
 
-    this.messages = [];
+    this.messages = undefined;
+    
     var msg = this;
 
     var CREATE_TABLE = 'CREATE TABLE IF NOT EXISTS messages (id text primary key, subject text, body text, site text, sitename text,date date,category text,url text,state text)';
@@ -92,18 +93,22 @@ angular.module('starter.messages', [])
    };
 
     var onNotification = function(event) {
-            var lastMessageDate = window.localStorage.lastMessageDate || new Date();
-            factoryObject.retrieveNewMessages();
+            factoryObject.retrieveNewMessages().then (function (numMessages){
+                $rootScope.$apply ();  
+            });
     };
     
     
     this.createMessage = function (data,success,failure){
-        var nowdate;
+        var msgdate;
+        
         if (data.created){
-            nowdate = new Date (parseInt(data.created));
+            msgdate = new Date (data.created);
         }else{
-            nowdate = new Date ();
+            msgdate = new Date ();
         }
+        
+        var pdate = getPrettyDate(msgdate);
         
         var message = {
             id: '' + Math.floor(Math.random()* 10000),
@@ -113,34 +118,34 @@ angular.module('starter.messages', [])
             sitename: data.siteTitle,
             category: 'cv',
             url: data.notiURL,
-            date: data.created,
-            prettyDateFormat: getPrettyDate(nowdate).name,
-            prettyDateOrder : getPrettyDate(nowdate).order,
+            date: msgdate,
+            prettyDateFormat: pdate.name,
+            prettyDateOrder : pdate.order,
             state: 'new'
         };
 
         DBService.getDb().then (function (db){
             db.transaction(function(tx) {
                 tx.executeSql(INSERT_MESSAGE, [message.id,message.subject,message.body,message.site,message.sitename,message.date,message.category,message.url,message.state],
-                      function (tx,res) {
-                          success(message);
-                      },
-                      function (tx,error){
-                          failure (error);  
-                      });
+                  function (tx,res) {
+                      success(message);
+                  },
+                  function (tx,error){
+                      failure (error);  
+                  });
             });
         });
         
         return message;     
     };
 
-    this.add = function(pushmessage) {
-        if (pushmessage){
+    this.add = function(messageIn) {
+        if (messageIn){
             
             //We ensure that we load all the messages before to add it
             factoryObject.getMessages().then (function (){
-                msg.createMessage (pushmessage.payload,function (message){
-                    msg.messages.unshift (message);
+                msg.createMessage (messageIn,function (message){
+                    msg.messages.unshift (message);   
                     $rootScope.$apply ();    
                 },function (error){
                     alert ("Message could not be inserted " + JSON.stringify(error)); 
@@ -168,7 +173,7 @@ angular.module('starter.messages', [])
                     //create a table it doesn't exist
                     tx.executeSql(CREATE_TABLE, [], function (tx,res) {
                         //Get a refresh 
-                        msg.retrieveNewMessages
+                        
                         console.log ('TABLE CREATED');
                     });
                 });
@@ -202,7 +207,7 @@ angular.module('starter.messages', [])
         getMessages: function (){
             var deferred = $q.defer();
 
-            if (msg.messages.length === 0){
+            if (msg.messages === undefined){
                 loadAll (function (){
                     deferred.resolve(msg.messages);
                 },function (error){
@@ -226,19 +231,26 @@ angular.module('starter.messages', [])
             return deferred.promise;
         },
         //Look at the server for new messages
-        retrieveNewMessages: function (date){
+        retrieveNewMessages: function (){
             var numMessages = $q.defer();
+            var lastDate = window.localStorage['lastMessageDate'];
+            var lastDateParam;
+            
+            if (lastDate){
+                lastDateParam = {'lastMessageDate' : new Date(lastDate)};
+            }
+            
+            $http.post (pushConfig.msg_api_url + pushConfig.messagesEP, lastDateParam)
+                .success(function (data){
+                    var messagesInfo = data;
+                    for (messageIdx in messagesInfo.messages){
+                        msg.add (messagesInfo.messages[messageIdx]);
+                    }
+                    window.localStorage['lastMessageDate'] = messagesInfo.currentDate;
 
-            $http.get (pushConfig.msg_api_url + pushConfig.messagesEP).success(function (data){
-                var newMessages = data;
-                for (messageIdx in newMessages){
-                    msg.add (newMessages[messageIdx]);
-                }
-                window.localStorage['lastMessageDate'] = new Date();
-                
-                numMessages.resolve(newMessages.lenght)
+                    numMessages.resolve(messagesInfo.messages.length);
             }).error (function (msg,status){
-                numMessages.reject();
+                    numMessages.reject();   
             });
 
             return numMessages.promise;
@@ -249,6 +261,7 @@ angular.module('starter.messages', [])
                  message.todelete =true;
              });
         },
+
         delete: function (messageid){
             var index = _.findIndex(msg.messages,{id:messageid});
             msg.messages.splice (index,1);

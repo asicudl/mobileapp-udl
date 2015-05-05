@@ -31,6 +31,10 @@ angular.module('starter.messages').controller('MessagesCtrl',['$scope','$ionicPo
         
     };
     
+    $scope.emptyList = function (){
+        return ($scope.messagesList === undefined || $scope.messagesList.length === 0);
+    }
+    
     $scope.deleteMessage = function (index){
         
         if (typeof index ==='string'){ // Is an string call the main view to delete it
@@ -146,12 +150,15 @@ angular.module('starter.messages').controller('MessagesCtrl',['$scope','$ionicPo
     };
     
     $scope.refreshMessages = function (){
-        MessagesService.retrieveNewMessages.then (function (numMessages){
+        MessagesService.retrieveNewMessages().then (function (numMessages){
             $scope.newMessages = numMessages;
         }).catch (function (data){
            console.log ('error'); 
-        });
-    }
+        }).finally(function (){
+            $scope.$broadcast('scroll.refreshComplete'); 
+        });;
+    };
+    
 
 }]);
 

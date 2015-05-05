@@ -1,35 +1,40 @@
 <ion-view class="udlapp-background" view-title="<i class='icon ion-android-mail'></i> {{title}}" ng-init="initList()" >
    <ion-content>
-    
+    <ion-refresher
+    pulling-text="Pull to refresh..."
+    on-refresh="refreshMessages()">
+  </ion-refresher>
     <!-- <ion-toggle ng-model="showDeleteButton">
         Show delete?
     </ion-toggle>   -->
-    <ion-list can-swipe="true" show-delete="false" ng-repeat="(key, value) in messagesList | groupBy: 'prettyDateOrder'"  ng-show="messagesList.length > 0"> 
-        
-        <div ng-show="value[0]" class="item item-divider">
-            <h2> {{value[0].prettyDateFormat}}</h2>
-        </div>
-           
-        <ion-item on-hold="openOptions($index)" ng-hide="message.hide" class="item udlapp-item item-avatar" ng-repeat="message in value | orderBy: 'date':true" href="#/app/messages/{{message.id}}">
-              
-         <div class="udlapp-category-av udlapp-category-av-cv {{buttonClassNumber(message.sitename)}}"><span>{{message.sitename.substr(0,1)}}</span></div>
-          <h2 class="{{message.state}}">{{message.subject}}</h2>
-          <p>{{message.sitename}}</p>
-          <p>{{message.date | date:'dd.MM.yyyy HH:mm'}}</p>
-        
-            <ion-option-button ng-click="deleteMessage(message.id)" class="button-assertive" >
-                <div class="udlapp-inlist-message-option"><i class="ion-trash-b"></i></div>
-            </ion-option-button>       
-           <ion-option-button ng-if="message.state != 'read'" ng-click="markAs(message.id,'read')" class="button-balanced" >
-                <div class="udlapp-inlist-message-option"><i class="ion-eye"></i></div>
-           </ion-option-button>
-            <ion-option-button ng-if="message.state == 'read'" ng-click="markAs(message.id,'unread')" class="button-energized" >
-                <div class="udlapp-inlist-message-option"><i class="ion-eye-disabled"></i></div>
-           </ion-option-button>
-        </ion-item>
+    <div ng-hide="emptyList()" >
+        <ion-list can-swipe="true" show-delete="false" ng-repeat="(key, value) in messagesList | groupBy: 'prettyDateOrder'" > 
 
-    </ion-list>
-    <div ng-hide="messagesList.length > 0" class="udlapp-emptymessages">
+            <div ng-show="value[0]" class="item item-divider">
+                <h2> {{value[0].prettyDateFormat}}</h2>
+            </div>
+
+            <ion-item on-hold="openOptions($index)" ng-hide="message.hide" class="item udlapp-item item-avatar" ng-repeat="message in value | orderBy: 'date':true" href="#/app/messages/{{message.id}}">
+
+             <div class="udlapp-category-av udlapp-category-av-cv {{buttonClassNumber(message.sitename)}}"><span>{{message.sitename.substr(0,1)}}</span></div>
+              <h2 class="{{message.state}}">{{message.subject}}</h2>
+              <p>{{message.sitename}}</p>
+              <p>{{message.date | date:'dd.MM.yyyy HH:mm'}}</p>
+
+                <ion-option-button ng-click="deleteMessage(message.id)" class="button-assertive" >
+                    <div class="udlapp-inlist-message-option"><i class="ion-trash-b"></i></div>
+                </ion-option-button>       
+               <ion-option-button ng-if="message.state != 'read'" ng-click="markAs(message.id,'read')" class="button-balanced" >
+                    <div class="udlapp-inlist-message-option"><i class="ion-eye"></i></div>
+               </ion-option-button>
+                <ion-option-button ng-if="message.state == 'read'" ng-click="markAs(message.id,'unread')" class="button-energized" >
+                    <div class="udlapp-inlist-message-option"><i class="ion-eye-disabled"></i></div>
+               </ion-option-button>
+            </ion-item>
+
+        </ion-list>
+    </div>
+    <div ng-show="emptyList()" class="udlapp-emptymessages">
         <p><i class="ion-archive" ></i><br />
         <span>There are no messages</span>
         </p>
