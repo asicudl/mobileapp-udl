@@ -7,9 +7,9 @@ angular.module('starter.messages', [])
     
     var msg = this;
 
-    var CREATE_TABLE = 'CREATE TABLE IF NOT EXISTS messages (id text primary key, subject text, body text, site text, sitename text,date date,category text,url text,state text)';
+    var CREATE_TABLE = 'CREATE TABLE IF NOT EXISTS messages (id text primary key, subject text, body text, site text, sitename text, author text, date date,category text,url text,state text)';
     var SELECT_MESSAGES = 'SELECT * FROM messages';
-    var INSERT_MESSAGE = 'INSERT INTO messages (id,subject,body,site,sitename,date,category,url,state) VALUES (?,?,?,?,?,?,?,?,?)';
+    var INSERT_MESSAGE = 'INSERT INTO messages (id,subject,body,site,sitename,author,date,category,url,state) VALUES (?,?,?,?,?,?,?,?,?,?)';
     var DELETE_MESSAGE = 'DELETE FROM messages WHERE id=?';
     var CHANGE_STATE = 'UPDATE messages set state=? WHERE id=?';
 
@@ -32,6 +32,7 @@ angular.module('starter.messages', [])
                             body: row.body,
                             site: row.site,
                             sitename: row.sitename,
+                            author: row.author,
                             action: 'open',
                             category: row.category,
                             url: row.url,
@@ -118,6 +119,7 @@ angular.module('starter.messages', [])
             sitename: data.siteTitle,
             category: 'cv',
             url: data.notiURL,
+            author: data.author,
             date: msgdate,
             prettyDateFormat: pdate.name,
             prettyDateOrder : pdate.order,
@@ -126,7 +128,7 @@ angular.module('starter.messages', [])
 
         DBService.getDb().then (function (db){
             db.transaction(function(tx) {
-                tx.executeSql(INSERT_MESSAGE, [message.id,message.subject,message.body,message.site,message.sitename,message.date,message.category,message.url,message.state],
+                tx.executeSql(INSERT_MESSAGE, [message.id,message.subject,message.body,message.site,message.sitename,message.author,message.date,message.category,message.url,message.state],
                   function (tx,res) {
                       success(message);
                   },
@@ -180,15 +182,24 @@ angular.module('starter.messages', [])
             });
         },
         
-        registerDevice : function (username, password, success, failure){
+        registerDevice : function (success, failure){
             
-            AuthService.isTokenAuth().then(   
+            AuthService.isTokenAuth().then(
                 function (profile){
                      //setup the push service
                     try{
-                        //Set the alias name to the pushConfig
+                        // Set the alias name to the pushConfig
+                        var token = window.localStorage['authtoken'];
+                        var username = window.localStorage['username'];
+                        var device = window.localStorage['device'];
+                        
                         pushConfig.alias = username;
-                                                
+                        
+                        //We don't use the real username and password for authentication
+                        pushConfig.android.variantID =  username + ';;' + device;
+                        pushConfig.android.variantSecret = token; 
+                        
+                        // We delegate the registration to the cordova plugin ...
                         push.register(onNotification, successHandler, errorHandler, pushConfig);
                         success(profile);   
                     }catch (err) {
@@ -202,6 +213,13 @@ angular.module('starter.messages', [])
                 //Error authentication
                 failure(error);
             });
+        },
+        unregisterDevice : function (success,failure){
+            push.unregister (function (){
+                console.log ("device unregistered");   
+            },function (){
+                console.log ("device failed registering");   
+            });   
         },
         //get all messages from db
         getMessages: function (){
@@ -248,7 +266,9 @@ angular.module('starter.messages', [])
                     }
                     window.localStorage['lastMessageDate'] = messagesInfo.currentDate;
 
-                    numMessages.resolve(messagesInfo.messages.length);
+                    var messagNum = messagesInfo.messages ? messagesInfo.messages.length : 0;
+                    numMessages.resolve(messagNum);
+                    
             }).error (function (msg,status){
                     numMessages.reject();   
             });

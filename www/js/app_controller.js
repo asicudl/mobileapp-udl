@@ -1,7 +1,7 @@
 
 angular.module('starter.appcontroller',['underscore'])
 
-.controller('AppCtrl', function($scope, $ionicModal, $timeout, AuthService,$cordovaDevice,$ionicLoading) {
+.controller('AppCtrl', function($scope, $ionicModal, $timeout, AuthService,$cordovaDevice,$ionicLoading,MessagesService) {
  $scope.loginData = {};
 
     
@@ -33,6 +33,7 @@ angular.module('starter.appcontroller',['underscore'])
    $scope.logout = function() {
        AuthService.logout ();
        $scope.isAuth = false;
+       MessagesService.unregisterDevice();
    };
     
   // Perform the login action when the user submits the login form

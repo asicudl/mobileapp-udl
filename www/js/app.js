@@ -23,7 +23,7 @@ angular.module('starter', ['ionic','ngCordova',  ,'starter.appcontroller','start
             MessagesService.init (result.pushService);
             
             //Register the device services
-            MessagesService.registerDevice('user','password', onRegistrationSuccess, onRegistrationFailure);
+            MessagesService.registerDevice(onRegistrationSuccess, onRegistrationFailure);
                   
 
         });

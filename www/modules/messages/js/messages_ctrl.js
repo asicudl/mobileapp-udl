@@ -158,7 +158,6 @@ angular.module('starter.messages').controller('MessagesCtrl',['$scope','$ionicPo
             $scope.$broadcast('scroll.refreshComplete'); 
         });;
     };
-    
 
 }]);
 
