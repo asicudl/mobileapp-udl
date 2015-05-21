@@ -25,18 +25,26 @@
         <ion-item class="udlapp-item"  nav-clear menu-close href="#/app/offeredservices">
           <i class="icon ion-paper-airplane"></i> Offered Services
         </ion-item>
-        <ion-item class="udlapp-item" nav-clear menu-close href="#/app/messages">
+        <ion-item ng-show="authStatus.hasToken" class="udlapp-item" nav-clear menu-close href="#/app/messages">
             <i class="icon ion-android-mail"></i> Messages
         </ion-item>
 
-        <ion-item ng-show="isAuth" class="udlapp-item" nav-clear menu-close ng-click="logout()">
+        <!--<ion-item ng-show="isAuth" class="udlapp-item" nav-clear menu-close ng-click="logout()">
             <i class="icon ion-log-out"></i> Logout
-        </ion-item>
-        <ion-item ng-hide="isAuth" class="udlapp-item" nav-clear menu-close ng-click="login()">
+        </ion-item>-->
+          
+        <ion-item ng-hide="authStatus.hasToken" class="udlapp-item" nav-clear menu-close ng-click="login()">
             <i class="icon ion-log-out"></i> Login
        </ion-item>     
           
-      </ion-list>
+      </ion-list>   
     </ion-content>
+    <ion-footer-bar class="bar-stable udl-menu-footer" >
+        <ion-list >
+            <ion-item class="udlapp-item" nav-clear menu-close href="#/app/settings">
+              <i class="icon ion-gear-a"></i> Settings
+            </ion-item>
+      </ion-list>
+      </ion-footer-bar>
   </ion-side-menu>
 </ion-side-menus>

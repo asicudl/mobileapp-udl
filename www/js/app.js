@@ -11,41 +11,28 @@ angular.module('starter', ['ionic','ngCordova',  ,'starter.appcontroller','start
     $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
-    /* $ionicLoading.show({
-        template: 'loading'
-    });*/
 
         AppConfigService.getConfig('dev').then (function (result){
+            $ionicLoading.show({
+                    template: 'Loading... '
+            });
+            
             //Configure each service with the configuration
             DBService.init (result.dbService);
             AuthService.init (result.authenticationService);
-            
             MessagesService.init (result.pushService);
-            
-            //Register the device services
-            MessagesService.registerDevice(onRegistrationSuccess, onRegistrationFailure);
-                  
-
         });
         
-    var onRegistrationSuccess = function () {
-            console.log ("Device registerd");
-            $ionicLoading.hide();
-    }
-    
-    var onRegistrationFailure = function (error) {
-            //show the error on screen 
-            console.log ("Device failure registering");
-            $ionicLoading.hide();
-    }
             
     if (window.cordova && window.cordova.plugins.Keyboard) {
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
     }
+    
     if (window.StatusBar) {
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
     }
+        
   });
 })
 
@@ -117,7 +104,19 @@ angular.module('starter', ['ionic','ngCordova',  ,'starter.appcontroller','start
         controller: 'OfferedServicesCtrl'
       }
     }
-  });
+  })
+  
+   .state('app.settings', {
+      url: "/settings",
+      views: {
+        'menuContent': {
+          templateUrl: "modules/appConfigService/templates/appsettings.html",
+          controller: 'AppCtrl'
+        }
+      }
+    })
+  
+  ;
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/app/agendaevents');
 });

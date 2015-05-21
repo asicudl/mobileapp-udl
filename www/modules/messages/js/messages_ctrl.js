@@ -33,7 +33,7 @@ angular.module('starter.messages').controller('MessagesCtrl',['$scope','$ionicPo
     
     $scope.emptyList = function (){
         return ($scope.messagesList === undefined || $scope.messagesList.length === 0);
-    }
+    };
     
     $scope.deleteMessage = function (index){
         

@@ -1,0 +1,26 @@
+<ion-view  class="udlapp-background" view-title="<i class='icon ion-gear-a'></i> App Settings" ng-init="">
+  <ion-content>
+    <div class="card list">
+        <div class="item">
+          <h2>Account settings</h2>
+        </div>
+        <div class="item item-body">
+            <p ng-show="authStatus.hasToken" >
+                You are connected as '{{authStatus.username}}'. In order to connect with another user account press 'Disconnect account' button. <i class="icon ion-alert-circled"></i>Notice that if you disconnect your account you'll lose all messages stored in the phone.
+            </p>
+            <p ng-hide="authStatus.hasToken" >
+                You are currently not connected. Please click login to connect your account 
+            </p>
+            
+        </div>
+        <div class="item tabs tabs-secondary tabs-icon-left">
+          <button ng-click="logout()" ng-show="authStatus.hasToken" class="button button-block button-assertive">
+            Disconnect account
+          </button>
+          <button ng-click="login()" ng-hide="authStatus.hasToken" class="button button-block button-positive">
+            Login
+          </button>    
+        </div>
+    </div>
+  </ion-content>
+</ion-view>

@@ -6,6 +6,7 @@ angular.module('starter.messages', [])
     this.messages = undefined;
     
     var msg = this;
+    msg.ready = $q.defer();
 
     var CREATE_TABLE = 'CREATE TABLE IF NOT EXISTS messages (id text primary key, subject text, body text, site text, sitename text, author text, date date,category text,url text,state text)';
     var SELECT_MESSAGES = 'SELECT * FROM messages';
@@ -86,11 +87,11 @@ angular.module('starter.messages', [])
     };
     
    var successHandler = function () {
-      
+       console.log ('Registration success' );
    };
 
    var errorHandler = function (message) {
-       
+       console.log ('registration failed ' + message); 
    };
 
     var onNotification = function(event) {
@@ -167,7 +168,6 @@ angular.module('starter.messages', [])
         
         init: function (pushServiceDef){
             pushConfig = pushServiceDef.config;
-            console.log (pushServiceDef.name + ' initialized');
 
             //Create messages Table
             DBService.getDb().then (function (db){
@@ -175,12 +175,17 @@ angular.module('starter.messages', [])
                     //create a table it doesn't exist
                     tx.executeSql(CREATE_TABLE, [], function (tx,res) {
                         //Get a refresh 
-                        
                         console.log ('TABLE CREATED');
+                        console.log (pushServiceDef.name + ' initialized');
+                        msg.ready.resolve();
                     });
                 });
             });
         },
+        isReady : function (){
+            return msg.ready.promise;   
+        },
+        
         
         registerDevice : function (success, failure){
             
@@ -192,12 +197,11 @@ angular.module('starter.messages', [])
                         var token = window.localStorage['authtoken'];
                         var username = window.localStorage['username'];
                         var device = window.localStorage['device'];
-                        
-                        pushConfig.alias = username;
-                        
+                           
                         //We don't use the real username and password for authentication
                         pushConfig.android.variantID =  username + ';;' + device;
                         pushConfig.android.variantSecret = token; 
+                        pushConfig.alias = username;
                         
                         // We delegate the registration to the cordova plugin ...
                         push.register(onNotification, successHandler, errorHandler, pushConfig);
@@ -214,12 +218,26 @@ angular.module('starter.messages', [])
                 failure(error);
             });
         },
+        unassociateDevice : function (success,failure){
+             if (typeof push !== 'undefined') {
+                
+                //That way we announce to aerogear to unsubcribe from notigications
+                pushConfig.alias = 'unregister';
+                push.register(onNotification, successHandler, errorHandler, pushConfig);
+            } else {
+                console.log ("Push service undefined, can't unregister");   
+            }
+        },
         unregisterDevice : function (success,failure){
-            push.unregister (function (){
-                console.log ("device unregistered");   
-            },function (){
-                console.log ("device failed registering");   
-            });   
+            if (typeof push !== 'undefined') {
+                push.unregister (function (){
+                    console.log ("device unregistered");   
+                },function (){
+                    console.log ("device failed registering");   
+                });   
+            } else {
+                console.log ("Push service undefined, can't unregister");   
+            }
         },
         //get all messages from db
         getMessages: function (){

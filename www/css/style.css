@@ -63,6 +63,26 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b0006f', end
 
 }
 
+.udlapp .menu-left .udl-menu-footer{
+    height: auto;   
+}
+
+.udlapp .menu-left .udl-menu-footer ion-list{
+    width:100%;   
+}
+
+.udlapp .menu-left .udl-menu-footer ion-list .item-content{
+    background: none;
+    color: #FFF;
+}
+
+.udlapp .menu-left .udl-menu-footer ion-list .item{
+    background: none;
+    color: #FFF;
+}
+
+
+
 .udlapp .udlapp-category-av{
     position: absolute;
     top: 10px;
