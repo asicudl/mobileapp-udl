@@ -85,14 +85,6 @@ angular.module('starter.messages', [])
             return prettyDates[5];  
         }
     };
-    
-   var successHandler = function () {
-       console.log ('Registration success' );
-   };
-
-   var errorHandler = function (message) {
-       console.log ('registration failed ' + message); 
-   };
 
     var onNotification = function(event) {
             factoryObject.retrieveNewMessages().then (function (numMessages){
@@ -187,7 +179,19 @@ angular.module('starter.messages', [])
         },
         
         
-        registerDevice : function (success, failure){
+        registerDevice : function (){
+            var registered  = $q.defer();
+            
+            
+            var successHandler = function () {
+                console.log ('Registration to PUSH service was success');
+                registered.resolve(); 
+            };
+
+            var errorHandler = function (message) {
+                console.log ('Error registering device to push service' + message);
+                registered.reject();
+            };
             
             AuthService.isTokenAuth().then(
                 function (profile){
@@ -205,18 +209,18 @@ angular.module('starter.messages', [])
                         
                         // We delegate the registration to the cordova plugin ...
                         push.register(onNotification, successHandler, errorHandler, pushConfig);
-                        success(profile);   
+                        
                     }catch (err) {
-                        //error registering device
-                        txt = "There was an error on this page.\n\n";
-                        txt += "Error description: " + err.message + "\n\n";
-                        failure(txt);
+                        //Something went wrong 
+                        registered.reject();
                     }
                 }
             ).catch (function (error){
-                //Error authentication
-                failure(error);
+                registered.reject();
+                console.log ('Registrations was called but it was not authenticated');
             });
+            
+            return registered.promise;
         },
         unassociateDevice : function (success,failure){
              if (typeof push !== 'undefined') {

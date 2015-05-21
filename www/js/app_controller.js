@@ -1,7 +1,7 @@
 
 angular.module('starter.appcontroller',['underscore'])
 
-.controller('AppCtrl', function($scope, $ionicModal,$ionicPlatform, $timeout, AuthService,$cordovaDevice,$ionicLoading,MessagesService,$location,$q) {
+.controller('AppCtrl', function($scope, $ionicModal, $ionicPlatform, $ionicPopup, $cordovaDevice, $ionicLoading, $timeout, AuthService,MessagesService,$location,$q) {
  $scope.loginData = {};
 
   $scope.authStatus = AuthService.authStatus;
@@ -18,7 +18,7 @@ angular.module('starter.appcontroller',['underscore'])
       });  
       
       return loginModal.promise;
-  }
+  };
 
   // Triggered in the login modal to close it
   $scope.closeLogin = function() {
@@ -34,14 +34,32 @@ angular.module('starter.appcontroller',['underscore'])
       });
   };
 
-   $scope.logout = function() {
+
+    $scope.logout = function() {
        AuthService.logout ();
        AuthService.authStatus.hasToken=false;
        
        MessagesService.unassociateDevice();
-   };
+    };
+
+    $scope.showServiceUnavaliable = function (){
+        $ionicPopup.alert ({
+            title: 'Connection failed', 
+            subTitle: 'Connection to service has failed',
+            template: 'Connection has failed, maybe you don\'t have fully internet access or our services are down now. You can check all messages until you get connected again'
+        });
+    };
     
-  // Perform the login action when the user submits the login form
+    $scope.showErrorOnRegistration = function (){
+        $ionicPopup.alert ({
+            title: 'Registering process failed', 
+            subTitle: 'Connection to service has failed',
+            template: 'We couldn\'t register your device in our system, it could make that some notifications alerts will not appear.'
+        });
+    };
+  
+    
+    // Perform the login action when the user submits the login form
   $scope.doLogin = function() {
     $scope.closeLogin ();  
 
@@ -59,17 +77,6 @@ angular.module('starter.appcontroller',['underscore'])
         device = '12345';   
     }
       
-    var onRegistrationSuccess = function () {
-            console.log ("Device registerd");
-            $ionicLoading.hide();
-    }
-    
-    var onRegistrationFailure = function (error) {
-            //show the error on screen 
-            console.log ("Device failure registering");
-            $ionicLoading.hide();
-    }  
-      
     if (device && username && password){
         
         AuthService.authenticateByCredentials(username,password).then(function (){
@@ -82,16 +89,23 @@ angular.module('starter.appcontroller',['underscore'])
                 $scope.closeLogin();
 
                 //Lets call to registration to the PUSH service
-                MessagesService.registerDevice(onRegistrationSuccess, onRegistrationFailure); 
+                MessagesService.registerDevice().catch (function (error){
+                    $scope.showErrorOnRegistration();
+                }).finally (function (){
+                    $ionicLoading.hide();
+                });
                 
         }).catch (function (error){
-            if (error === AuthSerice.errorCodes.CREDENTIALS_VALIDATION_FAILED){
+            if (error === AuthService.errorCodes.NO_VALID_CREDENTIALS){
                 $scope.loginError = 'Username and/or password are wrong, try it again please';       
-            }else if (error ===  AuthSerice.errorCodes.ERROR_CREATING_TOKEN){
+                $scope.login ();
+            } else if (error ===  AuthService.errorCodes.ERROR_CREATING_TOKEN){
                 $scope.loginError = 'Something went wrong while registering your device, please try to login again';
+                $scope.login ();
+            } else{ // On that case it seems that service is unavailable, lets alert it to avoid confusion
+                $scope.showServiceUnavaliable ();
             }
             
-            $scope.login ();
         }).finally (function (data){
             $ionicLoading.hide();
         });
@@ -112,7 +126,12 @@ angular.module('starter.appcontroller',['underscore'])
       $q.all ([ AuthService.isReady(), MessagesService.isReady()]).then(function (){ 
           AuthService.authenticateByToken().then (function (){
               $ionicLoading.show({template: 'Initializing... '});         
-              MessagesService.registerDevice(onRegistrationSuccess, onRegistrationFailure);
+              MessagesService.registerDevice().catch (function (error){
+                $scope.showErrorOnRegistration();
+              }).finally (function (){
+                  //Whatever happens with the registration we hide the loading panel
+                  $ionicLoading.hide();  
+              });
           }).catch (function (error){
               // If not auth didn't recognize token, so we must login again
               //On that case login first
@@ -123,18 +142,4 @@ angular.module('starter.appcontroller',['underscore'])
           }); 
       });
   });
-    
-  var onRegistrationSuccess = function () {
-            console.log ("Device registerd");
-            $ionicLoading.hide();
-    }
-    
-  var onRegistrationFailure = function (error) {
-            //show the error on screen 
-            console.log ("Device failure registering");
-            $ionicLoading.hide();
-    }
-
-        
-        
 });
