@@ -120,7 +120,7 @@ angular.module('starter.auth', ['underscore']).factory('AuthService',['$http','$
                     });
                     
                 }).catch (function (data){
-                    AuthService.authStatus.hasToken = false;
+                    auth.authStatus.hasToken = false;
                     delete window.sessionStorage.apiToken;
                     
                     if (data.status === 400 || data.status === 401){
