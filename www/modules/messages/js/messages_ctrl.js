@@ -1,33 +1,40 @@
-angular.module('starter.messages').controller('MessagesCtrl',['$scope','$ionicPopup','$ionicListDelegate','$timeout','MessagesService','$stateParams','_','$location','$filter','$timeout',function($scope, $ionicPopup,$ionicListDelegate, $timeout,MessagesService,$stateParams,_,$location,$filter,$timeout) {
-    
+angular.module('starter.messages').controller('MessagesCtrl',['$scope','$ionicPopup','$ionicListDelegate','$timeout','AuthService','MessagesService','$stateParams','_','$location','$filter','$timeout','$q',function($scope, $ionicPopup,$ionicListDelegate, $timeout,AuthService,MessagesService,$stateParams,_,$location,$filter,$timeout,$q) {
+
     $scope.title = "Messages"; 
     $scope.currentMessage = {};
     $scope.popover = {};
     $scope.undoAnimated = '';
+    var commonSolution = ' Please, stop the application and try it again. If problem persist contact with <a hreg="mailto:usuaris-cvirtual@llistes.udl.cat">Support address</a> to inform about the problem'
+    
 
-    $scope.initList = function (onmessages){
+    $scope.initList = function (){
         //Clear any undo action
+        var initialized = $q.defer();
         
         $scope.undoMessage = MessagesService.undoMessage;
         
         MessagesService.getMessages().then(function (messagesList){
             $scope.messagesList= messagesList;
+            initialized.resolve();
             
-            if (onmessages){
-                onmessages();   
-            }
+        }).catch (function (error){
+            $scope.showAlert ('while getting the stored messages list', commonSolution);
+            initialize.reject (); //Not necessary to show an specific code
         });
+        
+        return initialized.promise;
     };
                                             
     $scope.initMessage = function (){
         //Clear any undo action
         MessagesService.setToUndo();
         
-        $scope.initList(function (){
+        $scope.initList().then (function (){
             $scope.currentMessage = _.findWhere($scope.messagesList,{id:$stateParams.messageId});
-            MessagesService.changeState($scope.currentMessage.id,'read');
-            }
-        );
+            MessagesService.changeState($scope.currentMessage.id,'read').catch (function () {
+                $scope.showAlert ('while changing message state to read', commonSolution);
+            });
+        });
         
     };
     
@@ -60,7 +67,9 @@ angular.module('starter.messages').controller('MessagesCtrl',['$scope','$ionicPo
                     $scope.undoMessage.currentMessage.id === deleteMessage.id){
                     MessagesService.setToUndo();
                 }
-            MessagesService.delete(messageId);
+                MessagesService.delete(messageId).catch (function (error){
+                     $scope.showAlert ('while deleting a message', commonSolution);  
+                });
             }
             
         }, 5000);
@@ -76,7 +85,10 @@ angular.module('starter.messages').controller('MessagesCtrl',['$scope','$ionicPo
         $scope.messagesList[index].state = state;
 
         //Save the new state
-        MessagesService.changeState(messageId,state);
+        MessagesService.changeState(messageId,state).catch (function () {
+                $scope.showAlert ('while changing message state to read', commonSolution);
+        });
+        
         $ionicListDelegate.closeOptionButtons();
         
     };
@@ -149,14 +161,42 @@ angular.module('starter.messages').controller('MessagesCtrl',['$scope','$ionicPo
         }
     };
     
-    $scope.refreshMessages = function (){
+    $scope.refreshMessages = function (isRetry){
         MessagesService.retrieveNewMessages().then (function (numMessages){
             $scope.newMessages = numMessages;
-        }).catch (function (data){
-           console.log ('error'); 
+        }).catch (function (error){
+            //Lets guess if it's a authentication problem or a connection problem
+            AuthService.isTokenAuth().catch (function (error){
+                if (error === AuthService.errorCodes.TOKEN_VALIDATION_FAILED && !isRetry) {
+                        //In case that api token validation is not still valid try it again
+                        AuthService.authenticateByToken().then (function (){
+                            $scope.refreshMessages(true);
+                        }).catch (function (error){
+                            if (error === AuthService.errorCodes.NO_VALID_TOKEN || error === AuthService.errorCodes.NO_TOKEN_DATA){
+                                //Call login automatically ¿?¿?            
+                            }else{
+                                $scope.showRefreshListError();
+                            }
+                        });
+
+                 }else{
+                         $scope.showRefreshListError();
+                 }
+            }); 
         }).finally(function (){
             $scope.$broadcast('scroll.refreshComplete'); 
-        });;
+        });
+    };
+    
+    $scope.showAlert = function (action,todo){
+        $ionicPopup.alert ({
+            title: '<i class="ion-alert"></i> Problem ocurred',
+            template:  'Upps, something went wrong ' +action + '  <i class="ion-sad-outline"></i><br/>' + todo
+        });
+    };   
+    
+    $scope.showRefreshListError = function (){
+        $scope.showAlert ('refreshing the messages list. That could be produced because you don\'t have connection or our servers are now down.', 'Make sure that you have connection and try it again later'); 
     };
 
 }]);

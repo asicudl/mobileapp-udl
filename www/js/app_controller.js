@@ -120,8 +120,8 @@ angular.module('starter.appcontroller',['underscore'])
 
     
   //When ready try to auth by token first 
-  
-  $ionicPlatform.ready(function() {
+  if ('/app/settings' !== $location.path()){ // Just initialize in case the controller is loaded from main app
+    $ionicPlatform.ready(function() {
       //When all service are ready Launch the authentication process
       $q.all ([ AuthService.isReady(), MessagesService.isReady()]).then(function (){ 
           AuthService.authenticateByToken().then (function (){
@@ -138,8 +138,12 @@ angular.module('starter.appcontroller',['underscore'])
               $ionicLoading.hide();
               if (error === AuthService.errorCodes.NO_VALID_TOKEN || error === AuthService.errorCodes.NO_TOKEN_DATA){
                    $scope.login ();
+              }else{
+                  $scope.showServiceUnavaliable ();
+                  //TODO: Let's check automatically later ???
               }
           }); 
       });
-  });
+    });
+  };
 });

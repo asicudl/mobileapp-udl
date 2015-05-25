@@ -5,9 +5,15 @@
           <h2>Account settings</h2>
         </div>
         <div class="item item-body">
+            
             <p ng-show="authStatus.hasToken" >
-                You are connected as '{{authStatus.username}}'. In order to connect with another user account press 'Disconnect account' button. <i class="icon ion-alert-circled"></i>Notice that if you disconnect your account you'll lose all messages stored in the phone.
+                You are connected as <b>'{{authStatus.username}}'</b>. In order to connect with another user account press <b>'Disconnect account'</b> button. 
             </p>
+            
+            <p ng-show="authStatus.hasToken" >
+                <i class="icon ion-alert-circled"></i> Notice that if you disconnect your account you'll lose all messages stored in the phone.
+            </p>
+            
             <p ng-hide="authStatus.hasToken" >
                 You are currently not connected. Please click login to connect your account 
             </p>

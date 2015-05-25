@@ -12,7 +12,9 @@ angular.module('starter.auth', ['underscore']).factory('AuthService',['$http','$
         'NO_VALID_TOKEN': 20,                   //Token data is not valid
         'TOKEN_VALIDATION_FAILED': 21,          //APP stored token failed
         'ERROR_CREATING_TOKEN': 22,             //Token validation process failed
-        'NO_TOKEN_DATA': 23                     //There is no token data to try to validate
+        'NO_TOKEN_DATA': 23,                     //There is no token data to try to validate
+        
+        'API_TOKEN_NO_VALID':   30
     };
     
     auth.authStatus = {
@@ -186,9 +188,14 @@ angular.module('starter.auth', ['underscore']).factory('AuthService',['$http','$
             isTokenAuth: function (){
                 return auth.authStatus.apiToken.promise;
             },
+        
+            invalidateTokenAuth: function (){
+                delete window.sessionStorage.apiToken;
+                auth.authStatus.apiToken.reject (auth.errorCodesAPI_TOKEN_NO_VALID);
+            },
             
             //Updates the auth status elements
-            updateAuthStatus :function (hasToken, username){
+            updateAuthStatus : function (hasToken, username){
                 auth.authStatus.hasToken = hasToken;
                 auth.authStatus.username = username;
             },
@@ -199,22 +206,32 @@ angular.module('starter.auth', ['underscore']).factory('AuthService',['$http','$
     return factoryObject;
 }])
 
-.factory('authInterceptor', function ($rootScope, $q) {
-  return {
+.factory('authInterceptor', function ($rootScope,$injector,$q) {
+  
     
+    
+ return {
+      
     request: function (config) {
-      config.headers = config.headers || {};
-      if (window.sessionStorage.apiToken) {
-        config.headers.Authorization = 'Bearer ' + window.sessionStorage.apiToken;
-      }
-      return config;
+        config.headers = config.headers || {};
+        
+        if (window.sessionStorage.apiToken) {
+            config.headers.Authorization = 'Bearer ' + window.sessionStorage.apiToken;
+        }
+        
+        return config;
     },
     
     response: function (response) {
-      if (response.status === 401) {
+        //injected manually to get around circular dependency problem.
+        var AuthService = $injector.get('AuthService');
+        
+        //If we got an unauthorized response notify that api token auth is not valid anymore
+        if (response.status === 400 || response.status === 401) {
+            AuthService.invalidateTokenAuth ();
+        }
 
-      }
-      return response || $q.when(response);
+        return response || $q.when(response);
     }
   };
 
