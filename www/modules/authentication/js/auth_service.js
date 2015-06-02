@@ -23,6 +23,10 @@ angular.module('starter.auth', ['underscore']).factory('AuthService',['$http','$
         username: ''
     };
     
+    auth.endpoint = {
+        url : ''
+    };
+    
     auth.authenticate = function (url,authObject){
      //simulate a external request
         var deferred = $q.defer();
@@ -31,7 +35,7 @@ angular.module('starter.auth', ['underscore']).factory('AuthService',['$http','$
             deferred.resolve(data);
         }).error (function (msg,status) {
            console.log ("Error authenticating data " + status);
-           deferred.reject ({'msg':msg,'status':status});
+           deferred.reject (status);
         });
 
         return deferred.promise;   
@@ -74,6 +78,7 @@ angular.module('starter.auth', ['underscore']).factory('AuthService',['$http','$
             //Initializes the service with configuration
             init: function (authServiceDef){
                 authConfig = authServiceDef.config;
+                auth.endpoint.url = authConfig.auth_api_url;
                 auth.ready.resolve();
             },
         
@@ -85,9 +90,10 @@ angular.module('starter.auth', ['underscore']).factory('AuthService',['$http','$
             //Drops all logout session
             logout: function (){
                     delete window.sessionStorage.apiToken;
-                    delete window.localStorage.token;
+                    delete window.localStorage.authtoken;
                     delete window.localStorage.username;
                     delete window.localStorage.device;
+                    factoryObject.updateAuthStatus (false,'');
             },
         
             //Authentication by login and password
@@ -99,6 +105,7 @@ angular.module('starter.auth', ['underscore']).factory('AuthService',['$http','$
 
                     // Store the apitoken to perform API calls
                     window.sessionStorage.apiToken = data.token;
+                  
                     
                     //Get the device data information
                     var device;
@@ -115,24 +122,32 @@ angular.module('starter.auth', ['underscore']).factory('AuthService',['$http','$
                         window.localStorage.device = device;
                         factoryObject.updateAuthStatus(true,username);
                         authCredentialStatus.resolve ();
+                        //Resolve the state here and not before to make sure that all data is stored correctly
+                        auth.authStatus.apiToken.resolve(true);
                         
                     }).catch (function (data){
                         factoryObject.updateAuthStatus(false, username);
+                        
+                        // Also delete apitoken to ensure nothing can be called
+                        delete window.sessionStorage.apiToken;
+                        auth.authStatus.apiToken.reject (auth.errorCodes.ERROR_CREATING_TOKEN);
                         authCredentialStatus.reject (auth.errorCodes.ERROR_CREATING_TOKEN);
                     });
                     
-                }).catch (function (data){
+                }).catch (function (error){
                     auth.authStatus.hasToken = false;
                     delete window.sessionStorage.apiToken;
                     
-                    if (data.status === 400 || data.status === 401){
+                    if (error === 400 || error === 401){
                         authCredentialStatus.reject (auth.errorCodes.NO_VALID_CREDENTIALS);
                     } else{
                         authCredentialStatus.reject (auth.errorCodes.CREDENTIALS_VALIDATION_FAILED);    
                     }
-                    
-                    
 
+                    // Also delete apitoken to ensure nothing can be called
+
+                    delete window.sessionStorage.apiToken;
+                    auth.authStatus.apiToken.reject (auth.errorCodes.ERROR_CREATING_TOKEN);
                 });
                 
                 return authCredentialStatus.promise;
@@ -200,6 +215,7 @@ angular.module('starter.auth', ['underscore']).factory('AuthService',['$http','$
                 auth.authStatus.username = username;
             },
         
+            authEndpoint: auth.endpoint,
             authStatus: auth.authStatus,
             errorCodes : auth.errorCodes
     };
@@ -207,35 +223,44 @@ angular.module('starter.auth', ['underscore']).factory('AuthService',['$http','$
 }])
 
 .factory('authInterceptor', function ($rootScope,$injector,$q) {
-  
-    
-    
- return {
-      
-    request: function (config) {
-        config.headers = config.headers || {};
-        
-        if (window.sessionStorage.apiToken) {
-            config.headers.Authorization = 'Bearer ' + window.sessionStorage.apiToken;
-        }
-        
-        return config;
-    },
-    
-    response: function (response) {
-        //injected manually to get around circular dependency problem.
-        var AuthService = $injector.get('AuthService');
-        
-        //If we got an unauthorized response notify that api token auth is not valid anymore
-        if (response.status === 400 || response.status === 401) {
-            AuthService.invalidateTokenAuth ();
-        }
 
-        return response || $q.when(response);
-    }
-  };
+     if (!String.prototype.startsWith) {
+         String.prototype.startsWith = function(searchString, position) {
+             position = position || 0;
+        return this.lastIndexOf(searchString, position) === position;
+    };
+    
+    return {
+        request: function (config) {
+            var AuthService = $injector.get('AuthService');
 
+            config.headers = config.headers || {};
+
+            //Do not send the token unless the auth endpoint
+            if (window.sessionStorage.apiToken && config.url.startsWith(AuthService.authEndpoint.url)) {
+                config.headers.Authorization = 'Bearer ' + window.sessionStorage.apiToken;
+            }
+
+            return config;
+        },
+        responseError: function (rejection) {
+            //injected manually to get around circular dependency problem.
+            var AuthService = $injector.get('AuthService');
+
+            //If we got an unauthorized response notify that api token auth is not valid anymore
+            if ((rejection.status === 400 || rejection.status === 401) && rejection.config.url.startsWith(AuthService.authEndpoint.url))         {
+                AuthService.invalidateTokenAuth ();
+            }
+
+            return $q.reject(rejection);
+        }
+    };
+
+
+}
+    
+    
 }).config (function ($httpProvider) {
-    $httpProvider.interceptors.push('authInterceptor');
+   $httpProvider.interceptors.push('authInterceptor');
 });
 

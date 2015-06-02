@@ -198,6 +198,10 @@ angular.module('starter.messages').controller('MessagesCtrl',['$scope','$ionicPo
     $scope.showRefreshListError = function (){
         $scope.showAlert ('refreshing the messages list. That could be produced because you don\'t have connection or our servers are now down.', 'Make sure that you have connection and try it again later'); 
     };
-
+    
+    $scope.openExternalURL = function(url){
+        navigator.app.loadUrl(url, {openExternal: true});
+    };
+    
 }]);
 

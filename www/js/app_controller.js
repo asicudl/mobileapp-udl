@@ -1,7 +1,7 @@
 
 angular.module('starter.appcontroller',['underscore'])
 
-.controller('AppCtrl', function($scope, $ionicModal, $ionicPlatform, $ionicPopup, $cordovaDevice, $ionicLoading, $timeout, AuthService,MessagesService,$location,$q) {
+.controller('AppCtrl', function($scope, $ionicModal, $ionicPlatform, $ionicPopup,$ionicHistory, $cordovaDevice, $ionicLoading, $timeout, AuthService,MessagesService,$location,$q) {
  $scope.loginData = {};
 
   $scope.authStatus = AuthService.authStatus;
@@ -36,10 +36,34 @@ angular.module('starter.appcontroller',['underscore'])
 
 
     $scope.logout = function() {
-       AuthService.logout ();
-       AuthService.authStatus.hasToken=false;
        
-       MessagesService.unassociateDevice();
+        //Unassociate the device
+        MessagesService.unassociateDevice().then (function (){
+            $scope.showUnassocieatedOk();
+       }).catch (function (error){
+            //Actually we just can inform to user about it
+            $scope.showUnassocieatedFail();
+       }).finally (function (){
+            AuthService.logout ();
+            MessagesService.deleteAll().catch (function (error){
+                $scope.showDeletingError();
+            });
+       });
+        
+    };
+    
+    $scope.showUnassocieatedOk = function (){
+        $ionicPopup.alert ({
+            title: 'Account disconnected', 
+            template: 'Your device has been disconnected correctly. Please, login again if you want to access again to messages and receive notifications',
+        });
+    };
+    
+    $scope.showUnassocieatedFail = function (){
+       $ionicPopup.alert ({
+            title: 'Account disconnected', 
+            template: 'Your device has been disconnected but services are not notified. It can be possible that you receive notifications for a while',
+        });
     };
 
     $scope.showServiceUnavaliable = function (){
@@ -57,6 +81,14 @@ angular.module('starter.appcontroller',['underscore'])
             template: 'We couldn\'t register your device in our system, it could make that some notifications alerts will not appear.'
         });
     };
+        
+    $scope.showDeletingError = function (){
+        $ionicPopup.alert ({
+            title: 'Error cleaning messages', 
+            template: 'There was an error cleaning your stored messages. Please, clean data manually to ensure that messages are deleted.',
+        });
+    };    
+    
   
     
     // Perform the login action when the user submits the login form
@@ -97,11 +129,11 @@ angular.module('starter.appcontroller',['underscore'])
                 
         }).catch (function (error){
             if (error === AuthService.errorCodes.NO_VALID_CREDENTIALS){
-                $scope.loginError = 'Username and/or password are wrong, try it again please';       
-                $scope.login ();
+                $scope.loginError = 'Username and/or password were wrong, try it again please';       
+                setTimeout ($scope.login,300);
             } else if (error ===  AuthService.errorCodes.ERROR_CREATING_TOKEN){
                 $scope.loginError = 'Something went wrong while registering your device, please try to login again';
-                $scope.login ();
+               setTimeout ($scope.login,300);
             } else{ // On that case it seems that service is unavailable, lets alert it to avoid confusion
                 $scope.showServiceUnavaliable ();
             }
@@ -145,5 +177,7 @@ angular.module('starter.appcontroller',['underscore'])
           }); 
       });
     });
-  };
+  } else{
+    $ionicLoading.hide();   
+  }
 });

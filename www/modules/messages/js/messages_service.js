@@ -12,6 +12,7 @@ angular.module('starter.messages', [])
         'ERROR_DELETING_MSG': 12,
         'ERROR_MODIFYING_MSG' : 13,
         'ERROR_CREATING_TABLE': 14,
+        'ERROR_DELETING_ALL_MSGS': 15,
         
         // Remote messages error
         'ERROR_RETRIEVING_MSGS': 20,
@@ -27,11 +28,23 @@ angular.module('starter.messages', [])
         'USER_NOT_ALLOWED': 40
     };
     
+    var registrationState = {
+        'REGISTRATION_OK' : 10,
+        'REGISTRATION_FAILED': 11,
+        
+        'UNASSOCIATION_OK': 20,
+        'UNASSOCIATION_FAILED': 21,
+        
+        'UNREGISTRATION_OK': 30,
+        'UNREGISTRATION_FAILED': 31
+    };
+    
     var queries = {
         'CREATE_TABLE' : 'CREATE TABLE IF NOT EXISTS messages (id text primary key, subject text, body text, site text, sitename text,author text, date date,category text,url text,state text)',
         'SELECT_MESSAGES' : 'SELECT * FROM messages',
         'INSERT_MESSAGE' : 'INSERT INTO messages (id,subject,body,site,sitename,author,date,category,url,state) VALUES (?,?,?,?,?,?,?,?,?,?)',
         'DELETE_MESSAGE' :'DELETE FROM messages WHERE id=?',
+        'DELETE_ALL_MESSAGES' :'DELETE FROM messages',
         'CHANGE_STATE' : 'UPDATE messages set state=? WHERE id=?'
     };
     
@@ -129,6 +142,10 @@ angular.module('starter.messages', [])
                 $rootScope.$apply ();  
             });
     };
+    
+    var setRegistrationState = function (status){
+        window.localStorage.registrationStatus = status;
+    }
     
     this.createMessage = function (data){
        
@@ -244,11 +261,13 @@ angular.module('starter.messages', [])
             
             var successRegisterHandler = function () {
                 console.log ('Registration to PUSH service was success');
+                setRegistrationState (registrationState.REGISTRATION_OK);
                 registered.resolve(); 
             };
 
             var errorRegisterHandler = function (message) {
                 console.log ('Error registering device to push service' + message);
+                setRegistrationState (registrationState.REGISTRATION_FAILED);
                 registered.reject(errorCodes.ERROR_REGISTERING_DEVICE);
             };
             
@@ -270,12 +289,14 @@ angular.module('starter.messages', [])
                     push.register(onNotification, successRegisterHandler, errorRegisterHandler, pushConfig);
 
                 }catch (err) {
-                    console.log ('Push service undefined or invalid, can\'t unassociate: ' + err);        
-                    //Something went wrong 
+                    console.log ('Push service undefined or invalid, can\'t register: ' + err);        
+                    //Something went wrong
+                    setRegistrationState (registrationState.REGISTRATION_FAILED);
                     registered.reject(errorCodes.ERROR_SETTING_UP_REGISTRATION);
                 }
             }).catch (function (error){
-                console.log ('Registrations was called but it was not authenticated: ' + err);
+                console.log ('Registrations was called but it was not authenticated: ' + error);
+                setRegistrationState (registrationState.REGISTRATION_FAILED);
                 registered.reject(errorCodes.USER_NOT_ALLOWED);
             });
             
@@ -287,11 +308,13 @@ angular.module('starter.messages', [])
          
             var successUnassociateHandler = function () {
                 console.log ('Unassociation to PUSH service was success');
+                setRegistrationState (registrationState.UNASSOCIATION_OK);
                 unassociated.resolve(); 
             };
 
-            var errorUnassocicateHandler = function (message) {
+            var errorUnassociateHandler = function (message) {
                 console.log ('Error unassociating device to push service' + message);
+                setRegistrationState (registrationState.UNASSOCIACIATION_FAILED);
                 unassociated.reject(errorCodes.ERROR_UNASSOCIATING_DEVICE);
             };
 
@@ -301,12 +324,14 @@ angular.module('starter.messages', [])
                     pushConfig.alias = 'unregister';
                     push.register(onNotification, successUnassociateHandler, errorUnassociateHandler, pushConfig);
                 }catch (err){
-                    console.log ('Push service undefined or invalid, can\'t unassociate' + err);   
+                    console.log ('Push service undefined or invalid, can\'t unassociate' + err);
+                    setRegistrationState (registrationState.UNASSOCIACIATION_FAILED);
                     unassociated.reject(errorCodes.ERROR_SETTING_UP_REGISTRATION);
                 }
             }).catch (function (error){
-                    console.log ('Unassociation was called but it was not authenticated: ' + err);
-                    registered.reject(errorCodes.USER_NOT_ALLOWED);
+                    console.log ('Unassociation was called but it was not authenticated: ' + error);
+                    setRegistrationState (registrationState.UNASSOCIACIATION_FAILED);
+                    unassociated.reject(errorCodes.USER_NOT_ALLOWED);
             });  
             
             return unassociated.promise;
@@ -317,11 +342,13 @@ angular.module('starter.messages', [])
             
             var successUnregisterHandler = function () {
                 console.log ('Unregistration to PUSH service was success');
+                setRegistrationState (registrationState.UNREGISTRATION_OK);
                 unregistered.resolve(); 
             };
 
             var errorUnregisterHandler = function (message) {
                 console.log ('Error Unregistering device to push service' + message);
+                setRegistrationState (registrationState.UNREGISTRATION_FAILED);
                 unregistered.reject(errorCodes.ERROR_UNASSOCIATING_DEVICE);
             };
              
@@ -330,15 +357,22 @@ angular.module('starter.messages', [])
                 try{
                     push.unregister (successUnregisterHandler,errorUnregisterHandler);
                 }catch (err){
-                    console.log ('Push service undefined or invalid, can\'t unregister: ' + err);   
+                    console.log ('Push service undefined or invalid, can\'t unregister: ' + err);
+                    setRegistrationState (registrationState.UNREGISTRATION_FAILED);
                     unregistered.reject(errorCodes.ERROR_SETTING_UP_REGISTRATION);
                 }
             }).catch (function (error){
-                    console.log ('Unregister was called but it was not authenticated: ' + err);
+                    console.log ('Unregister was called but it was not authenticated: ' + error);
+                    setRegistrationState (registrationState.UNREGISTRATION_FAILED);
                     registered.reject(errorCodes.USER_NOT_ALLOWED);
             });
             
             return unregistered.promise;
+        },
+        
+        //Get the current registration status
+        getRegistrationStatus: function (){
+            return window.localStorage.registrationStatus;
         },
         
         //get all messages from db
@@ -448,7 +482,38 @@ angular.module('starter.messages', [])
             
             return deleted.promise;
         },
-        
+        deleteAll: function (){
+            var deleted = $q.defer();
+            
+             DBService.getDb().then(function (db){
+                db.transaction(
+                    function(tx) {
+                        tx.executeSql (queries.DELETE_ALL_MESSAGES,[],
+                            function(tx,res){ //Deletion success
+                                msg.messages = [];
+                                if (window.localStorage.lastMessageDate){
+                                    delete window.localStorage.lastMessageDate;   
+                                }
+                                deleted.resolve();
+                                $rootScope.$apply ();
+                            },
+                            function (tx,error){ //Deletion error
+                                console.log ('Error deleting all messages: ' + error.message);
+                                deleted.reject(errorCodes.ERROR_DELETING_ALL_MSGS);
+                            }
+                        );
+                    },
+                    function (txerror){
+                        console.log ('Error getting a transaction to delete all messages: ' + txerror.message);
+                        deleted.reject(errorCodes.ERROR_DELETING_ALL_MSGS);
+                    }
+                );
+            }).catch (function (error){
+                 deleted.reject(errorCodes.ERROR_DELETING_ALL_MSGS);
+            });
+            
+            return deleted.promise;
+        },
         changeState : function (messageid,state) {
             var changed = $q.defer();
             

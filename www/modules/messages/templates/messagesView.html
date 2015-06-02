@@ -11,7 +11,8 @@
        <div class="item item-body">
            <h2>{{currentMessage.subject}}</h2>
            <p ng-bind-html="currentMessage.body" />
-           <p> Per llegir el missatge complet obre'l al <a href="" target="_blank" ng-click="navigator.app.loadUrl(currentMessage.url,{openExterna:true})">Campus Virtual</a></p> 
+           <p> Per llegir el missatge complet obre'l al <a href="" ng-click="openExternalURL(currentMessage.url)"
+               > Campus Virtual</a></p> 
            
        </div>
        <div class="item tabs tabs-secondary tabs-icon-left">
