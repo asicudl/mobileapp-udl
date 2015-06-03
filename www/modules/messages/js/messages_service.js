@@ -451,7 +451,7 @@ angular.module('starter.messages', [])
             
             var index = _.findIndex(msg.messages,{id:messageid});
 
-            if (index > 0){
+            if (index > -1){
                  DBService.getDb().then(function (db){
                     db.transaction(
                         function(tx) {

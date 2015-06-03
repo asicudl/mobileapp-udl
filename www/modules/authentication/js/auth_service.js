@@ -225,9 +225,11 @@ angular.module('starter.auth', ['underscore']).factory('AuthService',['$http','$
 .factory('authInterceptor', function ($rootScope,$injector,$q) {
 
      if (!String.prototype.startsWith) {
+         
          String.prototype.startsWith = function(searchString, position) {
              position = position || 0;
-        return this.lastIndexOf(searchString, position) === position;
+             return this.lastIndexOf(searchString, position) === position;
+         };
     };
     
     return {
@@ -255,10 +257,6 @@ angular.module('starter.auth', ['underscore']).factory('AuthService',['$http','$
             return $q.reject(rejection);
         }
     };
-
-
-}
-    
     
 }).config (function ($httpProvider) {
    $httpProvider.interceptors.push('authInterceptor');
