@@ -5,7 +5,12 @@ angular.module('starter.messages').controller('MessagesCtrl',['$scope','$ionicPo
     $scope.popover = {};
     $scope.undoAnimated = '';
     var commonSolution = ' Please, stop the application and try it again. If problem persist contact with <a hreg="mailto:usuaris-cvirtual@llistes.udl.cat">Support address</a> to inform about the problem'
+     
     
+    $scope.$on('$ionicView.enter', function() {
+        //Load the new messages
+        $scope.refreshMessages();
+    });
 
     $scope.initList = function (){
         //Clear any undo action

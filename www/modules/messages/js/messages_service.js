@@ -61,6 +61,7 @@ angular.module('starter.messages', [])
     
     var msg = this;
     msg.ready = $q.defer();
+    msg.loadedMessages = $q.defer();
 
     
     var loadAll = function (success,failure){
@@ -377,20 +378,19 @@ angular.module('starter.messages', [])
         
         //get all messages from db
         getMessages: function () {
-            var deferred = $q.defer();
-
+        
             if (msg.messages === undefined){
                 loadAll().then (function (messages){
                     msg.messages = messages;
-                    deferred.resolve(msg.messages);
+                    msg.loadedMessages.resolve(msg.messages);
                 }).catch (function (error){
                     console.log ('Error retrieving messages: ' + error);
-                    deferred.reject(error);
+                    msg.loadedMessages.reject(error);
                 });
             }else{
-                deferred.resolve(msg.messages);  
+                msg.loadedMessages.resolve(msg.messages);  
             }
-            return deferred.promise;
+            return msg.loadedMessages.promise;
         },
         //get an stored message
         getMessage : function(messageid) {
@@ -490,7 +490,8 @@ angular.module('starter.messages', [])
                     function(tx) {
                         tx.executeSql (queries.DELETE_ALL_MESSAGES,[],
                             function(tx,res){ //Deletion success
-                                msg.messages = [];
+                                msg.messages.splice(0,msg.messages.length);
+                            
                                 if (window.localStorage.lastMessageDate){
                                     delete window.localStorage.lastMessageDate;   
                                 }

@@ -120,12 +120,16 @@ angular.module('starter.appcontroller',['underscore'])
                 delete $scope.loginError;
                 $scope.closeLogin();
 
+            
                 //Lets call to registration to the PUSH service
                 MessagesService.registerDevice().catch (function (error){
                     $scope.showErrorOnRegistration();
                 }).finally (function (){
                     $ionicLoading.hide();
                 });
+            
+            
+            
                 
         }).catch (function (error){
             if (error === AuthService.errorCodes.NO_VALID_CREDENTIALS){
