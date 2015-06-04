@@ -42,7 +42,7 @@ angular.module('starter', ['ionic','ngCordova',  ,'starter.appcontroller','start
   .state('app', {
     url: "/app",
     abstract: true,
-    templateUrl: "templates/menu.html",
+    templateUrl: "modules/mainApp/templates/menu.html",
     controller: 'AppCtrl'
   })
 
