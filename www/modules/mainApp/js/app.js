@@ -4,13 +4,14 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic','ngCordova',  ,'starter.appcontroller','starter.config','starter.db','starter.auth','starter.agendaevents','starter.offeredservices','starter.messages','angular.filter','angularMoment'])
+angular.module('starter', ['ionic','ngCordova','ngI18n' ,'starter.appcontroller','starter.config','starter.db','starter.auth','starter.agendaevents','starter.offeredservices','starter.messages','angular.filter','angularMoment'])
 
-.run(function($ionicPlatform,$ionicLoading, AppConfigService,DBService, AuthService, MessagesService) {
+.run(function($ionicPlatform,$ionicLoading, AppConfigService,DBService, AuthService, MessagesService,$q,ngI18nResourceBundle) {
     
     $ionicPlatform.ready(function() {
-    // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
-    // for form inputs)
+
+        // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
+        // for form inputs)
 
         AppConfigService.getConfig('dev').then (function (result){
             $ionicLoading.show({
@@ -33,6 +34,34 @@ angular.module('starter', ['ionic','ngCordova',  ,'starter.appcontroller','start
       StatusBar.styleDefault();
     }
         
+     //Add some extra functionalities to out i18n module
+     var compose = function() {
+                if (arguments.length>0) {
+                    var txt = this[arguments[0]];
+                    if (txt) {
+                        for (var z=0; z<arguments.length; z+=1) {
+                            txt = txt.replace('{'+z+'}',arguments[z+1]);
+                        }
+                        return txt;
+                    } else {
+                        return 'not found: '+arguments[0];
+                    }
+                }
+                return null;
+      };
+
+      //Wrap this exrta functionality inside the ng18n service     
+      ngI18nResourceBundle.getAll = function (options){
+            var deferred = $q.defer();
+
+            this.get(options).success(function (resourceBundle) {
+                // Add the functionality to build composed strings
+                resourceBundle.compose = compose;
+                deferred.resolve (resourceBundle);
+            });  
+
+            return deferred.promise; 
+      };    
   });
 })
 
@@ -45,6 +74,16 @@ angular.module('starter', ['ionic','ngCordova',  ,'starter.appcontroller','start
     templateUrl: "modules/mainApp/templates/menu.html",
     controller: 'AppCtrl'
   })
+  
+  .state('app.settings', {
+      url: "/settings",
+      views: {
+        'menuContent': {
+          templateUrl: "modules/mainApp/templates/settings.html",
+          controller: 'AppCtrl'
+        }
+      }
+    })
 
   .state('app.agendaevents', {
     url: "/agendaevents",
@@ -106,19 +145,19 @@ angular.module('starter', ['ionic','ngCordova',  ,'starter.appcontroller','start
     }
   })
   
-   .state('app.settings', {
-      url: "/settings",
-      views: {
-        'menuContent': {
-          templateUrl: "modules/appConfigService/templates/appsettings.html",
-          controller: 'AppCtrl'
-        }
-      }
-    })
   
-  ;
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/app/agendaevents');
+    
+}).value('ngI18nConfig', {
+    //defaultLocale should be in lowercase and is required!!
+    defaultLocale: 'en',
+    //supportedLocales is required - all locales should be in lowercase!!
+    supportedLocales:['ca', 'en'],
+    //without leading and trailing slashes, default is i18n
+    basePath:'modules',
+    //default is false
+    cache: false,
 });
 
 

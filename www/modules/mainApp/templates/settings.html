@@ -1,30 +1,31 @@
-<ion-view  class="udlapp-background" view-title="<i class='icon ion-gear-a'></i> App Settings" ng-init="">
+<ion-view  class="udlapp-background" view-title="<i class='icon ion-gear-a'></i> {{rb.settings_title}}" >
   <ion-content>
     <div class="card list">
         <div class="item">
-          <h2>Account settings</h2>
+          <h2>{{rb.settings_account_settings}}</h2>
         </div>
+
         <div class="item item-body">
             
             <p ng-show="authStatus.hasToken" >
-                You are connected as <b>'{{authStatus.username}}'</b>. In order to connect with another user account press <b>'Disconnect account'</b> button. 
+                <span ng-bind-html="rb.compose('settings_connected_desc',authStatus.username)" />
             </p>
             
             <p ng-show="authStatus.hasToken" >
-                <i class="icon ion-alert-circled"></i> Notice that if you disconnect your account you'll lose all messages stored in the phone.
+                <i class="icon ion-alert-circled"></i> <span ng-bind-html="rb.settings_connected_notice" />
             </p>
             
             <p ng-hide="authStatus.hasToken" >
-                You are currently not connected. Please click login to connect your account 
+                <span ng-bind-html="rb.settings_login_desc" />
             </p>
             
         </div>
         <div class="item tabs tabs-secondary tabs-icon-left">
           <button ng-click="logout()" ng-show="authStatus.hasToken" class="button button-block button-assertive">
-            Disconnect account
+           {{rb.settings_disconnect_button}}
           </button>
           <button ng-click="login()" ng-hide="authStatus.hasToken" class="button button-block button-positive">
-            Login
+            {{rb.settings_login_button}}
           </button>    
         </div>
     </div>

@@ -1,0 +1,32 @@
+{
+    "ms_list_title": "Messages",
+    "ms_list_pull": "Pull to refresh\u2026",
+    "ms_list_nomessages": "There are no messages",
+    "ms_list_undo": "Undo deleted message",
+    "ms_list_item_dateformat": "MM/dd/yyyy HH:mm",
+    "ms_list_whattodo": "What to do?",
+    "ms_view_title": "Message",
+    "ms_view_fullmessage_desc":"Clic to see the full message in the",
+    "ms_view_fullmessage_link":"Campus Virtual",
+    "ms_view_dateformat": "",
+    "ms_action_delete": "Delete",
+    "ms_action_markread": "Mark as read",
+    "ms_action_markunread": "Mark as unread",
+    "ms_action_cancel": "Cancel",
+    "pd_today": "Today",
+    "pd_yesterday": "Yesterday",
+    "pd_thisweek": "This week",
+    "pd_lastweek": "Last week",
+    "pd_thismonth": "This month",
+    "pd_later": "Later",
+    "ctrl_common_sol": "Please, stop the application and try it again. If problem persist contact with <a href='mailto:usuaris-cvirtual@llistes.udl.cat'>Support address</a> to inform about the problem",
+    "ctrl_while_stor": "while getting the stored messages list",
+    "ctrl_while_chang": "while changing message state to read",
+    "ctrl_while_deleting": "while deleting a message",
+    "ctrl_problem_ocurred": "Problem ocurred",
+    "ctrl_problem_desc": "Upps, something went wrong {0} <i class='ion-sad-outline'></i><br/>{1}",
+    "ctrl_while_refreshing": "refreshing the messages list. That could be produced because you don\'t have connection or our servers are now down.",
+    "ctrl_refreshlater":  "Make sure that you have connection and try it again later"
+    
+    
+}

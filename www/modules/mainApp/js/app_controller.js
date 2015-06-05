@@ -1,7 +1,7 @@
 
-angular.module('starter.appcontroller',['underscore'])
+var appcontroller = angular.module('starter.appcontroller',['underscore']);
 
-.controller('AppCtrl', function($scope, $ionicModal, $ionicPlatform, $ionicPopup,$ionicHistory, $cordovaDevice, $ionicLoading, $timeout, AuthService,MessagesService,$location,$q) {
+appcontroller.controller('AppCtrl', function($scope, $ionicModal, $ionicPlatform, $ionicPopup,$ionicHistory, $cordovaDevice, $ionicLoading, $timeout, AuthService,MessagesService,$location,$q,ngI18nResourceBundle) {
  $scope.loginData = {};
 
   $scope.authStatus = AuthService.authStatus;
@@ -54,41 +54,38 @@ angular.module('starter.appcontroller',['underscore'])
     
     $scope.showUnassocieatedOk = function (){
         $ionicPopup.alert ({
-            title: 'Account disconnected', 
-            template: 'Your device has been disconnected correctly. Please, login again if you want to access again to messages and receive notifications',
+            title: $scope.rb.ctrl_account_disconnected_title,
+            template: $scope.rb.ctrl_account_disconnected_ok
         });
     };
     
     $scope.showUnassocieatedFail = function (){
        $ionicPopup.alert ({
-            title: 'Account disconnected', 
-            template: 'Your device has been disconnected but services are not notified. It can be possible that you receive notifications for a while',
+            title: $scope.rb.ctrl_account_disconnected_title, 
+            template: $scope.rb.ctrl_account_disconnected_failed
         });
     };
 
     $scope.showServiceUnavaliable = function (){
         $ionicPopup.alert ({
-            title: 'Connection failed', 
-            subTitle: 'Connection to service has failed',
-            template: 'Connection has failed, maybe you don\'t have fully internet access or our services are down now. You can check all messages until you get connected again'
+            title: $scope.rb.ctrl_unavailable_service_title, 
+            template: $scope.rb.ctrl_unavailable_service_desc
         });
     };
     
     $scope.showErrorOnRegistration = function (){
         $ionicPopup.alert ({
-            title: 'Registering process failed', 
-            subTitle: 'Connection to service has failed',
-            template: 'We couldn\'t register your device in our system, it could make that some notifications alerts will not appear.'
+            title: $scope.rb.ctrl_registration_failed_title,
+            template: $scope.rb.ctrl_registration_failed_desc
         });
     };
         
     $scope.showDeletingError = function (){
         $ionicPopup.alert ({
-            title: 'Error cleaning messages', 
-            template: 'There was an error cleaning your stored messages. Please, clean data manually to ensure that messages are deleted.',
+            title: $scope.rb.ctrl_error_cleaning_title, 
+            template: $scope.rb.ctrl_error_cleaning_desc 
         });
     };    
-    
   
     
     // Perform the login action when the user submits the login form
@@ -96,7 +93,7 @@ angular.module('starter.appcontroller',['underscore'])
     $scope.closeLogin ();  
 
     $ionicLoading.show({
-        template: 'Logining'
+        template: $scope.rb.ctrl_loging_in
     });
     
     var username = $scope.loginData.username;
@@ -114,7 +111,7 @@ angular.module('starter.appcontroller',['underscore'])
         AuthService.authenticateByCredentials(username,password).then(function (){
                     
                 $ionicLoading.show({
-                    template: 'Setting account'
+                    template: $scope.rb.ctrl_setting_account
                 });
 
                 delete $scope.loginError;
@@ -133,10 +130,10 @@ angular.module('starter.appcontroller',['underscore'])
                 
         }).catch (function (error){
             if (error === AuthService.errorCodes.NO_VALID_CREDENTIALS){
-                $scope.loginError = 'Username and/or password were wrong, try it again please';       
+                $scope.loginError = $scope.rb.ctrl_invalid_credentials;       
                 setTimeout ($scope.login,300);
             } else if (error ===  AuthService.errorCodes.ERROR_CREATING_TOKEN){
-                $scope.loginError = 'Something went wrong while registering your device, please try to login again';
+                $scope.loginError = $scope.rb.ctrl_error_validatig;
                setTimeout ($scope.login,300);
             } else{ // On that case it seems that service is unavailable, lets alert it to avoid confusion
                 $scope.showServiceUnavaliable ();
@@ -155,13 +152,18 @@ angular.module('starter.appcontroller',['underscore'])
   };
 
     
+   ngI18nResourceBundle.getAll({locale: 'ca',name: 'mainApp/bundles/mainappBundle'}).then(function (resourceBundle) {
+        $scope.rb = resourceBundle;
+   }); 
+    
   //When ready try to auth by token first 
   if ('/app/settings' !== $location.path()){ // Just initialize in case the controller is loaded from main app
     $ionicPlatform.ready(function() {
-      //When all service are ready Launch the authentication process
+        
+    //When all service are ready Launch the authentication process
       $q.all ([ AuthService.isReady(), MessagesService.isReady()]).then(function (){ 
           AuthService.authenticateByToken().then (function (){
-              $ionicLoading.show({template: 'Initializing... '});         
+              $ionicLoading.show({template: $scope.rb.ctrl_initializin});         
               MessagesService.registerDevice().catch (function (error){
                 $scope.showErrorOnRegistration();
               }).finally (function (){
@@ -185,3 +187,4 @@ angular.module('starter.appcontroller',['underscore'])
     $ionicLoading.hide();   
   }
 });
+

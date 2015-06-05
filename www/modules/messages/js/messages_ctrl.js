@@ -1,11 +1,11 @@
-angular.module('starter.messages').controller('MessagesCtrl',['$scope','$ionicPopup','$ionicListDelegate','$timeout','AuthService','MessagesService','$stateParams','_','$location','$filter','$timeout','$q',function($scope, $ionicPopup,$ionicListDelegate, $timeout,AuthService,MessagesService,$stateParams,_,$location,$filter,$timeout,$q) {
+angular.module('starter.messages').controller('MessagesCtrl',['$scope','$ionicPopup','$ionicListDelegate','$timeout','AuthService','MessagesService','$stateParams','_','$location','$filter','$timeout','$q','ngI18nResourceBundle','ngI18nConfig',function($scope, $ionicPopup,$ionicListDelegate, $timeout,AuthService,MessagesService,$stateParams,_,$location,$filter,$timeout,$q,ngI18nResourceBundle) {
 
-    $scope.title = "Messages"; 
     $scope.currentMessage = {};
     $scope.popover = {};
     $scope.undoAnimated = '';
-    var commonSolution = ' Please, stop the application and try it again. If problem persist contact with <a hreg="mailto:usuaris-cvirtual@llistes.udl.cat">Support address</a> to inform about the problem'
-     
+    $scope.commonSolution = '';
+    
+    $scope.pullText = 'pull';
     
     $scope.$on('$ionicView.enter', function() {
         //Load the new messages
@@ -23,9 +23,11 @@ angular.module('starter.messages').controller('MessagesCtrl',['$scope','$ionicPo
             initialized.resolve();
             
         }).catch (function (error){
-            $scope.showAlert ('while getting the stored messages list', commonSolution);
+            $scope.showAlert (rb.ctrl_while_stor, $scope.commonSolution);
             initialize.reject (); //Not necessary to show an specific code
         });
+        
+        
         
         return initialized.promise;
     };
@@ -37,7 +39,7 @@ angular.module('starter.messages').controller('MessagesCtrl',['$scope','$ionicPo
         $scope.initList().then (function (){
             $scope.currentMessage = _.findWhere($scope.messagesList,{id:$stateParams.messageId});
             MessagesService.changeState($scope.currentMessage.id,'read').catch (function () {
-                $scope.showAlert ('while changing message state to read', commonSolution);
+                $scope.showAlert ($scope.rb.ctrl_while_changing, $scope.commonSolution);
             });
         });
         
@@ -73,7 +75,7 @@ angular.module('starter.messages').controller('MessagesCtrl',['$scope','$ionicPo
                     MessagesService.setToUndo();
                 }
                 MessagesService.delete(messageId).catch (function (error){
-                     $scope.showAlert ('while deleting a message', commonSolution);  
+                     $scope.showAlert ($scope.rb.ctrl_while_deleting, $scope.commonSolution);  
                 });
             }
             
@@ -91,7 +93,7 @@ angular.module('starter.messages').controller('MessagesCtrl',['$scope','$ionicPo
 
         //Save the new state
         MessagesService.changeState(messageId,state).catch (function () {
-                $scope.showAlert ('while changing message state to read', commonSolution);
+                $scope.showAlert ($scope.rb.ctrl_while_changing, $scope.commonSolution);
         });
         
         $ionicListDelegate.closeOptionButtons();
@@ -103,14 +105,14 @@ angular.module('starter.messages').controller('MessagesCtrl',['$scope','$ionicPo
         MessagesService.setToUndo();
         
          var changeButton = ($scope.messagesList[index].state==='read') ? {
-                 text: '<i class="ion-eye-disabled"></i> <b>Mark as unread</b>',
+                 text: '<i class="ion-eye-disabled"></i> <b>' + $scope.rb.ms_action_markunread + '</b>',
                  type: 'button-energized',
                  onTap: function(e) {
                      $scope.markAs(index,'unread');
                  }
             } : 
             {
-                 text: '<i class="ion-eye"></i> <b>Mark as read</b>',
+                 text: '<i class="ion-eye"></i> <b>'+ $scope.rb.ms_action_markread + '</b>',
                  type: 'button-balanced',
                  onTap: function(e) {
                      $scope.markAs(index,'read');
@@ -118,7 +120,7 @@ angular.module('starter.messages').controller('MessagesCtrl',['$scope','$ionicPo
             };
         
         var buttons =  [
-                {text: '<i class="ion-trash-b"></i> <b>Delete</b>',
+                {text: '<i class="ion-trash-b"></i> <b>'+ $scope.rb.ms_action_markdelete + '</b>',
                  type: 'button-assertive',
                  onTap: function(e) {
                      $scope.deleteMessage(index);
@@ -129,7 +131,7 @@ angular.module('starter.messages').controller('MessagesCtrl',['$scope','$ionicPo
         ];
          
         $scope.optionsPopup = $ionicPopup.show({
-            title: '<h3>What to do?</h3>',
+            title: '<h3>'+ scope.rb.ms_list_whattodo + '</h3>',
             scope: $scope,
             cssClass: 'udlapp-options-menu',
             buttons: buttons,
@@ -195,18 +197,25 @@ angular.module('starter.messages').controller('MessagesCtrl',['$scope','$ionicPo
     
     $scope.showAlert = function (action,todo){
         $ionicPopup.alert ({
-            title: '<i class="ion-alert"></i> Problem ocurred',
-            template:  'Upps, something went wrong ' +action + '  <i class="ion-sad-outline"></i><br/>' + todo
+            title: '<i class="ion-alert"></i> ' + $scope.rb.ctrl_problem_ocurred,
+            template:  $scope.rb.compose('ctrl_problem_desc',action,todo)
         });
     };   
     
     $scope.showRefreshListError = function (){
-        $scope.showAlert ('refreshing the messages list. That could be produced because you don\'t have connection or our servers are now down.', 'Make sure that you have connection and try it again later'); 
+        $scope.showAlert ($scope.rb.ctrl_while_refreshing,$scope.rb.ctrl_refreshlater); 
     };
     
     $scope.openExternalURL = function(url){
         navigator.app.loadUrl(url, {openExternal: true});
     };
     
+    ngI18nResourceBundle.getAll({locale: 'ca', name: 'messages/bundles/messagesBundle'}).then(function (resourceBundle) {
+            $scope.rb = resourceBundle;
+            
+            //Initialize this 
+            $scope.pullText = resourceBundle['ms_list_pull'];
+            $scope.commonSolution = resourceBundle['ctrl_common_sol'];
+    }); 
+    
 }]);
-

@@ -1,5 +1,5 @@
 angular.module('starter.messages', [])
-.factory('MessagesService', function (AppConfigService, $rootScope, AuthService, $q, DBService, $http){
+.factory('MessagesService', function (AppConfigService, $rootScope, AuthService, $q, DBService, $http) {
 
     var pushConfig = {};
     
@@ -49,12 +49,12 @@ angular.module('starter.messages', [])
     };
     
     var prettyDates = [
-            {name:'Today',order:0},
-            {name:'Yesterday',order:1},
-            {name:'This Week',order:2},
-            {name:'Last Week',order:3},
-            {name:'This Month',order:4},
-            {name:'Later',order:5}
+            {name:'pd_today',order:0},
+            {name:'pd_yesterday',order:1},
+            {name:'pd_thisweek',order:2},
+            {name:'pd_lastweek',order:3},
+            {name:'pd_thismonth',order:4},
+            {name:'pd_later',order:5}
     ];
     
     this.messages = undefined;
@@ -62,7 +62,6 @@ angular.module('starter.messages', [])
     var msg = this;
     msg.ready = $q.defer();
     msg.loadedMessages = $q.defer();
-
     
     var loadAll = function (success,failure){
         var defered = $q.defer();
@@ -560,4 +559,5 @@ angular.module('starter.messages', [])
         errorCodes: errorCodes
     };
     return factoryObject;
+
 });
