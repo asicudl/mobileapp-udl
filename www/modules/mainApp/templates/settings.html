@@ -1,33 +1,53 @@
 <ion-view  class="udlapp-background" view-title="<i class='icon ion-gear-a'></i> {{rb.settings_title}}" >
   <ion-content>
-    <div class="card list">
-        <div class="item">
-          <h2>{{rb.settings_account_settings}}</h2>
-        </div>
+    <div class="list">
+        <div class="card">
+            <div class="item item-divider">
+              <h2>{{rb.settings_language}}</h2>
+            </div>
 
-        <div class="item item-body">
-            
-            <p ng-show="authStatus.hasToken" >
-                <span ng-bind-html="rb.compose('settings_connected_desc',authStatus.username)" />
-            </p>
-            
-            <p ng-show="authStatus.hasToken" >
-                <i class="icon ion-alert-circled"></i> <span ng-bind-html="rb.settings_connected_notice" />
-            </p>
-            
-            <p ng-hide="authStatus.hasToken" >
-                <span ng-bind-html="rb.settings_login_desc" />
-            </p>
-            
+            <div class="item item-body">
+                <p>
+                    <span ng-bind-html="getLangMessage()" />
+                </p>
+                <button ng-click="chooseLocale()" class="button button-block button-positive">
+                    {{rb.settings_change_language_button}}
+              </button>
+           
+            </div>
         </div>
-        <div class="item tabs tabs-secondary tabs-icon-left">
-          <button ng-click="logout()" ng-show="authStatus.hasToken" class="button button-block button-assertive">
-           {{rb.settings_disconnect_button}}
-          </button>
-          <button ng-click="login()" ng-hide="authStatus.hasToken" class="button button-block button-positive">
-            {{rb.settings_login_button}}
-          </button>    
+      
+        <div class="card">
+            <div class="item item-divider">
+              <h2>{{rb.settings_account_settings}}</h2>
+            </div>
+
+            <div class="item item-body">
+
+                <p ng-show="authStatus.hasToken" >
+                    <span ng-bind-html="rb.compose('settings_connected_desc',authStatus.username)" />
+                </p>
+
+                <p ng-show="authStatus.hasToken" >
+                    <i class="icon ion-alert-circled"></i> <span ng-bind-html="rb.settings_connected_notice" />
+                </p>
+
+                <p ng-hide="authStatus.hasToken" >
+                    <span ng-bind-html="rb.settings_login_desc" />
+                </p>
+
+           
+              <button ng-click="logout()" ng-show="authStatus.hasToken" class="button button-block button-assertive">
+               {{rb.settings_disconnect_button}}
+              </button>
+              <button ng-click="login()" ng-hide="authStatus.hasToken" class="button button-block button-positive">
+                {{rb.settings_login_button}}
+              </button>    
+           
+            </div>
+        
         </div>
-    </div>
+      </div>    
+</ion-view>
   </ion-content>
 </ion-view>

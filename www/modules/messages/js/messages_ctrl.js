@@ -1,4 +1,4 @@
-angular.module('starter.messages').controller('MessagesCtrl',['$scope','$ionicPopup','$ionicListDelegate','$timeout','AuthService','MessagesService','$stateParams','_','$location','$filter','$timeout','$q','ngI18nResourceBundle','ngI18nConfig',function($scope, $ionicPopup,$ionicListDelegate, $timeout,AuthService,MessagesService,$stateParams,_,$location,$filter,$timeout,$q,ngI18nResourceBundle) {
+angular.module('starter.messages').controller('MessagesCtrl',['$scope','$ionicPopup','$ionicListDelegate','$timeout','AuthService','MessagesService','I18nService','$stateParams','_','$location','$filter','$timeout','$q',function($scope, $ionicPopup,$ionicListDelegate, $timeout,AuthService,MessagesService,I18nService,$stateParams,_,$location,$filter,$timeout,$q) {
 
     $scope.currentMessage = {};
     $scope.popover = {};
@@ -210,12 +210,15 @@ angular.module('starter.messages').controller('MessagesCtrl',['$scope','$ionicPo
         navigator.app.loadUrl(url, {openExternal: true});
     };
     
-    ngI18nResourceBundle.getAll({locale: 'ca', name: 'messages/bundles/messagesBundle'}).then(function (resourceBundle) {
+    $q.all([I18nService.isReady()]).then(function (){
+    
+        I18nService.getResourceBundles('messages').then(function (resourceBundle) {
             $scope.rb = resourceBundle;
             
             //Initialize this 
             $scope.pullText = resourceBundle['ms_list_pull'];
             $scope.commonSolution = resourceBundle['ctrl_common_sol'];
-    }); 
+        }); 
+    });
     
 }]);

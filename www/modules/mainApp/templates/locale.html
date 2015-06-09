@@ -1,0 +1,24 @@
+<ion-modal-view>
+  <ion-header-bar>
+    <h1 class="title">{{rb.locale_select_title}}</h1>
+  </ion-header-bar>
+  <ion-content>
+    <form ng-submit="doChooseLocale()">
+      <div class="list">
+        
+    <div class="list">
+           <p>{{rb.locale_select_language}}</p>
+           <label class="item item-radio" ng-repeat="locale in supportedLocales">
+            <input type="radio" name="localeGroup" ng-model="localeData.locale" value="{{locale.code}}" ng-change="loadLocale()">
+            <div class="item-content">
+                {{locale.name}}
+            </div>
+            <i class="radio-icon ion-checkmark"></i>
+        </label>
+        <label class="item">
+          <button class="button button-block button-positive" type="submit">{{rb.locale_next_button}}</button>
+        </label>
+     </div>
+    </form>
+  </ion-content>
+</ion-modal-view>

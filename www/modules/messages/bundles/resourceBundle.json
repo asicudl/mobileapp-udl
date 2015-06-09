@@ -25,7 +25,7 @@
     "ctrl_while_deleting": "while deleting a message",
     "ctrl_problem_ocurred": "Problem ocurred",
     "ctrl_problem_desc": "Upps, something went wrong {0} <i class='ion-sad-outline'></i><br/>{1}",
-    "ctrl_while_refreshing": "refreshing the messages list. That could be produced because you don\'t have connection or our servers are now down.",
+    "ctrl_while_refreshing": "refreshing the messages list. That could be produced because you don't have connection or our servers are now down.",
     "ctrl_refreshlater":  "Make sure that you have connection and try it again later"
     
     
