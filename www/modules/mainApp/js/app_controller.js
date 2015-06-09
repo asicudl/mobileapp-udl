@@ -1,12 +1,15 @@
 angular.module('starter.appcontroller',['underscore'])
 
-.controller('AppCtrl', function($scope, $ionicModal, $ionicPlatform, $ionicPopup,$ionicHistory, $cordovaDevice, $ionicLoading, $timeout, AuthService, AppConfigService, MessagesService ,I18nService, $location, $q,_, $window) {
- $scope.loginData = {};
- $scope.localeData = {};
+.controller('AppCtrl', function($scope, $ionicModal, $ionicPlatform, $ionicPopup,$ionicHistory, $cordovaDevice, $ionicLoading, $timeout, AuthService, AppConfigService, MessagesService ,PushNotificationService, I18nService, $location, $q,_, $window){ 
+    $scope.loginData = {};
+    $scope.localeData = {};
 
-  $scope.authStatus = AuthService.authStatus;
-  var loginModal = $q.defer();
-  var localeModal = $q.defer();
+
+    $scope.authStatus = AuthService.authStatus;
+
+    var loginModal = $q.defer();
+    var localeModal = $q.defer();    
+    var LOADING_TMPLT= '<i class="ion-loading-c"></i> '
     
   $scope.getLoginModal = function (){
 
@@ -53,7 +56,7 @@ angular.module('starter.appcontroller',['underscore'])
       $scope.getLocaleModal().then (function (modal){
         I18nService.setCurrentLocale ($scope.localeData.locale);
         modal.hide();
-        $window.location.reload();
+        $window.location.reload(true);
     });
   };
     
@@ -89,7 +92,7 @@ angular.module('starter.appcontroller',['underscore'])
   $scope.logout = function() {
        
         //Unassociate the device
-        MessagesService.unassociateDevice().then (function (){
+        PushNotificationService.unassociateDevice().then (function (){
             $scope.showUnassocieatedOk();
        }).catch (function (error){
             //Actually we just can inform to user about it
@@ -144,7 +147,7 @@ angular.module('starter.appcontroller',['underscore'])
     $scope.closeLogin ();  
 
     $ionicLoading.show({
-        template: $scope.rb.ctrl_loging_in
+        template: LOADING_TMPLT + $scope.rb.ctrl_loging_in
     });
     
     var username = $scope.loginData.username;
@@ -162,14 +165,14 @@ angular.module('starter.appcontroller',['underscore'])
         AuthService.authenticateByCredentials(username,password).then(function (){
                     
                 $ionicLoading.show({
-                    template: $scope.rb.ctrl_setting_account
+                    template: LOADING_TMPLT+  $scope.rb.ctrl_setting_account
                 });
 
                 delete $scope.loginError;
                 $scope.closeLogin();
 
                 //Lets call to registration to the PUSH service
-                MessagesService.registerDevice().catch (function (error){
+                PushNotificationService.registerDevice().catch (function (error){
                     $scope.showErrorOnRegistration();
                 }).finally (function (){
                     $ionicLoading.hide();
@@ -211,8 +214,9 @@ $scope.doChooseLocale = function (){
   
  var authenticate = function (){
          AuthService.authenticateByToken().then (function (){
-              $ionicLoading.show({template: $scope.rb.ctrl_initializin});         
-              MessagesService.registerDevice().catch (function (error){
+            $ionicLoading.show({template: LOADING_TMPLT +  $scope.rb.ctrl_initializin});         
+              
+             PushNotificationService.registerDevice().catch (function (error){
                 $scope.showErrorOnRegistration();
               }).finally (function (){
                   //Whatever happens with the registration we hide the loading panel
@@ -224,7 +228,8 @@ $scope.doChooseLocale = function (){
               $ionicLoading.hide();
               
              if (error === AuthService.errorCodes.NO_VALID_TOKEN || error === AuthService.errorCodes.NO_TOKEN_DATA){
-                   $scope.login ();
+                 $scope.invalidateApiToken();  
+                 $scope.login ();
               }else{
                   $scope.showServiceUnavaliable ();
                   //TODO: Let's check automatically later ???

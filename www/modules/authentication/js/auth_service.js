@@ -121,9 +121,9 @@ angular.module('starter.auth', ['underscore']).factory('AuthService',['$http','$
                         window.localStorage.username = username;
                         window.localStorage.device = device;
                         factoryObject.updateAuthStatus(true,username);
-                        authCredentialStatus.resolve ();
                         //Resolve the state here and not before to make sure that all data is stored correctly
                         auth.authStatus.apiToken.resolve(true);
+                        authCredentialStatus.resolve ();
                         
                     }).catch (function (data){
                         factoryObject.updateAuthStatus(false, username);
@@ -199,14 +199,16 @@ angular.module('starter.auth', ['underscore']).factory('AuthService',['$http','$
                 return auth.authStatus.apiToken.promise;
             },
             
+            
             // Returns the promise corresponding to the authentication by token.
-            isTokenAuth: function (){
+            hasApiToken: function (){
                 return auth.authStatus.apiToken.promise;
             },
         
-            invalidateTokenAuth: function (){
+            invalidateApiToken: function (){
                 delete window.sessionStorage.apiToken;
-                auth.authStatus.apiToken.reject (auth.errorCodesAPI_TOKEN_NO_VALID);
+                //Re-set the promise to be able to be resolved again
+                auth.authStatus.apiToken = $q.defer();
             },
             
             //Updates the auth status elements
@@ -250,8 +252,9 @@ angular.module('starter.auth', ['underscore']).factory('AuthService',['$http','$
             var AuthService = $injector.get('AuthService');
 
             //If we got an unauthorized response notify that api token auth is not valid anymore
-            if ((rejection.status === 400 || rejection.status === 401) && rejection.config.url.startsWith(AuthService.authEndpoint.url))         {
-                AuthService.invalidateTokenAuth ();
+            if ((rejection.status === 400 || rejection.status === 401) && rejection.config.url.startsWith(AuthService.authEndpoint.url)){
+                AuthService.invalidateApiToken ();
+                return $q.reject(AuthService.errorCodes.API_TOKEN_NO_VALID);
             }
 
             return $q.reject(rejection);

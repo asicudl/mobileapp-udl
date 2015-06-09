@@ -1,8 +1,8 @@
 // Starter App
 
-angular.module('starter', ['ionic','ngCordova', 'starter.appcontroller','starter.config','starter.i18n','starter.db','starter.auth','starter.agendaevents','starter.offeredservices','starter.messages','angular.filter','angularMoment'])
+angular.module('starter', ['ionic','ngCordova', 'starter.appcontroller','starter.config','starter.i18n','starter.db','starter.auth','starter.agendaevents','starter.offeredservices','starter.messages','starter.pushnotification','angular.filter','angularMoment'])
 
-.run(function($ionicPlatform, $ionicLoading, AppConfigService, DBService, AuthService, MessagesService, I18nService) {
+.run(function($ionicPlatform, $ionicLoading, AppConfigService, DBService, AuthService, MessagesService, PushNotificationService, I18nService) {
     
     $ionicPlatform.ready(function() {
 
@@ -14,7 +14,8 @@ angular.module('starter', ['ionic','ngCordova', 'starter.appcontroller','starter
             I18nService.init (result.i18n);
             DBService.init (result.dbService);
             AuthService.init (result.authenticationService);
-            MessagesService.init (result.pushService);
+            MessagesService.init (result.messagesService);
+            PushNotificationService.init (result.pushService);
         });
         
             

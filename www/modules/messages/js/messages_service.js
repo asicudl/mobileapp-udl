@@ -1,7 +1,7 @@
 angular.module('starter.messages', [])
 .factory('MessagesService', function (AppConfigService, $rootScope, AuthService, $q, DBService, $http) {
 
-    var pushConfig = {};
+    var messagesConfig = {};
     
     //Load queries and errorCodes
     
@@ -17,29 +17,11 @@ angular.module('starter.messages', [])
         // Remote messages error
         'ERROR_RETRIEVING_MSGS': 20,
         
-        // Push Service Registration
-        'ERROR_REGISTERING_DEVICE': 30,
-        'ERROR_UNASSOCIATING_DEVICE': 31,
-        'ERROR_UNREGISTERING_DEVICE': 32,
-        'ERROR_SETTING_UP_REGISTRATION': 33,
-        'PUSH_FEATURE_NOT_PRESENT': 34,
-
         //Network accessing problems
         'USER_NOT_ALLOWED': 40
     };
     
-    var registrationState = {
-        'REGISTRATION_OK' : 10,
-        'REGISTRATION_FAILED': 11,
-        
-        'UNASSOCIATION_OK': 20,
-        'UNASSOCIATION_FAILED': 21,
-        
-        'UNREGISTRATION_OK': 30,
-        'UNREGISTRATION_FAILED': 31
-    };
-    
-    var queries = {
+       var queries = {
         'CREATE_TABLE' : 'CREATE TABLE IF NOT EXISTS messages (id text primary key, subject text, body text, site text, sitename text,author text, date date,category text,url text,state text)',
         'SELECT_MESSAGES' : 'SELECT * FROM messages',
         'INSERT_MESSAGE' : 'INSERT INTO messages (id,subject,body,site,sitename,author,date,category,url,state) VALUES (?,?,?,?,?,?,?,?,?,?)',
@@ -119,34 +101,25 @@ angular.module('starter.messages', [])
         var yesterday = moment().subtract(1,'days');
         var lastweek = moment().subtract(1,'weeks');
         var mdate = moment(date);
+        var period = 5;
         
-        if (mdate.isSame(nowdate,'month')){
-            if (mdate.isSame(nowdate,'week')){
-                if (mdate.isSame(nowdate,'day')){
-                       return prettyDates[0];
-                }else if (mdate.isSame (yesterday,'day')){
-                    return prettyDates[1];   
-                }
-                return prettyDates[2];
-            }else if (mdate.isSame(lastweek,'day')){
-                return prettyDates[3];
-            }
-            return prettyDates[4];
+        if (mdate.isSame(nowdate,'day')){
+            period = 0;
+        }else if (mdate.isSame (yesterday,'day')){
+            period = 1;
+        }else if (mdate.isSame(nowdate,'week')){
+            period = 2;
+        }else if (mdate.isSame(lastweek,'week')){
+            period = 3;
+        }else if (mdate.isSame(nowdate,'month')){
+            peridod = 4;   
         }else{
-            return prettyDates[5];  
+            period = 5;   
         }
+        
+        return prettyDates[period];
     };
-
-    var onNotification = function(event) {
-            factoryObject.retrieveNewMessages().then (function (numMessages){
-                $rootScope.$apply ();  
-            });
-    };
-    
-    var setRegistrationState = function (status){
-        window.localStorage.registrationStatus = status;
-    }
-    
+  
     this.createMessage = function (data){
        
         var defered = $q.defer();
@@ -225,8 +198,8 @@ angular.module('starter.messages', [])
     **/
     
     var factoryObject = {
-        init: function (pushServiceDef){
-            pushConfig = pushServiceDef.config;
+        init: function (messageDef){
+            messagesConfig = messageDef.config;
 
             //Create messages Table
             DBService.getDb().then (function (db){
@@ -234,7 +207,7 @@ angular.module('starter.messages', [])
                     //create a table it doesn't exist
                     tx.executeSql(queries.CREATE_TABLE, [], 
                         function (tx,res) {
-                            console.log (pushServiceDef.name + ' initialized');
+                            console.log (messageDef.name + ' initialized');
                             msg.ready.resolve();
                         },
                         function (tx,err){
@@ -256,125 +229,6 @@ angular.module('starter.messages', [])
             return msg.ready.promise;   
         },
         
-        registerDevice : function (){
-            var registered  = $q.defer();
-            
-            var successRegisterHandler = function () {
-                console.log ('Registration to PUSH service was success');
-                setRegistrationState (registrationState.REGISTRATION_OK);
-                registered.resolve(); 
-            };
-
-            var errorRegisterHandler = function (message) {
-                console.log ('Error registering device to push service' + message);
-                setRegistrationState (registrationState.REGISTRATION_FAILED);
-                registered.reject(errorCodes.ERROR_REGISTERING_DEVICE);
-            };
-            
-            
-            AuthService.isTokenAuth().then(function (profile){
-                 //setup the push service
-                try{
-                    // Set the alias name to the pushConfig
-                    var token = window.localStorage['authtoken'];
-                    var username = window.localStorage['username'];
-                    var device = window.localStorage['device'];
-
-                    //We don't use the real username and password for authentication
-                    pushConfig.android.variantID =  username + ';;' + device;
-                    pushConfig.android.variantSecret = token; 
-                    pushConfig.alias = username;
-
-                    // We delegate the registration to the cordova plugin ...
-                    push.register(onNotification, successRegisterHandler, errorRegisterHandler, pushConfig);
-
-                }catch (err) {
-                    console.log ('Push service undefined or invalid, can\'t register: ' + err);        
-                    //Something went wrong
-                    setRegistrationState (registrationState.REGISTRATION_FAILED);
-                    registered.reject(errorCodes.ERROR_SETTING_UP_REGISTRATION);
-                }
-            }).catch (function (error){
-                console.log ('Registrations was called but it was not authenticated: ' + error);
-                setRegistrationState (registrationState.REGISTRATION_FAILED);
-                registered.reject(errorCodes.USER_NOT_ALLOWED);
-            });
-            
-            return registered.promise;
-        },
-       
-        unassociateDevice : function (success,failure) {
-            var unassociated = $q.defer();
-         
-            var successUnassociateHandler = function () {
-                console.log ('Unassociation to PUSH service was success');
-                setRegistrationState (registrationState.UNASSOCIATION_OK);
-                unassociated.resolve(); 
-            };
-
-            var errorUnassociateHandler = function (message) {
-                console.log ('Error unassociating device to push service' + message);
-                setRegistrationState (registrationState.UNASSOCIACIATION_FAILED);
-                unassociated.reject(errorCodes.ERROR_UNASSOCIATING_DEVICE);
-            };
-
-            //That way we announce to aerogear to unsubcribe from notigications
-            AuthService.isTokenAuth().then(function (profile){
-                try{
-                    pushConfig.alias = 'unregister';
-                    push.register(onNotification, successUnassociateHandler, errorUnassociateHandler, pushConfig);
-                }catch (err){
-                    console.log ('Push service undefined or invalid, can\'t unassociate' + err);
-                    setRegistrationState (registrationState.UNASSOCIACIATION_FAILED);
-                    unassociated.reject(errorCodes.ERROR_SETTING_UP_REGISTRATION);
-                }
-            }).catch (function (error){
-                    console.log ('Unassociation was called but it was not authenticated: ' + error);
-                    setRegistrationState (registrationState.UNASSOCIACIATION_FAILED);
-                    unassociated.reject(errorCodes.USER_NOT_ALLOWED);
-            });  
-            
-            return unassociated.promise;
-        },
-        
-        unregisterDevice : function (success,failure) {
-            var unregistered = $q.defer();
-            
-            var successUnregisterHandler = function () {
-                console.log ('Unregistration to PUSH service was success');
-                setRegistrationState (registrationState.UNREGISTRATION_OK);
-                unregistered.resolve(); 
-            };
-
-            var errorUnregisterHandler = function (message) {
-                console.log ('Error Unregistering device to push service' + message);
-                setRegistrationState (registrationState.UNREGISTRATION_FAILED);
-                unregistered.reject(errorCodes.ERROR_UNASSOCIATING_DEVICE);
-            };
-             
-            //That way we announce to aerogear to unsubcribe from notigications
-            AuthService.isTokenAuth().then(function (profile){
-                try{
-                    push.unregister (successUnregisterHandler,errorUnregisterHandler);
-                }catch (err){
-                    console.log ('Push service undefined or invalid, can\'t unregister: ' + err);
-                    setRegistrationState (registrationState.UNREGISTRATION_FAILED);
-                    unregistered.reject(errorCodes.ERROR_SETTING_UP_REGISTRATION);
-                }
-            }).catch (function (error){
-                    console.log ('Unregister was called but it was not authenticated: ' + error);
-                    setRegistrationState (registrationState.UNREGISTRATION_FAILED);
-                    registered.reject(errorCodes.USER_NOT_ALLOWED);
-            });
-            
-            return unregistered.promise;
-        },
-        
-        //Get the current registration status
-        getRegistrationStatus: function (){
-            return window.localStorage.registrationStatus;
-        },
-        
         //get all messages from db
         getMessages: function () {
         
@@ -391,6 +245,7 @@ angular.module('starter.messages', [])
             }
             return msg.loadedMessages.promise;
         },
+        
         //get an stored message
         getMessage : function(messageid) {
             // Simple index lookup
@@ -407,7 +262,7 @@ angular.module('starter.messages', [])
         },
         
         //Look at the server for new messages
-        retrieveNewMessages: function () {
+        retrieveNewMessages: function (isRetry) {
             var numMessages = $q.defer();
             var lastDate = window.localStorage['lastMessageDate'];
             var lastDateParam;
@@ -416,7 +271,8 @@ angular.module('starter.messages', [])
                 lastDateParam = {'lastMessageDate' : new Date(lastDate)};
             }
             
-            $http.post (pushConfig.msg_api_url + pushConfig.messagesEP, lastDateParam)
+            AuthService.hasApiToken().then (function(){
+                $http.post (messagesConfig.msg_api_url + messagesConfig.messagesEP, lastDateParam)
                 .success(function (data){
                     var messagesInfo = data;
                     for (messageIdx in messagesInfo.messages){
@@ -428,8 +284,10 @@ angular.module('starter.messages', [])
                     var messagNum = messagesInfo.messages ? messagesInfo.messages.length : 0;
                     numMessages.resolve(messagNum);
                     
-            }).error (function (msg,status){
-                    numMessages.reject(errorCodes.ERROR_RETRIEVING_MSGS);   
+                }).error (function (status){
+                    numMessages.reject(errorCodes.ERROR_RETRIEVING_MSGS);
+                });
+                
             });
 
             return numMessages.promise;

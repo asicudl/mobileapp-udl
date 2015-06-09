@@ -168,28 +168,11 @@ angular.module('starter.messages').controller('MessagesCtrl',['$scope','$ionicPo
         }
     };
     
-    $scope.refreshMessages = function (isRetry){
+    $scope.refreshMessages = function (){
         MessagesService.retrieveNewMessages().then (function (numMessages){
             $scope.newMessages = numMessages;
         }).catch (function (error){
-            //Lets guess if it's a authentication problem or a connection problem
-            AuthService.isTokenAuth().catch (function (error){
-                if (error === AuthService.errorCodes.TOKEN_VALIDATION_FAILED && !isRetry) {
-                        //In case that api token validation is not still valid try it again
-                        AuthService.authenticateByToken().then (function (){
-                            $scope.refreshMessages(true);
-                        }).catch (function (error){
-                            if (error === AuthService.errorCodes.NO_VALID_TOKEN || error === AuthService.errorCodes.NO_TOKEN_DATA){
-                                //Call login automatically ¿?¿?            
-                            }else{
-                                $scope.showRefreshListError();
-                            }
-                        });
-
-                 }else{
-                         $scope.showRefreshListError();
-                 }
-            }); 
+             $scope.showRefreshListError();
         }).finally(function (){
             $scope.$broadcast('scroll.refreshComplete'); 
         });
