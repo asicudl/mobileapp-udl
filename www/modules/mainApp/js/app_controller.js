@@ -1,6 +1,6 @@
 angular.module('starter.appcontroller',['underscore'])
 
-.controller('AppCtrl', function($scope, $ionicModal, $ionicPlatform, $ionicPopup,$ionicHistory, $cordovaDevice, $ionicLoading, $timeout, AuthService, AppConfigService, MessagesService ,PushNotificationService, I18nService, $location, $q,_, $window){ 
+    .controller('AppCtrl', function($scope, $ionicModal, $ionicPlatform, $ionicPopup,$ionicHistory, $cordovaDevice, $ionicLoading, $timeout, AuthService, AppConfigService, MessagesService ,PushNotificationService, I18nService, $location, $q,_, $window, $rootScope){ 
     $scope.loginData = {};
     $scope.localeData = {};
 
@@ -9,7 +9,7 @@ angular.module('starter.appcontroller',['underscore'])
 
     var loginModal = $q.defer();
     var localeModal = $q.defer();    
-    var LOADING_TMPLT= '<i class="ion-loading-c"></i> '
+    var LOADING_TMPLT= '<i class="ion-loading-c"></i> ';
     
   $scope.getLoginModal = function (){
 
@@ -136,7 +136,7 @@ angular.module('starter.appcontroller',['underscore'])
         
     $scope.showDeletingError = function (){
         $ionicPopup.alert ({
-            title: $scope.rb.ctrl_error_cleaning_title, 
+            title: $scope.rb.ctrl_error_cleaning_title,   
             template: $scope.rb.ctrl_error_cleaning_desc 
          });
     };    
@@ -213,7 +213,11 @@ $scope.doChooseLocale = function (){
   //When ready try to auth by token first 
   
  var authenticate = function (){
-         AuthService.authenticateByToken().then (function (){
+     $rootScope.appInitialized = true;
+     
+     //Just invalidate previous token
+     AuthService.invalidateApiToken();
+     AuthService.authenticateByToken().then (function (){
             $ionicLoading.show({template: LOADING_TMPLT +  $scope.rb.ctrl_initializin});         
               
              PushNotificationService.registerDevice().catch (function (error){
@@ -238,30 +242,37 @@ $scope.doChooseLocale = function (){
  };
     
     
- $ionicPlatform.ready(function() {
+    $scope.initApp = function (){
+        authenticate();
+    };
+    
+    $scope.initSettings =function (){
+        $ionicLoading.hide();   
+    };
+    
+    $ionicPlatform.ready(function() {
+        //When all service are ready Launch the authentication process
+        $q.all ([ AuthService.isReady(), MessagesService.isReady(), I18nService.isReady()]).then(function (){
 
-  //When all service are ready Launch the authentication process
-   $q.all ([ AuthService.isReady(), MessagesService.isReady(), I18nService.isReady()]).then(function (){
+            //Load locale configuration
+           $scope.supportedLocales = I18nService.getSupportedLocales();    
+           $scope.currentLocale  = I18nService.getCurrentLocale();
+            
+           
 
-        //Load locale configuration
-       $scope.supportedLocales = I18nService.getSupportedLocales();    
-       $scope.currentLocale  = I18nService.getCurrentLocale();
-         
-       I18nService.getResourceBundles('mainApp').then(function (resourceBundles){
-            $scope.rb = resourceBundles;
-       });
-        
-       if (I18nService.hasLocalePreference()){
-           if ('/app/settings' !== $location.path()){ // Just initialize in case the controller is loaded from main app        
-                authenticate();
-            } else{
-                $ionicLoading.hide();   
+           I18nService.getResourceBundles('mainApp').then(function (resourceBundles){
+                $scope.rb = resourceBundles;
+               
+               //Better do it when resource Bundles are received in order to show write error message if needed
+               if (!$scope.appInitialized){
+                   authenticate();
+               }
+           });
+
+           if (!I18nService.hasLocalePreference()){
+                $scope.chooseLocale();       
             }
-        }else{
-            $scope.chooseLocale();       
-        }
-       
-      });
+        });
     });
 });
 

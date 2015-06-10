@@ -1,15 +1,20 @@
-angular.module('starter.messages').controller('MessagesCtrl',['$scope','$ionicPopup','$ionicListDelegate','$timeout','AuthService','MessagesService','I18nService','$stateParams','_','$location','$filter','$timeout','$q',function($scope, $ionicPopup,$ionicListDelegate, $timeout,AuthService,MessagesService,I18nService,$stateParams,_,$location,$filter,$timeout,$q) {
-
+angular.module('starter.messages').controller('MessagesCtrl',['$scope','$ionicPopup','$ionicListDelegate','$ionicLoading','$timeout','AuthService','MessagesService','I18nService','$stateParams','_','$location','$filter','$timeout','$q',function($scope, $ionicPopup,$ionicListDelegate,$ionicLoading, $timeout,AuthService,MessagesService,I18nService,$stateParams,_,$location,$filter,$timeout,$q) {
+    
+    
+    var LOADING_TMPLT= '<i class="ion-loading-c"></i> ';
     $scope.currentMessage = {};
     $scope.popover = {};
     $scope.undoAnimated = '';
     $scope.commonSolution = '';
+   
     
     $scope.pullText = 'pull';
     
     $scope.$on('$ionicView.enter', function() {
         //Load the new messages
-        $scope.refreshMessages();
+        if ($scope.messagesInitialized && $stateParams.location === '/app/messages'){
+            $scope.refreshMessages();
+        }
     });
 
     $scope.initList = function (){
@@ -17,17 +22,21 @@ angular.module('starter.messages').controller('MessagesCtrl',['$scope','$ionicPo
         var initialized = $q.defer();
         
         $scope.undoMessage = MessagesService.undoMessage;
-        
-        MessagesService.getMessages().then(function (messagesList){
-            $scope.messagesList= messagesList;
-            initialized.resolve();
+        $scope.initializeBundles().then (function () {
+            $ionicLoading.show({template: LOADING_TMPLT +  $scope.rb.ctrl_message_initializing});    
             
-        }).catch (function (error){
-            $scope.showAlert (rb.ctrl_while_stor, $scope.commonSolution);
-            initialize.reject (); //Not necessary to show an specific code
+            MessagesService.getMessages().then(function (messages){
+                $scope.messagesList= messages;//Is the second promise return parameter
+                initialized.resolve();
+                $scope.messagesInitialized = true;
+                $scope.refreshMessages();
+            }).catch (function (error){
+                $scope.showAlert (rb.ctrl_while_stor, $scope.commonSolution);
+                initialize.reject (); //Not necessary to show an specific code
+            }).finally (function (){
+                $ionicLoading.hide();  
+            });
         });
-        
-        
         
         return initialized.promise;
     };
@@ -36,8 +45,10 @@ angular.module('starter.messages').controller('MessagesCtrl',['$scope','$ionicPo
         //Clear any undo action
         MessagesService.setToUndo();
         
-        $scope.initList().then (function (){
-            $scope.currentMessage = _.findWhere($scope.messagesList,{id:$stateParams.messageId});
+        $q.all([$scope.initializeBundles(),MessagesService.getMessages()]).then (function (data){
+            var messages = data[1];
+            $scope.messagesList= messages;
+            $scope.currentMessage = _.findWhere(messages,{id:$stateParams.messageId});
             MessagesService.changeState($scope.currentMessage.id,'read').catch (function () {
                 $scope.showAlert ($scope.rb.ctrl_while_changing, $scope.commonSolution);
             });
@@ -131,7 +142,7 @@ angular.module('starter.messages').controller('MessagesCtrl',['$scope','$ionicPo
         ];
          
         $scope.optionsPopup = $ionicPopup.show({
-            title: '<h3>'+ scope.rb.ms_list_whattodo + '</h3>',
+            title: '<h3>'+ $scope.rb.ms_list_whattodo + '</h3>',
             scope: $scope,
             cssClass: 'udlapp-options-menu',
             buttons: buttons,
@@ -193,15 +204,18 @@ angular.module('starter.messages').controller('MessagesCtrl',['$scope','$ionicPo
         navigator.app.loadUrl(url, {openExternal: true});
     };
     
-    $q.all([I18nService.isReady()]).then(function (){
-    
-        I18nService.getResourceBundles('messages').then(function (resourceBundle) {
+   $scope.initializeBundles = function(){
+       
+       return $q.all ([I18nService.isReady(),I18nService.getResourceBundles('messages')]).then(function (data) {
+            var resourceBundle =  data[1];
             $scope.rb = resourceBundle;
-            
-            //Initialize this 
-            $scope.pullText = resourceBundle['ms_list_pull'];
-            $scope.commonSolution = resourceBundle['ctrl_common_sol'];
-        }); 
-    });
+               
+           //Initialize this 
+           $scope.pullText = resourceBundle['ms_list_pull'];
+           $scope.commonSolution = resourceBundle['ctrl_common_sol'];
+
+       }); 
+   };
     
+  
 }]);

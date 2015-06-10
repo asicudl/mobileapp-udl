@@ -109,7 +109,7 @@ angular.module('starter', ['ionic','ngCordova', 'starter.appcontroller','starter
         controller: 'OfferedServicesCtrl'
       }
     }
-  })
+  });   
   
   
   // if none of the above states are matched, use this as the fallback

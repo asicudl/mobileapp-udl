@@ -26,5 +26,6 @@
     "ctrl_problem_ocurred": "Hi ha hagut un problema",
     "ctrl_problem_desc": "Upps, alguna cosa ha anat malament {0} <i class='ion-sad'></i><br/>{1}",
     "ctrl_while_refreshing": "refrescant la llista de missatges. Pot haver estat produït perque no tens connexió o bé els nostres servidors no estan actius en aquest moment.",
-    "ctrl_refreshlater":  "Assegurat que tens connexió i després torna-ho."
+    "ctrl_refreshlater":  "Assegurat que tens connexió i després torna-ho.",
+    "ctrl_message_initializing": "Llegint els missatges\u2026"
 }

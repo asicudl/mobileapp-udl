@@ -43,7 +43,7 @@ angular.module('starter.messages', [])
     
     var msg = this;
     msg.ready = $q.defer();
-    msg.loadedMessages = $q.defer();
+   
     
     var loadAll = function (success,failure){
         var defered = $q.defer();
@@ -231,19 +231,19 @@ angular.module('starter.messages', [])
         
         //get all messages from db
         getMessages: function () {
-        
+            var defered =  $q.defer();
             if (msg.messages === undefined){
                 loadAll().then (function (messages){
                     msg.messages = messages;
-                    msg.loadedMessages.resolve(msg.messages);
+                    defered.resolve(msg.messages);
                 }).catch (function (error){
                     console.log ('Error retrieving messages: ' + error);
-                    msg.loadedMessages.reject(error);
+                    defered.reject(error);
                 });
             }else{
-                msg.loadedMessages.resolve(msg.messages);  
+                defered.resolve(msg.messages);  
             }
-            return msg.loadedMessages.promise;
+            return defered.promise;
         },
         
         //get an stored message
@@ -271,7 +271,7 @@ angular.module('starter.messages', [])
                 lastDateParam = {'lastMessageDate' : new Date(lastDate)};
             }
             
-            AuthService.hasApiToken().then (function(){
+            AuthService.hasApiToken().then (function() {
                 $http.post (messagesConfig.msg_api_url + messagesConfig.messagesEP, lastDateParam)
                 .success(function (data){
                     var messagesInfo = data;
@@ -288,6 +288,8 @@ angular.module('starter.messages', [])
                     numMessages.reject(errorCodes.ERROR_RETRIEVING_MSGS);
                 });
                 
+            }).catch (function (error){
+                numMessages.reject(errorCodes.ERROR_RETRIEVING_MSGS);
             });
 
             return numMessages.promise;

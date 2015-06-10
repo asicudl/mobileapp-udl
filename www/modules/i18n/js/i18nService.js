@@ -31,6 +31,7 @@ angular.module('starter.i18n', ['ngI18n'])
             i18n.supportedLocales = i18nConfig.supportedLocales;
             i18n.ready.resolve ();
             i18n.currentLocale = window.localStorage.currentLocale || i18n.defaultLocale;
+            i18n.bundles = {};
         },
         
         isReady: function (){
@@ -43,13 +44,23 @@ angular.module('starter.i18n', ['ngI18n'])
             var deferred = $q.defer();
 
             this.isReady().then (function (){
-                var options = {locale: factoryObject.getCurrentLocale(), name: moduleFolderName +'/bundles/resourceBundle'};
+                var currentLocale = factoryObject.getCurrentLocale();
+                
+                i18n.bundles[moduleFolderName] = i18n.bundles[moduleFolderName] || {};
+                
+                if (i18n.bundles[moduleFolderName][currentLocale]){
+                    deferred.resolve(i18n.bundles[moduleFolderName][currentLocale])
+                }else{
+                
+                    var options = {locale: factoryObject.getCurrentLocale(), name: moduleFolderName +'/bundles/resourceBundle'};
 
-                ngI18nResourceBundle.get(options).success(function (resourceBundle) {
-                    // Add the functionality to build composed strings
-                    resourceBundle.compose = compose;
-                    deferred.resolve (resourceBundle);
-                });  
+                    ngI18nResourceBundle.get(options).success(function (resourceBundle) {
+                        // Add the functionality to build composed strings
+                        resourceBundle.compose = compose;
+                        i18n.bundles[moduleFolderName][currentLocale] = resourceBundle;
+                        deferred.resolve (i18n.bundles[moduleFolderName][currentLocale]);
+                    }); 
+                }
             });
 
             return deferred.promise; 
@@ -74,8 +85,6 @@ angular.module('starter.i18n', ['ngI18n'])
         getDefaultLocale: function (){
             return i18n.defaultLocale;   
         }
-        
-        
     }
     
     return factoryObject;

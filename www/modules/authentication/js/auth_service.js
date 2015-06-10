@@ -138,7 +138,7 @@ angular.module('starter.auth', ['underscore']).factory('AuthService',['$http','$
                     auth.authStatus.hasToken = false;
                     delete window.sessionStorage.apiToken;
                     
-                    if (error === 400 || error === 401){
+                    if (error.status === 400 || error.status === 401){
                         authCredentialStatus.reject (auth.errorCodes.NO_VALID_CREDENTIALS);
                     } else{
                         authCredentialStatus.reject (auth.errorCodes.CREDENTIALS_VALIDATION_FAILED);    
@@ -254,7 +254,6 @@ angular.module('starter.auth', ['underscore']).factory('AuthService',['$http','$
             //If we got an unauthorized response notify that api token auth is not valid anymore
             if ((rejection.status === 400 || rejection.status === 401) && rejection.config.url.startsWith(AuthService.authEndpoint.url)){
                 AuthService.invalidateApiToken ();
-                return $q.reject(AuthService.errorCodes.API_TOKEN_NO_VALID);
             }
 
             return $q.reject(rejection);
