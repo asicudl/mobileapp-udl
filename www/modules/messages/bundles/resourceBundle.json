@@ -6,7 +6,7 @@
     "ms_list_item_dateformat": "MM/dd/yyyy HH:mm",
     "ms_list_whattodo": "What to do?",
     "ms_view_title": "Message",
-    "ms_view_fullmessage_desc":"Clic to see the full message in the",
+    "ms_view_fullmessage_desc":"Click to see the full message in the",
     "ms_view_fullmessage_link":"Campus Virtual",
     "ms_view_dateformat": "",
     "ms_action_delete": "Delete",
@@ -24,7 +24,7 @@
     "ctrl_while_chang": "while changing message state to read",
     "ctrl_while_deleting": "while deleting a message",
     "ctrl_problem_ocurred": "Problem ocurred",
-    "ctrl_problem_desc": "Upps, something went wrong {0} <i class='ion-sad-outline'></i><br/>{1}",
+    "ctrl_problem_desc": "Uups, something went wrong {0} <i class='ion-sad-outline'></i><br/>{1}",
     "ctrl_while_refreshing": "refreshing the messages list. That could be produced because you don't have connection or our servers are now down.",
     "ctrl_refreshlater":  "Make sure that you have connection and try it again later",
     "ctrl_message_initializing": "Getting messages\u2026"
