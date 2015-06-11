@@ -12,20 +12,20 @@
                 <h2>{{rb[value[0].prettyDateFormat]}}</h2>
             </div>
 
-            <ion-item on-hold="openOptions($index)" ng-hide="message.hide" class="item udlapp-item item-avatar" ng-repeat="message in value | orderBy: 'date':true" href="#/app/messages/{{message.id}}">
+            <ion-item on-hold="openOptions(message)" ng-hide="message.hide" class="item udlapp-item item-avatar" ng-repeat="message in value | orderBy: 'date':true" href="#/app/messages/{{message.id}}">
 
              <div class="udlapp-category-av udlapp-category-av-cv {{buttonClassNumber(message.sitename)}}"><span>{{message.sitename.substr(0,1)}}</span></div>
               <h2 class="{{message.state}}">{{message.subject}}</h2>
               <p>{{message.sitename}}</p>
               <p>{{message.date | date: 'MM/dd/yyyy HH:mm'}}</p>
 
-                <ion-option-button ng-click="deleteMessage(message.id)" class="button-assertive" >
+                <ion-option-button ng-click="deleteMessage(message)" class="button-assertive" >
                     <div class="udlapp-inlist-message-option"><i class="ion-trash-b"></i></div>
                 </ion-option-button>       
-               <ion-option-button ng-if="message.state != 'read'" ng-click="markAs(message.id,'read')" class="button-balanced" >
+               <ion-option-button ng-if="message.state != 'read'" ng-click="markAs(message,'read')" class="button-balanced" >
                     <div class="udlapp-inlist-message-option"><i class="ion-eye"></i></div>
                </ion-option-button>
-                <ion-option-button ng-if="message.state == 'read'" ng-click="markAs(message.id,'unread')" class="button-energized" >
+                <ion-option-button ng-if="message.state == 'read'" ng-click="markAs(message,'unread')" class="button-energized" >
                     <div class="udlapp-inlist-message-option"><i class="ion-eye-disabled"></i></div>
                </ion-option-button>
             </ion-item>
@@ -42,7 +42,7 @@
     </div>
        
   </ion-content>
-    <div class="bar bar-footer bar-stable udlapp-undobar {{undoAnimated}}" ng-show="undoMessage && undoMessage.show" ng-click="applyUndo()">
-        <button class="button button-energized" ><i class="ion-arrow-return-left"></i>{{rb.ms_list_undo}}</button>
-    </div>
+  <div class="bar bar-footer bar-stable udlapp-undobar {{undoAnimated}}" ng-show="undoMessage && undoMessage.show" ng-click="applyUndo()">
+    <button class="button button-energized" ><i class="ion-arrow-return-left"></i> {{rb.ms_list_undo}}</button>
+</div>
 </ion-view>

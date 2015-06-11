@@ -294,17 +294,6 @@ angular.module('starter.messages', [])
 
             return numMessages.promise;
         },
-        
-        askToDelete: function (messageid) {
-            //Not necessary to handle errors here
-            
-            this.getMessage(messageid).then(function (message){
-                 //We assume that is in the list  
-                 message.todelete =true;
-             });
-            
-        },
-
         delete: function (messageid) {
             var deleted = $q.defer();
             

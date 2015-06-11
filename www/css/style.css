@@ -167,10 +167,10 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b0006f', end
     height: 65px;
 }
 
-.udlapp-undobar button{
+.udlapp-undobar.bar button.button{
     width: 100%;
-    font-size: 1.1em;
-    opacity: 0.85;  
+    font-size: 1.2em;
+    opacity: 0.90;  
     height: 65px;
 }
 
@@ -209,4 +209,18 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b0006f', end
 .udlapp .udlapp-emptymessages p span{
     font-size: 1.5em;
 }
+.udlapp .bar-udl{
+    background: #830051;
+}
+.udlapp .bar-udl h1{
+    color: #fff;
+}
 
+.button.button-udl.button-outline{
+    border-color: #830051;
+    background: transparent;
+    color: #830051;
+}
+button.button-alert-message{
+    text-align: justify;
+}

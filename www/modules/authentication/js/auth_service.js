@@ -138,7 +138,7 @@ angular.module('starter.auth', ['underscore']).factory('AuthService',['$http','$
                     auth.authStatus.hasToken = false;
                     delete window.sessionStorage.apiToken;
                     
-                    if (error.status === 400 || error.status === 401){
+                    if (error === 400 || error === 401){
                         authCredentialStatus.reject (auth.errorCodes.NO_VALID_CREDENTIALS);
                     } else{
                         authCredentialStatus.reject (auth.errorCodes.CREDENTIALS_VALIDATION_FAILED);    

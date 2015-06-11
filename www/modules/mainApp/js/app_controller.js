@@ -55,6 +55,7 @@ angular.module('starter.appcontroller',['underscore'])
   $scope.closeChooseLocale = function() {
       $scope.getLocaleModal().then (function (modal){
         I18nService.setCurrentLocale ($scope.localeData.locale);
+        delete $scope.firstLocale;
         modal.hide();
         $window.location.reload(true);
     });
@@ -147,7 +148,7 @@ angular.module('starter.appcontroller',['underscore'])
     $scope.closeLogin ();  
 
     $ionicLoading.show({
-        template: LOADING_TMPLT + $scope.rb.ctrl_loging_in
+        template: LOADING_TMPLT + $scope.rb.ctrl_login_in
     });
     
     var username = $scope.loginData.username;
@@ -218,7 +219,7 @@ $scope.doChooseLocale = function (){
      //Just invalidate previous token
      AuthService.invalidateApiToken();
      AuthService.authenticateByToken().then (function (){
-            $ionicLoading.show({template: LOADING_TMPLT +  $scope.rb.ctrl_initializin});         
+         $ionicLoading.show({template: LOADING_TMPLT +  $scope.rb.ctrl_initializing_app});         
               
              PushNotificationService.registerDevice().catch (function (error){
                 $scope.showErrorOnRegistration();
@@ -232,7 +233,7 @@ $scope.doChooseLocale = function (){
               $ionicLoading.hide();
               
              if (error === AuthService.errorCodes.NO_VALID_TOKEN || error === AuthService.errorCodes.NO_TOKEN_DATA){
-                 $scope.invalidateApiToken();  
+                 AuthService.invalidateApiToken();  
                  $scope.login ();
               }else{
                   $scope.showServiceUnavaliable ();
@@ -258,19 +259,19 @@ $scope.doChooseLocale = function (){
            $scope.supportedLocales = I18nService.getSupportedLocales();    
            $scope.currentLocale  = I18nService.getCurrentLocale();
             
-           
-
-           I18nService.getResourceBundles('mainApp').then(function (resourceBundles){
-                $scope.rb = resourceBundles;
-               
-               //Better do it when resource Bundles are received in order to show write error message if needed
-               if (!$scope.appInitialized){
-                   authenticate();
-               }
-           });
-
-           if (!I18nService.hasLocalePreference()){
+            if (!I18nService.hasLocalePreference()){
+                $scope.firstLocale = true;
                 $scope.chooseLocale();       
+            }else{
+
+                I18nService.getResourceBundles('mainApp').then(function (resourceBundles){
+                    $scope.rb = resourceBundles;
+               
+                    //Better do it when resource Bundles are received in order to show write error message if needed
+                    if (!$scope.appInitialized){
+                        authenticate();
+                    }
+                });
             }
         });
     });

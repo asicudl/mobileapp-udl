@@ -28,8 +28,8 @@
         <ion-item ng-show="authStatus.hasToken" class="udlapp-item" nav-clear menu-close href="#/app/messages">
             <i class="icon ion-android-mail"></i> {{rb.messages_menu_item}}
         </ion-item>
-        <ion-item ng-hide="authStatus.hasToken" class="udlapp-item" nav-clear menu-close href="#/app/login">
-            <i class="icon ion-log-out"></i> Login
+        <ion-item ng-hide="authStatus.hasToken" class="udlapp-item" nav-clear menu-close href="login()">
+            <i class="icon ion-log-out"></i> {{rb.login_menu_item}}
        </ion-item>     
           
       </ion-list>   

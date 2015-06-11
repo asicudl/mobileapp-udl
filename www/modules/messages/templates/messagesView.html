@@ -16,11 +16,11 @@
            
        </div>
        <div class="item tabs tabs-secondary tabs-icon-left">
-            <a class="tab-item" href="#/app/messages" ng-click="deleteMessage(currentMessage.id)">
+            <a class="tab-item" href="#/app/messages" ng-click="deleteMessage(currentMessage)">
               <i class="icon ion-trash-b"></i>
                 {{rb.ms_action_delete}}
             </a>
-            <a class="tab-item" href="#/app/messages" ng-click="markAs(currentMessage.id,'unread')">
+            <a class="tab-item" href="#/app/messages" ng-click="markAs(currentMessage,'unread')">
               <i class="icon ion-eye-disabled"></i>
                 {{rb.ms_action_markunread}}
             </a>

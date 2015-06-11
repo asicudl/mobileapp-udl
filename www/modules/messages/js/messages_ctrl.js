@@ -43,6 +43,7 @@ angular.module('starter.messages').controller('MessagesCtrl',['$scope','$ionicPo
                                             
     $scope.initMessage = function (){
         //Clear any undo action
+        $scope.undoMessage = MessagesService.undoMessage;
         MessagesService.setToUndo();
         
         $q.all([$scope.initializeBundles(),MessagesService.getMessages()]).then (function (data){
@@ -60,24 +61,18 @@ angular.module('starter.messages').controller('MessagesCtrl',['$scope','$ionicPo
         return ($scope.messagesList === undefined || $scope.messagesList.length === 0);
     };
     
-    $scope.deleteMessage = function (index){
-        
-        if (typeof index ==='string'){ // Is an string call the main view to delete it
-            var index = _.findIndex($scope.messagesList,{id: index});
-        }
+    $scope.deleteMessage = function (message){
 
         //We activate it to apply the animations now
        $scope.undoAnimated = 'animated';
-        
-        var messageId = $scope.messagesList[index].id;
 
         $ionicListDelegate.closeOptionButtons();
-        $scope.messagesList[index].hide = true;
-        MessagesService.setToUndo($scope.messagesList[index]);
+        message.hide = true;
+        MessagesService.setToUndo(message);
 
         $timeout(function (){
             //We look the message again because the position maybe changed for a previous delete
-            var deleteMessage = _.findWhere ($scope.messagesList,{id: messageId});
+            var deleteMessage = message;
             
             if (deleteMessage && deleteMessage.hide) {
                 //if the undo message is the current deleted message then we hide the undo button
@@ -85,25 +80,17 @@ angular.module('starter.messages').controller('MessagesCtrl',['$scope','$ionicPo
                     $scope.undoMessage.currentMessage.id === deleteMessage.id){
                     MessagesService.setToUndo();
                 }
-                MessagesService.delete(messageId).catch (function (error){
+                MessagesService.delete(deleteMessage.id).catch (function (error){
                      $scope.showAlert ($scope.rb.ctrl_while_deleting, $scope.commonSolution);  
                 });
             }
-            
         }, 5000);
     };
     
-    $scope.markAs = function (index,state){
+    $scope.markAs = function (message,state){
        
-       if (typeof index ==='string'){ // Is an string call the main view to delete it
-            var index = _.findIndex($scope.messagesList,{id: index});
-        }
-        
-        var messageId = $scope.messagesList[index].id;
-        $scope.messagesList[index].state = state;
-
         //Save the new state
-        MessagesService.changeState(messageId,state).catch (function () {
+        MessagesService.changeState(message.id,state).catch (function () {
                 $scope.showAlert ($scope.rb.ctrl_while_changing, $scope.commonSolution);
         });
         
@@ -111,30 +98,30 @@ angular.module('starter.messages').controller('MessagesCtrl',['$scope','$ionicPo
         
     };
     
-     $scope.openOptions = function (index){
+     $scope.openOptions = function (message){
          //Clear any undo action
         MessagesService.setToUndo();
         
-         var changeButton = ($scope.messagesList[index].state==='read') ? {
+         var changeButton = (message.state==='read') ? {
                  text: '<i class="ion-eye-disabled"></i> <b>' + $scope.rb.ms_action_markunread + '</b>',
                  type: 'button-energized',
                  onTap: function(e) {
-                     $scope.markAs(index,'unread');
+                     $scope.markAs(message,'unread');
                  }
             } : 
             {
                  text: '<i class="ion-eye"></i> <b>'+ $scope.rb.ms_action_markread + '</b>',
                  type: 'button-balanced',
                  onTap: function(e) {
-                     $scope.markAs(index,'read');
+                     $scope.markAs(message,'read');
                  }
             };
         
         var buttons =  [
-                {text: '<i class="ion-trash-b"></i> <b>'+ $scope.rb.ms_action_markdelete + '</b>',
+                {text: '<i class="ion-trash-b"></i> <b>'+ $scope.rb.ms_action_delete + '</b>',
                  type: 'button-assertive',
                  onTap: function(e) {
-                     $scope.deleteMessage(index);
+                     $scope.deleteMessage(message);
                     }
                 },
                  changeButton,
