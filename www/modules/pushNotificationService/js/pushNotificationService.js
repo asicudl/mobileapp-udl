@@ -1,5 +1,5 @@
 angular.module('starter.pushnotification', [])
-.factory('PushNotificationService', function (AuthService, $rootScope, $q, MessagesService) {
+.factory('PushNotificationService', function (AuthService, $rootScope, $q, MessagesService,$location) {
 
     var pushConfig = {};
     
@@ -37,8 +37,10 @@ angular.module('starter.pushnotification', [])
     }
     
     var onNotification = function(event) {
-            MessagesService.retrieveNewMessages().then (function (numMessages){
-                $rootScope.$apply ();  
+        
+            //We always try and go to messages 
+            MessagesService.retrieveNewMessages().finally (function (){
+                $location.path('/app/messages');
             });
     };
     

@@ -17,7 +17,7 @@
              <div class="udlapp-category-av udlapp-category-av-cv {{buttonClassNumber(message.sitename)}}"><span>{{message.sitename.substr(0,1)}}</span></div>
               <h2 class="{{message.state}}">{{message.subject}}</h2>
               <p>{{message.sitename}}</p>
-              <p>{{message.date | date: 'MM/dd/yyyy HH:mm'}}</p>
+                <p>{{message.date | date: rb.ms_list_item_dateformat}}</p>
 
                 <ion-option-button ng-click="deleteMessage(message)" class="button-assertive" >
                     <div class="udlapp-inlist-message-option"><i class="ion-trash-b"></i></div>

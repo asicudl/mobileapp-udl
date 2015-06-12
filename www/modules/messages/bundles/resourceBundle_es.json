@@ -8,7 +8,7 @@
     "ms_view_title": "Mensaje",
     "ms_view_fullmessage_desc":"Haz click para ver el mensaje completo en el ",
     "ms_view_fullmessage_link":"Campus Virtual",
-    "ms_view_dateformat": "dddd, MMMM Do YYYY, HH:mm",
+    "ms_view_dateformat": "dd/MM/yyyy HH:mm",
     "ms_action_delete": "Elimina",
     "ms_action_markread": "Marca como leído",
     "ms_action_markunread": "Marca como no leído",

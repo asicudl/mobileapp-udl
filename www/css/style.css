@@ -87,11 +87,12 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b0006f', end
     position: absolute;
     top: 10px;
     left: 10px;
-    width: 50px;
-    height: 50px;
+    width: 3em;
+    height: 3em;
     text-align: center;
     border: 1px solid: #ccc;
     border-radius: 50%;
+    line-height: 3em;
 }
 
 .udlapp .udlapp-category-av.new, .udlapp .udlapp-category-av.unread{
@@ -99,11 +100,10 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b0006f', end
 }
 
 .udlapp .udlapp-category-av span{
-    position: absolute;
     font-size: 1.7em;
     color: #FFF;
-    top:15px;
-    left:17px;
+    display: block;
+    text-transform: capitalize;
 }
     
 .udlapp .udlapp-category-av.btn_0 {

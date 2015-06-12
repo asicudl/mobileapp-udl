@@ -16,6 +16,7 @@ angular.module('starter.messages', [])
         
         // Remote messages error
         'ERROR_RETRIEVING_MSGS': 20,
+        'ALREADY_RETRIEVING': 21,
         
         //Network accessing problems
         'USER_NOT_ALLOWED': 40
@@ -43,7 +44,7 @@ angular.module('starter.messages', [])
     
     var msg = this;
     msg.ready = $q.defer();
-   
+    msg.retrieving = false;
     
     var loadAll = function (success,failure){
         var defered = $q.defer();
@@ -264,34 +265,45 @@ angular.module('starter.messages', [])
         //Look at the server for new messages
         retrieveNewMessages: function (isRetry) {
             var numMessages = $q.defer();
-            var lastDate = window.localStorage['lastMessageDate'];
-            var lastDateParam;
             
-            if (lastDate){
-                lastDateParam = {'lastMessageDate' : new Date(lastDate)};
+            //First prevent executing more than one retrieves 
+            if (msg.retrieving) {
+                q.reject (errorCodes.ALREADY_RETRIEVING);
+            }else{
+                msg.retrieving = true;
+
+                var lastDate = window.localStorage['lastMessageDate'];
+                var lastDateParam;
+
+                if (lastDate){
+                    lastDateParam = {'lastMessageDate' : new Date(lastDate)};
+                }
+
+                AuthService.hasApiToken().then (function() {
+                    $http.post (messagesConfig.msg_api_url + messagesConfig.messagesEP, lastDateParam)
+                    .success(function (data){
+                        var messagesInfo = data;
+                        for (messageIdx in messagesInfo.messages){
+                            msg.add (messagesInfo.messages[messageIdx]);
+                        }
+
+                        window.localStorage['lastMessageDate'] = messagesInfo.currentDate;
+                        msg.retrieving = false;
+
+                        var messagNum = messagesInfo.messages ? messagesInfo.messages.length : 0;
+                        numMessages.resolve(messagNum);
+
+                    }).error (function (status){
+                        numMessages.reject(errorCodes.ERROR_RETRIEVING_MSGS);
+                        msg.retrieving = false;
+                    });
+
+                }).catch (function (error){
+                    numMessages.reject(errorCodes.ERROR_RETRIEVING_MSGS);
+                    msg.retrieving = false;
+                });
             }
             
-            AuthService.hasApiToken().then (function() {
-                $http.post (messagesConfig.msg_api_url + messagesConfig.messagesEP, lastDateParam)
-                .success(function (data){
-                    var messagesInfo = data;
-                    for (messageIdx in messagesInfo.messages){
-                        msg.add (messagesInfo.messages[messageIdx]);
-                    }
-                    
-                    window.localStorage['lastMessageDate'] = messagesInfo.currentDate;
-
-                    var messagNum = messagesInfo.messages ? messagesInfo.messages.length : 0;
-                    numMessages.resolve(messagNum);
-                    
-                }).error (function (status){
-                    numMessages.reject(errorCodes.ERROR_RETRIEVING_MSGS);
-                });
-                
-            }).catch (function (error){
-                numMessages.reject(errorCodes.ERROR_RETRIEVING_MSGS);
-            });
-
             return numMessages.promise;
         },
         delete: function (messageid) {

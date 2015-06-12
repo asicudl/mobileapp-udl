@@ -1,4 +1,4 @@
-angular.module('starter.messages').controller('MessagesCtrl',['$scope','$ionicPopup','$ionicListDelegate','$ionicLoading','$timeout','AuthService','MessagesService','I18nService','$stateParams','_','$location','$filter','$timeout','$q',function($scope, $ionicPopup,$ionicListDelegate,$ionicLoading, $timeout,AuthService,MessagesService,I18nService,$stateParams,_,$location,$filter,$timeout,$q) {
+angular.module('starter.messages').controller('MessagesCtrl',['$scope','$ionicPopup','$ionicListDelegate','$ionicLoading','$timeout','AuthService','MessagesService','I18nService','$stateParams','_','$location','$filter','$timeout','$q','$rootScope',function($scope, $ionicPopup,$ionicListDelegate,$ionicLoading, $timeout,AuthService,MessagesService,I18nService,$stateParams,_,$location,$filter,$timeout,$q,$rootScope) {
     
     
     var LOADING_TMPLT= '<i class="ion-loading-c"></i> ';
@@ -167,13 +167,27 @@ angular.module('starter.messages').controller('MessagesCtrl',['$scope','$ionicPo
     };
     
     $scope.refreshMessages = function (){
-        MessagesService.retrieveNewMessages().then (function (numMessages){
-            $scope.newMessages = numMessages;
-        }).catch (function (error){
-             $scope.showRefreshListError();
-        }).finally(function (){
-            $scope.$broadcast('scroll.refreshComplete'); 
-        });
+        
+        if ($rootScope.routeToServicesNotAvailable){
+            $rootScope.authenticate().then (function (){
+                $scope.refreshMessage();    
+            }).catch (function (){
+                $scope.showRefreshListError();          
+            }).finally (function (){
+                $scope.$broadcast('scroll.refreshComplete'); 
+            });
+        }else{
+            MessagesService.retrieveNewMessages().then (function (numMessages){
+                $scope.newMessages = numMessages;
+            }).catch (function (error){
+                if (error !== MessageService.errorCodes.ALREADY_RETRIEVING){
+                    $scope.showRefreshListError();
+                    $rootScope.routeToServicesNotAvailable = true;
+                }
+            }).finally(function (){
+                $scope.$broadcast('scroll.refreshComplete'); 
+            });
+        }
     };
     
     $scope.showAlert = function (action,todo){
@@ -203,6 +217,5 @@ angular.module('starter.messages').controller('MessagesCtrl',['$scope','$ionicPo
 
        }); 
    };
-    
   
 }]);

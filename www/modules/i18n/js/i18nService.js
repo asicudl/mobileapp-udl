@@ -93,7 +93,7 @@ angular.module('starter.i18n', ['ngI18n'])
     //defaultLocale should be in lowercase and is required!!
     defaultLocale: 'en',
     //supportedLocales is required - all locales should be in lowercase!!
-    supportedLocales:['ca', 'en'],
+    supportedLocales:['ca', 'en','es','oc'],
     //without leading and trailing slashes, default is i18n
     basePath:'modules',
     //default is false
