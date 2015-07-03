@@ -1,10 +1,12 @@
-<ion-view class="udlapp-background" view-title="<i class='icon ion-android-mail'></i> {{rb.ms_view_title}}" ng-init="initMessage()">
- 
+<ion-view class="udlapp-background" view-title=" " ng-init="initMessage()">
+    <ion-nav-title>
+        <i class='icon ion-android-mail'></i> {{rb.ms_view_title}}
+    </ion-nav-title> 
   <ion-content>
    <div class="list card">
-       <div class="item item udlapp-item item-avatar">
+       <div class="item udlapp-item item-avatar">
            <div class="udlapp-category-av udlapp-category-av-cv {{buttonClassNumber(currentMessage.sitename)}}"><span>{{currentMessage.sitename.substr(0,1)}}</span></div>
-           <h3>{{currentMessage.sitename}}</h3>
+           <h2>{{currentMessage.sitename}}</h2>
            <p>{{currentMessage.date | date: rb.ms_view_dateformat}}</p>
            <p>{{currentMessage.author}}</p>
        </div>

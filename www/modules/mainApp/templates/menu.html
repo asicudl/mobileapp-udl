@@ -8,7 +8,13 @@
         <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
         </button>
       </ion-nav-buttons>
-    </ion-nav-bar>
+      <ion-nav-buttons   side="right">
+            <button class="button button-outline button-positive" ng-repeat="extraButton in extraButtons" ng-click="extraButton.onclick()">{{extraButton.text}}
+            </button>
+      </ion-nav-buttons>
+      </ion-nav-bar>
+      
+
     <ion-nav-view name="menuContent"></ion-nav-view>
   </ion-side-menu-content>
 

@@ -1,11 +1,65 @@
-<ion-view class="udlapp-background" view-title="<i class='icon ion-calendar'></i> {{title}}" ng-init="initList()" >
-  <ion-content>
-    <ion-list>
-      <a class="item udlapp-item item-thumbnail-left" ng-repeat="agendaEvent in agendaEventsList" href="#/app/agendaevents/{{agendaEvent.id}}">
-          <img style="height: 80px" src="{{agendaEvent.imgSrc}}" />  
-          <h2>{{agendaEvent.title}}</h2>
-          <p>{{agendaEvent.date}}</p>
-      </a>
-    </ion-list>
-  </ion-content>
+
+<ion-view class="udlapp-background" view-title="{{title}}" ng-init="initList()" >
+      <ion-content>
+          <div ng-hide="fullEvents" >
+            <ion-slide-box ng-hide="fullEvents"  does-continue="true" auto-play="true" slide-interval="7500">
+                <ion-slide ng-repeat="event in eventsList" >
+                    <div class="eventItem" >
+                        <img src="{{event.imgSrc}}" >  
+                        <div class="content">
+                            <div class="caption" >
+                                <h3><a href="#/app/agendaevents/{{event.id}}">{{event.title}}</a></h3>
+                                <p>{{event.date}}</p> 
+                            </div>
+                            <div class="description">{{event.description}}</div>
+                        </div>
+                    </div>
+                </ion-slide>
+            </ion-slide-box>
+        </div>
+
+        <div ng-show="fullEvents">
+
+            <div class="activitiesSeparator"> <i class="icon ion-ribbon-b"></i> Activitats</div>
+            <ion-list>
+                <a class="eventListItem item udlapp-item item-thumbnail-left" ng-repeat="event in eventsList" href="#/app/agendaevents/{{event.id}}">
+                    <img  src="{{event.imgSrc}}" />  
+                    <h2>{{event.title}}</h2>
+                    <p>{{event.date}}</p>
+                    <p>{{event.hour}}</p>
+                </a>
+            </ion-list>
+        </div>
+        
+        <div class="calendarSeparator"> <i class="icon ion-calendar"></i> Agenda</div>
+       
+       
+        <div>
+            <div ng-hide="emptyList()" >
+                <ion-list can-swipe="true" show-delete="false" ng-repeat="(key, value) in agendaList | groupBy: 'dayMonth'" class="calendarList"> 
+
+                    <div ng-show="value[0]" class="date ">
+                            <span class="dayOfWeek">{{value[0].dayOfWeek}}</span>
+                            <span class="dayMonth">{{value[0].dayMonth}}</span> 
+                    </div>
+
+                    <ion-item  class="item udlapp-item agendaItem" ng-repeat="agendaItem in value | orderBy: 'date':true" href="#/app/agendaevents/{{agendaItem.id}}">
+
+                        <h2>{{agendaItem.title}}</h2>
+                        <div>{{agendaItem.location}}</div>
+                        <p>{{agendaItem.hour}}</p>
+
+                    </ion-item>
+
+                </ion-list>
+            </div>
+            <div ng-show="emptyList()" class="udlapp-emptymessages">
+                <p><i class="ion-archive" ></i><br />
+                    <span>{{rb.ms_list_nomessages}}</span>
+                </p>
+            </div>
+        </div>
+    </ion-content> 
 </ion-view>
+
+

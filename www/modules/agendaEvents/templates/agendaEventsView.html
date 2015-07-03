@@ -2,11 +2,20 @@
   <ion-content>
    <div class="list card">
         <div class="item">
-            <h2>{{currentEvent.title}}</h2>
-            <p>{{currentEvent.date}}</p>
+
+            <div class="date left">
+                <span class="dayOfWeek">{{currentEvent.dayOfWeek}}</span>
+                <span class="dayMonth">{{currentEvent.dayMonth}}</span> 
+            </div>
+
+            <div class="eventInfo">
+                <h3>{{currentEvent.title}}</h3>
+                <p>{{currentEvent.location}}</p>
+                <p>{{currentEvent.hour}}</p>
+            </div>
+            
         </div>
         <div class="item item-body">
-            <img class="full-image" ng-src="{{currentEvent.imgSrc}}">
             <p>{{currentEvent.description}}</p>
            <p>
                <a href="#" class="subdued">Veure al web</a>

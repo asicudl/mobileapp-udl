@@ -4,7 +4,8 @@
   "devDependencies": {
     "ionic": "driftyco/ionic-bower#1.0.0-beta.14"
   },
-  "dependencies":{
-    "angular-underscore-module": "~1.0.1"
+  "dependencies": {
+    "angular-underscore-module": "~1.0.1",
+    "ionic-contrib-tinder-cards": "*"
   }
 }
