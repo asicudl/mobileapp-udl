@@ -36,14 +36,14 @@
        
         <div>
             <div ng-hide="emptyList()" >
-                <ion-list can-swipe="true" show-delete="false" ng-repeat="(key, value) in agendaList | groupBy: 'dayMonth'" class="calendarList"> 
+                <ion-list can-swipe="true" show-delete="false" ng-repeat="(key, value) in agendaList  | groupBy: 'eventDay'  |orderBy: 'eventDate':false " class="calendarList"> 
 
-                    <div ng-show="value[0]" class="date ">
+                    <div ng-show="value[0]" class="date">
                             <span class="dayOfWeek">{{value[0].dayOfWeek}}</span>
                             <span class="dayMonth">{{value[0].dayMonth}}</span> 
                     </div>
 
-                    <ion-item  class="item udlapp-item agendaItem" ng-repeat="agendaItem in value | orderBy: 'date':true" href="#/app/agendaevents/{{agendaItem.id}}">
+                    <ion-item  class="item udlapp-item agendaItem" ng-repeat="agendaItem in value | orderBy: 'eventDate': false" href="#/app/agendaevents/{{agendaItem._id}}">
 
                         <h2>{{agendaItem.title}}</h2>
                         <div>{{agendaItem.location}}</div>

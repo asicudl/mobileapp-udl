@@ -1,17 +1,21 @@
 angular.module('starter.agendaevents')  
-    .controller('AgendaEventsCtrl',['$scope','$ionicModal','$interval','AgendaEventsService','$location','$stateParams', function($scope, $ionicModal, $interval,AgendaEventsService,$location,$stateParams) {
+    .controller('AgendaEventsCtrl',['$scope','$ionicPopup','$ionicListDelegate','$ionicLoading','$timeout','ActivityService','AgendaService','I18nService','$stateParams','_','$location','$filter','$timeout','$q','$rootScope',function($scope, $ionicPopup,$ionicListDelegate,$ionicLoading, $timeout,ActivityService,AgendaService,I18nService,$stateParams,_,$location,$filter,$timeout,$q,$rootScope) {
     
     $scope.title = "Activitats"; 
     $scope.fullEvents = false;
-    $scope.firstIndex = -1;
-    $scope.secIndex = 0;
-    $scope.events  = [];
     $scope.eventsList = [];
     $scope.agendaList = [];
     var changeEvents = {};
-    
+        
+        
+        
     $scope.$on('$ionicView.enter', function() {
         //Load the new messages
+        if ($scope.agendaInitialized && $location.$$url === '/app/agendaevents'){
+            $scope.refreshItems();
+        }
+        
+        
         if ($location.$$url === '/app/agendaevents'){
             var expandButton = { 'text' : 'Totes', 'onclick' : function () {
                     if ($scope.fullEvents){
@@ -34,30 +38,50 @@ angular.module('starter.agendaevents')
     })
     
     $scope.initList = function (){
-        $scope.eventsList  = AgendaEventsService.getEvents();
-        $scope.agendaList = AgendaEventsService.getAgendaItems();
+        var initialized = $q.defer();
         
-        if ($scope.events.length > 1){
-            $scope.secIndex = 1;
-        }
+        $scope.eventsList  = ActivityService.getEvents();
         
+        AgendaService.getAgendaItems().then(function (messages){
+            $scope.agendaList= messages;//Is the second promise return parameter
+            initialized.resolve();
+            $scope.agendaInitialized = true;
+            $scope.refreshItems();
+        }).catch (function (error){
+            //$scope.showAlert (rb.ctrl_while_stor, $scope.commonSolution);
+            initialize.reject (); //Not necessary to show an specific code
+        }).finally (function (){
+            $ionicLoading.hide();  
+        });
+        
+        return initialized.promise;
     };
     
     $scope.initEvent = function (){
-        
-        //In the case we access directly from event 
-        if ($scope.agendaList===undefined || $scope.agendaList.length <= 0){
-            $scope.initList();
-        }
-        
-        //Look for the agenda Event
-        for (var i = 0; i < $scope.agendaList.length; i++){
-            if ($scope.agendaList[i].id ===  $stateParams.agendaEventId){
-                $scope.currentEvent = $scope.agendaList [i];
-                break;
-            }
-        }
+            $scope.initList().then (function (){
+                    $scope.currentEvent = _.findWhere($scope.agendaList,{_id: $stateParams.agendaEventId});
+            });
+      
     };
+        
+    $scope.refreshItems = function (){
+
+            if ($rootScope.routeToServicesNotAvailable){
+                    $scope.$broadcast('scroll.refreshComplete'); 
+            }else{
+                AgendaService.retrieveNewItems().then (function (numItems){
+                    $scope.newItems = numItems;
+                }).catch (function (error){
+                    if (error !== AgendaService.errorCodes.ALREADY_RETRIEVING){
+                        //$scope.showRefreshListError();
+                        $rootScope.routeToServicesNotAvailable = true;
+                    }
+                }).finally(function (){
+                    $scope.$broadcast('scroll.refreshComplete'); 
+                });
+            }
+        };    
+        
 
 }]);
 

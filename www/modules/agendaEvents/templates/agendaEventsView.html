@@ -16,8 +16,9 @@
             
         </div>
         <div class="item item-body">
-            <p>{{currentEvent.description}}</p>
-           <p>
+            <div ng-bind-html="currentEvent.content"></div>
+           
+            <p>
                <a href="#" class="subdued">Veure al web</a>
            </p>
        </div>
