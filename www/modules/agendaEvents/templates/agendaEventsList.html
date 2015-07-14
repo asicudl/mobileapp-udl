@@ -1,6 +1,11 @@
 
 <ion-view class="udlapp-background" view-title="{{title}}" ng-init="initList()" >
       <ion-content>
+          <ion-refresher
+                         pulling-text="{{pullText}}"
+                         on-refresh="refreshItems()">
+          </ion-refresher>
+
           <div ng-hide="fullEvents" >
             <ion-slide-box ng-hide="fullEvents"  does-continue="true" auto-play="true" slide-interval="7500">
                 <ion-slide ng-repeat="event in eventsList" >
@@ -36,14 +41,14 @@
        
         <div>
             <div ng-hide="emptyList()" >
-                <ion-list can-swipe="true" show-delete="false" ng-repeat="(key, value) in agendaList  | groupBy: 'eventDay'  |orderBy: 'eventDate':false " class="calendarList"> 
+                <ion-list can-swipe="true" show-delete="false" ng-repeat="(key, value) in agendaList  | groupBy: 'eventDay._d'  | orderBy: 'eventDate._d' : true " class="calendarList"> 
 
                     <div ng-show="value[0]" class="date">
                             <span class="dayOfWeek">{{value[0].dayOfWeek}}</span>
                             <span class="dayMonth">{{value[0].dayMonth}}</span> 
                     </div>
 
-                    <ion-item  class="item udlapp-item agendaItem" ng-repeat="agendaItem in value | orderBy: 'eventDate': false" href="#/app/agendaevents/{{agendaItem._id}}">
+                    <ion-item  class="item udlapp-item agendaItem" ng-repeat="agendaItem in value | orderBy: 'hour'  : false" href="#/app/agendaevents/{{agendaItem._id}}">
 
                         <h2>{{agendaItem.title}}</h2>
                         <div>{{agendaItem.location}}</div>

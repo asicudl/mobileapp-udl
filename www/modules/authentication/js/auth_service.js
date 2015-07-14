@@ -173,10 +173,10 @@ angular.module('starter.auth', ['underscore']).factory('AuthService',['$http','$
                             window.sessionStorage.apiToken = data.token;
                             auth.authStatus.apiToken.resolve(true);
                         }
-                    ).catch (function(data) {
+                    ).catch (function(error) {
                         
                         //Auth error implies that suplied token is no valid anymore
-                        if (data.status === 400 || data.status === 401){
+                        if (error === 400 || error === 401){
                             delete window.sessionStorage.apiToken;
                             delete window.localStorage.token;
                             

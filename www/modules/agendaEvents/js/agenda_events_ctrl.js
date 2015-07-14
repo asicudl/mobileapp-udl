@@ -7,14 +7,11 @@ angular.module('starter.agendaevents')
     $scope.agendaList = [];
     var changeEvents = {};
         
-        
-        
     $scope.$on('$ionicView.enter', function() {
         //Load the new messages
         if ($scope.agendaInitialized && $location.$$url === '/app/agendaevents'){
             $scope.refreshItems();
         }
-        
         
         if ($location.$$url === '/app/agendaevents'){
             var expandButton = { 'text' : 'Totes', 'onclick' : function () {
@@ -42,10 +39,12 @@ angular.module('starter.agendaevents')
         
         $scope.eventsList  = ActivityService.getEvents();
         
-        AgendaService.getAgendaItems().then(function (messages){
-            $scope.agendaList= messages;//Is the second promise return parameter
+        AgendaService.getAgendaItems().then(function (agendaItems){
+            $scope.agendaList= agendaItems;//Is the second promise return parameter
             initialized.resolve();
             $scope.agendaInitialized = true;
+            
+            //In case we got updated the array of items provided by the service is another one. We must update it
             $scope.refreshItems();
         }).catch (function (error){
             //$scope.showAlert (rb.ctrl_while_stor, $scope.commonSolution);
@@ -69,8 +68,9 @@ angular.module('starter.agendaevents')
             if ($rootScope.routeToServicesNotAvailable){
                     $scope.$broadcast('scroll.refreshComplete'); 
             }else{
-                AgendaService.retrieveNewItems().then (function (numItems){
-                    $scope.newItems = numItems;
+                AgendaService.retrieveNewItems().then (function (agendaItems){
+                    $scope.agendaList = agendaItems;
+                    
                 }).catch (function (error){
                     if (error !== AgendaService.errorCodes.ALREADY_RETRIEVING){
                         //$scope.showRefreshListError();

@@ -10,7 +10,7 @@ angular.module('starter.agendaevents',[])
         'ERROR_WRITING_ITEM' : 11,
         'ERROR_MODIFYING_ITEM' : 13,
         'ERROR_CREATING_TABLE': 14,
-        'ERROR_DELETING_ALL_ITEMS': 15,
+        'ERROR_PURGING_ITEMS': 15,
 
         // Remote agenda error
         'ERROR_RETRIEVING_AGENDA_ITEMS': 20,
@@ -25,13 +25,13 @@ angular.module('starter.agendaevents',[])
         'SELECT_ITEMS' : 'SELECT * FROM agenda_items',
         'INSERT_ITEM' : 'INSERT INTO agenda_items (title, content, location, period, eventdate, state, id) VALUES (?,?,?,?,?,?,?)',
         'UPDATE_ITEM' : 'UPDATE agenda_items SET title=?, content=?, location=?, period=?, eventdate=?, state=? WHERE id=?',
-        'PURGE_ITEMS' :'DELETE FROM agenda_items WHERE eventdate < ? OR state=\'deleted\'',
+        'PURGE_ITEMS' :'DELETE FROM agenda_items WHERE  state=?',
         'DELETE_ALL_ITEMS' :'DELETE FROM agenda_items'
     };
     
     var agenda = this;
-    agenda.ready = $q.defer();
-    agenda.retrieving = false;
+    agndSrv.ready = $q.defer();
+    agndSrv.retrieving = false;
 
     var loadAll = function (success,failure){
         var defered = $q.defer();
@@ -56,6 +56,9 @@ angular.module('starter.agendaevents',[])
                                 content: row.content,
                                 location: row.location,
                                 period: row.period,
+                                state: row.state,
+                                eventDate: row.eventdate,
+                                hour: itemDate.format('HH:mm'),
                                 eventDay: itemDate.startOf('day'),
                                 dayMonth: itemDate.format('D MMM'),
                                 dayOfWeek: itemDate.format ('dddd')
@@ -115,19 +118,22 @@ angular.module('starter.agendaevents',[])
             factoryObject.getAgendaItems().then (function (){
                 
                 //Look if already exists, so update it
-                var foundItem = _.findWhere(agenda.agendaItems,{_id: agendaItem._id});
+                var foundItem = _.findWhere(agndSrv.agendaItems,{_id: agendaItem._id});
                 
                 //Add the item into the array and save it to the db
-                agenda.saveItem (agendaItem, (foundItem===undefined)).then (function (item){
-                    var itemDate = moment(item.eventdate);
+                agndSrv.saveItem (agendaItem, (foundItem===undefined)).then (function (item){
+                    var itemDate = moment(item.eventDate);
                     
                     item.dayMonth =  itemDate.format('D MMM');
                     item.dayOfWeek = itemDate.format ('dddd');
+                    item.hour = itemDate.format('HH:mm');
                     item.eventDay =  itemDate.startOf('day');
+                    
+                    
                     if (foundItem!==undefined){
                         angular.extend (foundItem,item);
-                    }else{
-                        agenda.agendaItems.unshift (item);   
+                    }else if (item.state === 'active') {
+                        agndSrv.agendaItems.unshift (item);   
                     }
                         
                      
@@ -159,40 +165,40 @@ angular.module('starter.agendaevents',[])
                     tx.executeSql(queries.CREATE_TABLE, [], 
                                   function (tx,res) {
                         console.log (agendaDef.name + ' initialized');
-                        agenda.ready.resolve();
+                        agndSrv.ready.resolve();
                     },
                                   function (tx,err){
                         console.log ('Error creating the table' + err.message);
-                        agenda.ready.reject (errorCodes.ERROR_CREATING_TABLE);
+                        agndSrv.ready.reject (errorCodes.ERROR_CREATING_TABLE);
                     }
                                  );
                 },
                                function (txerror){
                     console.log ('Error getting the transaction for creting table' + txerror.message);    
-                    agenda.ready.reject (errorCodes.ERROR_CREATING_TABLE);
+                    agndSrv.ready.reject (errorCodes.ERROR_CREATING_TABLE);
                 });
             }).catch (function (error){
-                agenda.ready.reject (errorCodes.ERROR_CREATING_TABLE);
+                agndSrv.ready.reject (errorCodes.ERROR_CREATING_TABLE);
             });
         },
 
         isReady : function (){
-            return agenda.ready.promise;   
+            return agndSrv.ready.promise;   
         },
 
         //get all agenda items from db
         getAgendaItems: function () {
             var defered =  $q.defer();
-            if (agenda.agendaItems === undefined){
+            if (agndSrv.agendaItems === undefined){
                 loadAll().then (function (agendaItems){
-                    agenda.agendaItems = agendaItems;
-                    defered.resolve(agenda.agendaItems);
+                    agndSrv.agendaItems = agendaItems;
+                    defered.resolve(agndSrv.agendaItems);
                 }).catch (function (error){
                     console.log ('Error retrieving agenda items: ' + error);
                     defered.reject(error);
                 });
             }else{
-                defered.resolve(agenda.agendaItems);  
+                defered.resolve(agndSrv.agendaItems);  
             }
             return defered.promise;
         },
@@ -214,13 +220,13 @@ angular.module('starter.agendaevents',[])
 
         //Look at the server for new messages
         retrieveNewItems: function (isRetry) {
-            var numAgendaItems = $q.defer();
+            var updatedAgendaItems = $q.defer();
 
             //First prevent executing more than one retrieves 
-            if (agenda.retrieving) {
-                q.reject (errorCodes.ALREADY_RETRIEVING);
+            if (agndSrv.retrieving) {
+                updatedAgendaItems.reject (errorCodes.ALREADY_RETRIEVING);
             }else{
-                agenda.retrieving = true;
+                agndSrv.retrieving = true;
 
                 var lastDate = window.localStorage['lastAgendaDate'];
                 var lastDateParam;
@@ -232,26 +238,40 @@ angular.module('starter.agendaevents',[])
                 $http.post (agendaConfig.agenda_api_url + agendaConfig.agendaEP, lastDateParam)
                     .success(function (data){
                     var agendaInfo = data;
+                    var allAdds = [];
                     
                     for (agendaIdx in agendaInfo.agendaItems){
-                        agenda.add (agendaInfo.agendaItems[agendaIdx]);
+                        allAdds.push (agndSrv.add (agendaInfo.agendaItems[agendaIdx]));
+                    }
+                    
+                    //If there are changes just remove the discarded ones and update the list
+                    if (allAdds.length > 0){
+                        $q.all (allAdds).then (function(){
+                            window.localStorage.lastAgendaDate = agendaInfo.currentDate;
+                            agndSrv.retrieving = false;
+
+                            factoryObject.purgeOld().then (function (){
+                                updatedAgendaItems.resolve (agndSrv.agendaItems)
+                            }).
+                            catch (function (error){
+                                updatedAgendaItems.reject (errorCodes.ERROR_PURGING_ITEMS);
+                            });
+                        });
+                    }else{
+                        window.localStorage.lastAgendaDate = agendaInfo.currentDate;
+                        agndSrv.retrieving = false;
+                        updatedAgendaItems.resolve (agndSrv.agendaItems);
                     }
 
-                    window.localStorage['lastAgendaDate'] = agendaInfo.currentDate;
-                    agenda.retrieving = false;
-
-                    var agendaNum = agendaInfo.agendaItems ? agendaInfo.agendaItems.length : 0;
-                    numAgendaItems.resolve(agendaNum);
-
                 }).error (function (status){
-                    numAgendaItems.reject(errorCodes.ERROR_RETRIEVING_ITEMS);
-                    agenda.retrieving = false;
+                    updatedAgendaItems.reject(errorCodes.ERROR_RETRIEVING_ITEMS);
+                    agndSrv.retrieving = false;
                 });
 
                 
             }
 
-            return numAgendaItems.promise;
+            return updatedAgendaItems.promise;
         },
                 
         purgeOld: function () {
@@ -260,33 +280,29 @@ angular.module('starter.agendaevents',[])
             DBService.getDb().then(function (db){
                 db.transaction(
                     function(tx) {
-                        tx.executeSql (queries.PURGE_ALL,[new Date()],
+                        tx.executeSql (queries.PURGE_ITEMS,['deleted'],
                                        function(tx,res){ //Deletion success
                             
-                            agenda.agedaItems = _.reject(agenda.agendaItems, function (item){
-                                return item.state==='deleted';   
+                            agndSrv.agendaItems = _.reject(agndSrv.agendaItems,function (item) {
+                                return (item.state === 'deleted');
                             });
-                            
-                            if (window.localStorage.lastAgendaDate) {
-                                delete window.localStorage.lastAgendaDate;   
-                            }
                             
                             deleted.resolve();
                             $rootScope.$apply ();
                         },
-                                       function (tx,error){ //Deletion error
+                        function (tx,error){ //Deletion error
                             console.log ('Error purgin  agenda items: ' + error.message);
-                            deleted.reject(errorCodes.ERROR_DELETING_ALL_ITEMS);
+                            deleted.reject(errorCodes.ERROR_PURGING_ITEMS);
                         }
                             );
                     },
                     function (txerror){
                         console.log ('Error getting a transaction to purge all messages: ' + txerror.message);
-                        deleted.reject(errorCodes.ERROR_DELETING_ALL_ITEMS);
+                        deleted.reject(errorCodes.ERROR_PURGING_ITEMS);
                     }
                 );
             }).catch (function (error){
-                deleted.reject(errorCodes.ERROR_DELETING_ALL_ITEMS);
+                deleted.reject(errorCodes.ERROR_PURGING_ITEMS);
             });
 
             return deleted.promise;
