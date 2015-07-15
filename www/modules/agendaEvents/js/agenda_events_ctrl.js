@@ -8,7 +8,7 @@ angular.module('starter.agendaevents')
     var changeEvents = {};
         
     $scope.$on('$ionicView.enter', function() {
-        //Load the new messages
+        //Load the new items
         if ($scope.agendaInitialized && $location.$$url === '/app/agendaevents'){
             $scope.refreshItems();
         }
@@ -37,13 +37,14 @@ angular.module('starter.agendaevents')
     $scope.initList = function (){
         var initialized = $q.defer();
         
-        $scope.eventsList  = ActivityService.getEvents();
-        
-        AgendaService.getAgendaItems().then(function (agendaItems){
-            $scope.agendaList= agendaItems;//Is the second promise return parameter
+        $q.all ([ActivityService.getActivityItems(),AgendaService.getAgendaItems()]).then(function (results){
+
+            $scope.eventsList = results[0]; 
+            $scope.agendaList= results[1]; 
+            
             initialized.resolve();
             $scope.agendaInitialized = true;
-            
+
             //In case we got updated the array of items provided by the service is another one. We must update it
             $scope.refreshItems();
         }).catch (function (error){
@@ -56,11 +57,19 @@ angular.module('starter.agendaevents')
         return initialized.promise;
     };
     
-    $scope.initEvent = function (){
+    $scope.initAgendaEvent = function (){
             $scope.initList().then (function (){
                     $scope.currentEvent = _.findWhere($scope.agendaList,{_id: $stateParams.agendaEventId});
             });
       
+    };
+        
+        
+    $scope.initActivityEvent = function (){
+            $scope.initList().then (function (){
+                $scope.currentActivity = _.findWhere($scope.activityList,{_id: $stateParams.activityEventId});
+            });
+
     };
         
     $scope.refreshItems = function (){
@@ -68,10 +77,12 @@ angular.module('starter.agendaevents')
             if ($rootScope.routeToServicesNotAvailable){
                     $scope.$broadcast('scroll.refreshComplete'); 
             }else{
-                AgendaService.retrieveNewItems().then (function (agendaItems){
-                    $scope.agendaList = agendaItems;
+                $q.all ([ActivityService.retrieveNewItems(),AgendaService.retrieveNewItems()]).then(function (results){
+                    $scope.eventsList = results[0]; 
+                    $scope.agendaList= results[1]; 
                     
                 }).catch (function (error){
+                    //The error code is the same so just needed one check
                     if (error !== AgendaService.errorCodes.ALREADY_RETRIEVING){
                         //$scope.showRefreshListError();
                         $rootScope.routeToServicesNotAvailable = true;
@@ -81,7 +92,6 @@ angular.module('starter.agendaevents')
                 });
             }
         };    
-        
 
 }]);
 

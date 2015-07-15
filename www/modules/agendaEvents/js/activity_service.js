@@ -1,4 +1,4 @@
-angular.module('starter.agendaevents',[])
+angular.module('starter.agendaevents')
     .factory('ActivityService',function (AppConfigService, $rootScope, $q, DBService, $http) {
 
     var activityConfig = {};
@@ -21,11 +21,11 @@ angular.module('starter.agendaevents',[])
     };
 
     var queries = {
-        'CREATE_TABLE' : 'CREATE TABLE IF NOT EXISTS activity_items (id text primary key, title text, content text, location text,period text, startdate date,duedate date,published boolean,image mediumtext,eventurl text)',
+        'CREATE_TABLE' : 'CREATE TABLE IF NOT EXISTS activity_items (id text primary key, title text, content text, location text,period text, startdate date,duedate date,published boolean,state text,image mediumtext,eventurl text)',
         'SELECT_ITEMS' : 'SELECT * FROM activity_items',
-        'INSERT_ITEM' : 'INSERT INTO activity_items (title, content, location, period, startdate, duedate, published, image, eventurl, id) VALUES (?,?,?,?,?,?,?,?,?,?)',
-        'UPDATE_ITEM' : 'UPDATE activity_items SET title=?, content=?, location=?, period=?, startdate=?, duedate=?, published=?,image=?,eventurl=? WHERE id=?',
-        'PURGE_ITEMS' :'DELETE FROM activity_items WHERE  publised=?',
+        'INSERT_ITEM' : 'INSERT INTO activity_items (title, content, location, period, startdate, duedate, published, image, eventurl,state, id) VALUES (?,?,?,?,?,?,?,?,?,?,?)',
+        'UPDATE_ITEM' : 'UPDATE activity_items SET title=?, content=?, location=?, period=?, startdate=?, duedate=?, published=?,image=?,eventurl=?,state=? WHERE id=?',
+        'PURGE_ITEMS' :'DELETE FROM activity_items WHERE state=?',
         'DELETE_ALL_ITEMS' :'DELETE FROM activity_items'
     };
 
@@ -56,6 +56,7 @@ angular.module('starter.agendaevents',[])
                                 content: row.content,
                                 location: row.location,
                                 period: row.period,
+                                state: row.state,
                                 published: row.published,
                                 startDate: row.startDate,
                                 dueDate: row.dueDateDate,
@@ -92,7 +93,7 @@ angular.module('starter.agendaevents',[])
 
         DBService.getDb().then (function (db){
             db.transaction(function(tx) {
-                tx.executeSql(create ? queries.INSERT_ITEM : queries.UPDATE_ITEM , [item.title, item.content, item.location,item.period, item.eventDate,  item.state, item._id ], 
+                tx.executeSql(create ? queries.INSERT_ITEM : queries.UPDATE_ITEM , [item.title, item.content, item.location,item.period, item.startDate,item.dueDate,item.published,item.image,item.eventURL, item.state, item._id ], 
                               function (tx,res) {
                     defered.resolve (item);
                 },

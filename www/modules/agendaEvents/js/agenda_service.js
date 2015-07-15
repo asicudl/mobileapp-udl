@@ -29,7 +29,7 @@ angular.module('starter.agendaevents',[])
         'DELETE_ALL_ITEMS' :'DELETE FROM agenda_items'
     };
     
-    var agenda = this;
+    var agndSrv = this;
     agndSrv.ready = $q.defer();
     agndSrv.retrieving = false;
 
