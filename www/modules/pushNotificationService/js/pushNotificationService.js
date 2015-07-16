@@ -78,15 +78,15 @@ angular.module('starter.pushnotification', [])
                     var device = window.localStorage['device'];
 
                     //We don't use the real username and password for authentication
-                    pushConfig.android.variantID =  username + ';;' + device;
-                    pushConfig.android.variantSecret = token; 
+                    pushConfig.ios.variantID = pushConfig.android.variantID =  username + ';;' + device;
+                    pushConfig.ios.variantSecret = pushConfig.android.variantSecret = token;
                     pushConfig.alias = username;
 
                     // We delegate the registration to the cordova plugin ...
                     push.register(onNotification, successRegisterHandler, errorRegisterHandler, pushConfig);
 
                 }catch (err) {
-                    console.log ('Push service undefined or invalid, can\'t register: ' + err);        
+                    console.log ('Push service undefined or invalid, can\'t register: ' + err);
                     //Something went wrong
                     setRegistrationState (registrationState.REGISTRATION_FAILED);
                     registered.reject(errorCodes.ERROR_SETTING_UP_REGISTRATION);
