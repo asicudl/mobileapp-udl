@@ -11,6 +11,7 @@ angular.module('starter.agendaevents')
         //Load the new items
         if ($scope.agendaInitialized && $location.$$url === '/app/agendaevents'){
             $scope.refreshItems();
+            
         }
         
         if ($location.$$url === '/app/agendaevents'){
@@ -25,9 +26,9 @@ angular.module('starter.agendaevents')
 
                 }
             };
-                                
             $scope.$parent.extraButtons = [expandButton];
         }
+        
     });
     
     $scope.$on('$stateChangeStart', function() {
@@ -56,6 +57,7 @@ angular.module('starter.agendaevents')
         
         return initialized.promise;
     };
+        
     
     $scope.initAgendaEvent = function (){
             $scope.initList().then (function (){
@@ -67,7 +69,7 @@ angular.module('starter.agendaevents')
         
     $scope.initActivityEvent = function (){
             $scope.initList().then (function (){
-                $scope.currentActivity = _.findWhere($scope.activityList,{_id: $stateParams.activityEventId});
+                $scope.currentActivity = _.findWhere($scope.eventsList,{_id: $stateParams.activityEventId});
             });
 
     };
@@ -91,7 +93,11 @@ angular.module('starter.agendaevents')
                     $scope.$broadcast('scroll.refreshComplete'); 
                 });
             }
-        };    
+        }; 
+        
+        $scope.openExternalURL = function(url){
+            navigator.app.loadUrl(url, {openExternal: true});
+        };
 
 }]);
 

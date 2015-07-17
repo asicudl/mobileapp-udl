@@ -24,12 +24,33 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ededed', end
 
 }
 .udlapp-item h2{
-    font-size: 1.2em;
+    display:block;
+    font-size: 1.1em;
 }
+
 
 .udlapp-item h2.new, .udlapp-item h2.unread{
     font-weight: bolder
 }
+
+.udlapp-item p.secondaryInformation{
+    text-transform: uppercase;
+}
+
+.udlapp-item p {
+    white-space: pre-line;
+}
+
+.udlapp-item p.otherInformation{
+    font-size: 0.9em;
+}
+
+.udlapp-item p.title{
+    display:block;
+    font-size: 1.1em;
+    margin-bottom: 0.5em; 
+}
+
 
 .udlapp .bar{
     background: none;

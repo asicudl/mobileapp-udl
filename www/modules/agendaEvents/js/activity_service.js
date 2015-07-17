@@ -22,7 +22,7 @@ angular.module('starter.agendaevents')
 
     var queries = {
         'CREATE_TABLE' : 'CREATE TABLE IF NOT EXISTS activity_items (id text primary key, title text, content text, location text,period text, startdate date,duedate date,published boolean,state text,image mediumtext,eventurl text)',
-        'SELECT_ITEMS' : 'SELECT * FROM activity_items',
+        'SELECT_ITEMS' : 'SELECT * FROM activity_items ORDER BY startdate',
         'INSERT_ITEM' : 'INSERT INTO activity_items (title, content, location, period, startdate, duedate, published, image, eventurl,state, id) VALUES (?,?,?,?,?,?,?,?,?,?,?)',
         'UPDATE_ITEM' : 'UPDATE activity_items SET title=?, content=?, location=?, period=?, startdate=?, duedate=?, published=?,image=?,eventurl=?,state=? WHERE id=?',
         'PURGE_ITEMS' :'DELETE FROM activity_items WHERE state=?',
@@ -66,7 +66,6 @@ angular.module('starter.agendaevents')
                                 eventDay: itemDate.startOf('day'),
                                 dayMonth: itemDate.format('D MMM'),
                                 dayOfWeek: itemDate.format ('dddd')
-
                             };
 
                             activityItems.unshift (item);
@@ -130,6 +129,7 @@ angular.module('starter.agendaevents')
 
                     item.dayMonth =  itemDate.format('D MMM');
                     item.dayOfWeek = itemDate.format ('dddd');
+                   
                     item.hour = itemDate.format('HH:mm');
                     item.eventDay =  itemDate.startOf('day');
 

@@ -22,7 +22,7 @@ angular.module('starter.agendaevents',[])
 
     var queries = {
         'CREATE_TABLE' : 'CREATE TABLE IF NOT EXISTS agenda_items (id text primary key, title text, content text, location text,period text, eventdate date,state text)',
-        'SELECT_ITEMS' : 'SELECT * FROM agenda_items',
+        'SELECT_ITEMS' : 'SELECT * FROM agenda_items order by eventdate',
         'INSERT_ITEM' : 'INSERT INTO agenda_items (title, content, location, period, eventdate, state, id) VALUES (?,?,?,?,?,?,?)',
         'UPDATE_ITEM' : 'UPDATE agenda_items SET title=?, content=?, location=?, period=?, eventdate=?, state=? WHERE id=?',
         'PURGE_ITEMS' :'DELETE FROM agenda_items WHERE  state=?',
@@ -59,10 +59,10 @@ angular.module('starter.agendaevents',[])
                                 state: row.state,
                                 eventDate: row.eventdate,
                                 hour: itemDate.format('HH:mm'),
-                                eventDay: itemDate.startOf('day'),
                                 dayMonth: itemDate.format('D MMM'),
-                                dayOfWeek: itemDate.format ('dddd')
-                                
+                                dayOfWeek: itemDate.format ('dddd'),
+                                numDayOfWeek: itemDate.format('E'),
+                                eventDayStamp: itemDate.startOf('day').format ('x'),
                             };
 
                             agendaItems.unshift (item);
@@ -126,16 +126,16 @@ angular.module('starter.agendaevents',[])
                     
                     item.dayMonth =  itemDate.format('D MMM');
                     item.dayOfWeek = itemDate.format ('dddd');
+                    item.numDayOfWeek = itemDate.format('E');
+
                     item.hour = itemDate.format('HH:mm');
-                    item.eventDay =  itemDate.startOf('day');
-                    
+                    item.eventDayStamp = temDate.startOf('day').format ('x');
                     
                     if (foundItem!==undefined){
                         angular.extend (foundItem,item);
                     }else if (item.state === 'active') {
                         agndSrv.agendaItems.unshift (item);   
                     }
-                        
                      
                     added.resolve();
                 }).catch (function (error){

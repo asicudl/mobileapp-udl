@@ -73,6 +73,16 @@ angular.module('starter', ['ionic','ngCordova', 'starter.appcontroller','starter
     }
   })
   
+      .state('app.activityevent', {
+      url: "/activityevents/:activityEventId",
+      views: {
+          'menuContent': {
+              templateUrl: "modules/agendaEvents/templates/activityEventsView.html",
+              controller: "AgendaEventsCtrl"
+          }
+      }
+  })
+  
   .state('app.messages', {
     url: "/messages",
     views: {

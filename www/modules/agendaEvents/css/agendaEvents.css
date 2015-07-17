@@ -1,91 +1,27 @@
-@media (max-width: 500px) {
-
-    .eventItem{
-        width: 100%;
-        height: auto;
-        margin-left: auto;
-        margin-right: auto;
-        display: block;
+@media (max-width: 400px) {
+    .eventListItem.item-thumbnail-left > img:first-child{
+        max-width: 80px;   
     }
 
-    .eventItem img{
-        width: 100%;
-        height: auto;
-
+    .eventListItem.item-thumbnail-left{
+        padding-left: 100px;
     }
-
-    .eventItem .caption h3{
-        color: #830051;
-        font-size: 1.2em;
-    }
-
-    .eventItem .caption p{
-        color: #111;
-        font-size: 1em;
-    }
-
-    .eventItem .caption{
-        position: absolute;
-        float:left;
-        bottom: 0.38em;
-        width: 100%;
-        color: #FFF;
-        background-color: #FEFEFE;
-        opacity: 0.85;
-        padding: 3px;
-
-    }
-
-    .eventItem .description {
-        display: none;
-    }
+    
 
 }
-
-@media (min-width: 500px) {
-
-    .eventItem{
-        width: 98%;
-        height: auto;
-        margin-left: auto;
-        margin-right: auto;
-        margin-bottom: 2em;
-        display: block;
+@media (min-width: 400px) {
+    .eventListItem.item-thumbnail-left > img:first-child{
+        max-width: 135px;   
     }
 
-    .eventItem img{
-        width: 35%;
-        height: auto;
-        display: inline-block;
-        vertical-align: top;
-        margin-top: 1em;
+    .eventListItem.item-thumbnail-left{
+        padding-left: 153px;
     }
-
-
-    .eventItem .caption{
-        display: inline-block;
-        padding: 0.5em;
-
-    }
-
-    .eventItem .caption h3{
-        color: #111;
-        font-size: 1.3em;
-    }
-
-    .eventItem .content{
-        display: inline-block;
-        width: 60%;
-        padding: 1em;
-    }
-
 }
-
 .eventItem .caption a{
     text-decoration: inherit;
     color:inherit;
 }
-
 
 
 .agendaEvent.bar-header{
@@ -93,12 +29,14 @@
 }
 
 
-.eventListItem.item-thumbnail-left > img:first-child{
-    max-width: 135px;   
+
+
+.eventListItem.small.item-thumbnail-left > img:first-child{
+    max-width: 80px;   
 }
 
-.eventListItem.item-thumbnail-left{
-    padding-left: 153px;
+.eventListItem.small.item-thumbnail-left{
+    padding-left: 100px;
 }
 
 .allEvents{
@@ -106,6 +44,7 @@
     top: 3px;
     right: 3px;
 }
+
 .calendarSeparator, .activitiesSeparator{
     margin-top: 1em;
     margin-bottom: 0.5em;
@@ -113,13 +52,7 @@
     padding-left: 0.5em;
     color: #830051;
 }
-.calendarList{
-    top: -40px;
-    position: relative;   
-}
-.calendarList > .list{
-    padding-top: 38px;
-}
+
 .date {
     width: 60px; 
     height: 60px; 
@@ -141,6 +74,83 @@
     right: 15px;
     z-index: 3;
 }
+
+.udlapp .date.udlapp-date-av{
+    position: absolute;
+    text-align: center;
+    border: none;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    background: none;
+    border-radius: 40px;
+    text-align: center;
+    color: #FAFAFA;
+    left: 10px;
+    top: 10px;
+    margin-top: 0px;
+    z-index: 3;   
+    
+}
+
+.udlapp .date.udlapp-date-av.btn_0 {
+    background:  #009688;
+}
+.udlapp .date.udlapp-date-av.btn_1 {
+    background:  #ff9800;
+    color: #222;
+}
+.udlapp .date.udlapp-date-av.btn_2{
+    background: #4caf50;
+}
+.udlapp .date.udlapp-date-av.btn_3{
+    background: #03a9f4;
+}
+.udlapp .date.udlapp-date-av.btn_4 {
+    background:  #cddc39;
+    color: #222;
+}
+.udlapp .date.udlapp-date-av.btn_5{
+    background: #ffeb3b;
+    color: #222;
+}
+.udlapp .date.udlapp-date-av.btn_6{
+    background: #9c27b0;
+}
+.udlapp .date.udlapp-date-av.btn_7 {
+    background:  #e91e63;
+}
+
+
+
+.agendaItem.btn_0 .item-content{
+    border-color:  #009688;
+}
+.agendaItem.btn_1 .item-content{
+    border-color:  #ff9800;
+    color: #222;
+}
+.agendaItem.btn_2 .item-content{
+    border-color: #4caf50;
+}
+.agendaItem.btn_3 .item-content{
+    border-color: #03a9f4;
+}
+.agendaItem.btn_4 .item-content{
+    border-color:  #cddc39;
+    color: #222;
+}
+.agendaItem.btn_5 .item-content{
+    border-color: #ffeb3b;
+    color: #222;
+}
+.agendaItem.btn_6 .item-content{
+    border-color: #9c27b0;
+}
+.agendaItem.btn_7 .item-content{
+    border-color:  #e91e63;
+}
+
 .date.left{
     left: 15px;
     margin-top:3px;
@@ -167,13 +177,78 @@
     display: block;
     bottom: 0px;
     background: #830051; 
-    font-size: 1em; font-weight: bold; color: #fff; text-transform: uppercase; 	
+    font-size: 1em; font-weight: bold; text-transform: uppercase; 	
     border-radius: 0px 0px 40px 40px;
 
 }
 
-.agendaItem.item-complex .item-content{
+.date.udlapp-date-av .dayMonth{
+    background: none;   
+}
+
+.dateText {
+    display: inline-block;
+    position: absolute;
+    right: 20px;
+    top: 3px;
+    text-transform: uppercase; 
+}
+
+.dateText.btn_1 span{
+    color:  #ff9800;
+    
+}
+
+.dateText.btn_2 span{
+    color:   #4caf50;
+}
+
+.dateText.btn_3 span{
+    color:   #03a9f4;
+}
+
+.dateText.btn_4 span{
+    color:   #cddc39;
+}
+
+.dateText.btn_5 span{
+    color:   #4caf50;
+}
+
+.dateText.btn_6 span{
+    color:  #ffeb3b;
+}
+
+.dateText.btn_7 span{
+    color:    #e91e63;
+}
+
+.calendarList{
+    top: -15px;
+    position: relative;   
+}
+
+.calendarList > .list{
+    padding-top: 20px;
+}
+
+.udlapp-item.agendaItem{
+    padding: 0px;
+    border-top-width: 2px
+}
+
+.agendaItem .item-content{
     border-width: 0px 0px 0px 5px;
     border-color: #830051;
     border-style: solid;
+    padding: 0px;
 }
+
+.agendaItem .agendaItemDescription{
+    padding-top:10px;
+    padding-left: 10px;
+}
+
+
+
+

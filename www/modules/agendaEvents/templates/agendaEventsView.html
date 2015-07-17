@@ -1,33 +1,25 @@
 <ion-view  class="udlapp-background" view-title="<i class='icon ion-calendar'></i> Agenda Event" ng-init="initAgendaEvent()">
   <ion-content>
-   <div class="list card">
-        <div class="item">
+   <div class="card">
 
-            <div class="date left">
-                <span class="dayOfWeek">{{currentEvent.dayOfWeek}}</span>
-                <span class="dayMonth">{{currentEvent.dayMonth}}</span> 
+           
+       
+       <div class="item udlapp-item small item-thumbnail-left">
+                <div class="date udlapp-date-av btn_{{currentEvent.numDayOfWeek}}">
+                    <span class="dayOfWeek">{{currentEvent.dayOfWeek}}</span>
+                    <span class="dayMonth">{{currentEvent.dayMonth}}</span>
+                </div>
+                
+                <p class="title">{{currentEvent.title}}</p>
+                <p class="secondaryInfo"><i class="icon ion-pin"></i> {{currentEvent.location}}</p>
+                <p class="secondaryInfo"><i class="icon ion-clock"></i>  {{currentEvent.hour}}</p> 
             </div>
+           
 
-            <div class="eventInfo">
-                <h3>{{currentEvent.title}}</h3>
-                <p>{{currentEvent.location}}</p>
-                <p>{{currentEvent.hour}}</p>
-            </div>
-            
-        </div>
         <div class="item item-body">
             <div ng-bind-html="currentEvent.content"></div>
-           
-            <p>
-               <a href="#" class="subdued">Veure al web</a>
-           </p>
        </div>
-       <div class="item tabs tabs-secondary tabs-icon-left">
-            <a class="tab-item" href="#">
-              <i class="icon ion-share"></i>
-              Share
-            </a>
-        </div>
+       
       </div>    
   </ion-content>
 </ion-view>
