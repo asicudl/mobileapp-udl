@@ -25,7 +25,7 @@ angular.module('starter.agendaevents',[])
         'SELECT_ITEMS' : 'SELECT * FROM agenda_items order by eventdate',
         'INSERT_ITEM' : 'INSERT INTO agenda_items (title, content, location, period, eventdate, state, id) VALUES (?,?,?,?,?,?,?)',
         'UPDATE_ITEM' : 'UPDATE agenda_items SET title=?, content=?, location=?, period=?, eventdate=?, state=? WHERE id=?',
-        'PURGE_ITEMS' :'DELETE FROM agenda_items WHERE  state=?',
+        'PURGE_ITEMS' :'DELETE FROM agenda_items WHERE state=? and eventDate ',
         'DELETE_ALL_ITEMS' :'DELETE FROM agenda_items'
     };
     
@@ -129,7 +129,7 @@ angular.module('starter.agendaevents',[])
                     item.numDayOfWeek = itemDate.format('E');
 
                     item.hour = itemDate.format('HH:mm');
-                    item.eventDayStamp = temDate.startOf('day').format ('x');
+                    item.eventDayStamp = itemDate.startOf('day').format ('x');
                     
                     if (foundItem!==undefined){
                         angular.extend (foundItem,item);

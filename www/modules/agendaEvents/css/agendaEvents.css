@@ -28,9 +28,6 @@
     padding-bottom: 1em;
 }
 
-
-
-
 .eventListItem.small.item-thumbnail-left > img:first-child{
     max-width: 80px;   
 }
