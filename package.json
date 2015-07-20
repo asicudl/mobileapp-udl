@@ -17,7 +17,11 @@
   "cordovaPlugins": [
     "org.jboss.aerogear.cordova.push",
     "org.apache.cordova.device",
-    "com.ionic.keyboard"
+    "com.ionic.keyboard",
+    {
+      "locator": "https://github.com/EddyVerbruggen/SocialSharing-PhoneGap-Plugin.git",
+      "id": "nl.x-services.plugins.socialsharing"
+    }
   ],
   "cordovaPlatforms": [
     "android"

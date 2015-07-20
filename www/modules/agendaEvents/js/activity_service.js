@@ -64,8 +64,9 @@ angular.module('starter.agendaevents')
                                 eventURL: row.eventurl,
                                 hour: itemDate.format('HH:mm'),
                                 eventDay: itemDate.startOf('day'),
-                                dayMonth: itemDate.format('D MMM'),
-                                dayOfWeek: itemDate.format ('dddd')
+                                month: itemDate.month(),
+                                dayOfMonth: itemDate.format('D'),
+                                dayOfWeek: itemDate.isoWeekday()
                             };
 
                             activityItems.unshift (item);
@@ -127,8 +128,9 @@ angular.module('starter.agendaevents')
                 actService.saveItem (activityItem, (foundItem===undefined)).then (function (item){
                     var itemDate = moment(item.eventDate);
 
-                    item.dayMonth =  itemDate.format('D MMM');
-                    item.dayOfWeek = itemDate.format ('dddd');
+                    item.dayMonth =  itemDate.format('D');
+                    item.month = itemDate.month();
+                    item.dayOfWeek = itemDate.isoWeekday();
                    
                     item.hour = itemDate.format('HH:mm');
                     item.eventDay =  itemDate.startOf('day');

@@ -59,9 +59,9 @@ angular.module('starter.agendaevents',[])
                                 state: row.state,
                                 eventDate: row.eventdate,
                                 hour: itemDate.format('HH:mm'),
-                                dayMonth: itemDate.format('D MMM'),
-                                dayOfWeek: itemDate.format ('dddd'),
-                                numDayOfWeek: itemDate.format('E'),
+                                month: itemDate.month(),
+                                dayOfMonth: itemDate.format('D'),
+                                dayOfWeek: itemDate.isoWeekday(),
                                 eventDayStamp: itemDate.startOf('day').format ('x'),
                             };
 
@@ -124,9 +124,9 @@ angular.module('starter.agendaevents',[])
                 agndSrv.saveItem (agendaItem, (foundItem===undefined)).then (function (item){
                     var itemDate = moment(item.eventDate);
                     
-                    item.dayMonth =  itemDate.format('D MMM');
-                    item.dayOfWeek = itemDate.format ('dddd');
-                    item.numDayOfWeek = itemDate.format('E');
+                    item.dayMonth =  itemDate.format('D');
+                    item.dayOfWeek = itemDate.isoWeekday();
+                    item.month = itemDate.month();
 
                     item.hour = itemDate.format('HH:mm');
                     item.eventDayStamp = itemDate.startOf('day').format ('x');

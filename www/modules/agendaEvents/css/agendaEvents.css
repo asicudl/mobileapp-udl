@@ -1,20 +1,20 @@
 @media (max-width: 400px) {
-    .eventListItem.item-thumbnail-left > img:first-child{
+    .activityListItem.item-thumbnail-left > img:first-child{
         max-width: 80px;   
     }
 
-    .eventListItem.item-thumbnail-left{
+    .activityListItem.item-thumbnail-left{
         padding-left: 100px;
     }
     
 
 }
 @media (min-width: 400px) {
-    .eventListItem.item-thumbnail-left > img:first-child{
+    .activityListItem.item-thumbnail-left > img:first-child{
         max-width: 135px;   
     }
 
-    .eventListItem.item-thumbnail-left{
+    .activityListItem.item-thumbnail-left{
         padding-left: 153px;
     }
 }
@@ -28,11 +28,11 @@
     padding-bottom: 1em;
 }
 
-.eventListItem.small.item-thumbnail-left > img:first-child{
+.activityListItem.small.item-thumbnail-left > img:first-child{
     max-width: 80px;   
 }
 
-.eventListItem.small.item-thumbnail-left{
+.activityListItem.small.item-thumbnail-left{
     padding-left: 100px;
 }
 
@@ -174,7 +174,9 @@
     display: block;
     bottom: 0px;
     background: #830051; 
-    font-size: 1em; font-weight: bold; text-transform: uppercase; 	
+    font-size: 1em; 
+    font-weight: bold; 
+    text-transform: uppercase; 	
     border-radius: 0px 0px 40px 40px;
 
 }
@@ -188,7 +190,7 @@
     position: absolute;
     right: 20px;
     top: 3px;
-    text-transform: uppercase; 
+    white-space: nowrap;
 }
 
 .dateText.btn_1 span{
@@ -246,6 +248,27 @@
     padding-left: 10px;
 }
 
+.udlapp .udlapp-emptylist{
+    width: 100%;
+    position: absolute;
+    top: 60px;
+    ￼    font-size: 1.5em;
+    text-align: center;
+}
+
+.udlapp .udlapp-emptylist p{
+    width:100%;
+    text-align: center;
+    color: #D5D1D3;
+}
+
+.udlapp .udlapp-emptylist p i{
+    font-size: 2.5em;
+}
+
+.udlapp .udlapp-emptylist p span{
+    font-size: 1.5em;
+}
 
 
 

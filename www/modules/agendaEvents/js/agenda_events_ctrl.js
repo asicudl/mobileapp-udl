@@ -1,33 +1,35 @@
 angular.module('starter.agendaevents')  
-    .controller('AgendaEventsCtrl',['$scope','$ionicPopup','$ionicListDelegate','$ionicLoading','$timeout','ActivityService','AgendaService','I18nService','$stateParams','_','$location','$filter','$timeout','$q','$rootScope',function($scope, $ionicPopup,$ionicListDelegate,$ionicLoading, $timeout,ActivityService,AgendaService,I18nService,$stateParams,_,$location,$filter,$timeout,$q,$rootScope) {
+    .controller('AgendaEventsCtrl',['$scope','$ionicPopup','$ionicListDelegate','$ionicLoading','$timeout','ActivityService','AgendaService','I18nService','$stateParams','_','$location','$filter','$timeout','$q','$rootScope','$cordovaSocialSharing',function($scope, $ionicPopup,$ionicListDelegate,$ionicLoading, $timeout,ActivityService,AgendaService,I18nService,$stateParams,_,$location,$filter,$timeout,$q,$rootScope,$cordovaSocialSharing) {
 
-        $scope.title = "Activitats"; 
+        var LOADING_TMPLT= '<i class="ion-loading-c"></i> ';
         $scope.fullEvents = false;
-        $scope.eventsList = [];
+        $scope.activitiesList = [];
         $scope.agendaList = [];
         var changeEvents = {};
+        
+        $scope.pullText = '';
 
         $scope.$on('$ionicView.enter', function() {
             //Load the new items
-            if ($scope.messagesInitialized && $scope.agendaInitialized && $location.$$url === '/app/agendaevents'){
+            if ($scope.eventsViewInitialized && $location.$$url === '/app/agendaevents'){
                 $scope.refreshItems();
-
             }
-
+            
             if ($location.$$url === '/app/agendaevents'){
-                var expandButton = { 'text' : 'Totes', 'onclick' : function () {
+                $scope.initializeBundles().then (function () {
+                    var expandButton = { 'text' : $scope.rb.all_activities, 'onclick' : function () {
+                        if ($scope.fullEvents){
+                            this.text = $scope.rb.all_activities;
+                        }else{
+                            this.text = $scope.rb.collapse_activities;
+                        }
 
-                    if ($scope.fullEvents){
-                        this.text = 'Totes';
-                    }else{
-                        this.text = 'Recull';
+                        $scope.fullEvents= !$scope.fullEvents;    
+
                     }
-
-                    $scope.fullEvents= !$scope.fullEvents;    
-
-                }
-                                   };
-                $scope.$parent.extraButtons = [expandButton];
+                                       };
+                    $scope.$parent.extraButtons = [expandButton];
+                });
             }
 
         });
@@ -38,30 +40,34 @@ angular.module('starter.agendaevents')
 
         $scope.initList = function (){
             var initialized = $q.defer();
+            $scope.initializeBundles().then (function () {
+                $ionicLoading.show({template: LOADING_TMPLT +  $scope.rb.ctrl_agenda_initializing});   
+                
+                $q.all ([ActivityService.getActivityItems(),AgendaService.getAgendaItems()]).then(function (results){
 
-            $q.all ([ActivityService.getActivityItems(),AgendaService.getAgendaItems()]).then(function (results){
+                    $scope.activitiesList = results[0]; 
+                    $scope.agendaList= results[1]; 
 
-                $scope.eventsList = results[0]; 
-                $scope.agendaList= results[1]; 
+                    initialized.resolve();
+                    $scope.eventsViewInitialized = true;
 
-                initialized.resolve();
-                $scope.agendaInitialized = true;
-
-                //In case we got updated the array of items provided by the service is another one. We must update it
-                $scope.refreshItems();
-            }).catch (function (error){
-                //$scope.showAlert (rb.ctrl_while_stor, $scope.commonSolution);
-                initialize.reject (); //Not necessary to show an specific code
-            }).finally (function (){
-                $ionicLoading.hide();  
+                    //In case we got updated the array of items provided by the service is another one. We must update it
+                    $scope.refreshItems();
+                }).catch (function (error){
+                    //$scope.showAlert (rb.ctrl_while_stor, $scope.commonSolution);
+                    initialize.reject (); //Not necessary to show an specific code
+                }).finally (function (){
+                    $ionicLoading.hide();  
+                });
             });
-
+            
             return initialized.promise;
         };
 
 
         $scope.initAgendaEvent = function (){
-            $scope.initList().then (function (){
+            
+            $q.all([$scope.initializeBundles(), $scope.initList()]).then (function (){
                 $scope.currentEvent = _.findWhere($scope.agendaList,{_id: $stateParams.agendaEventId});
             });
 
@@ -69,8 +75,8 @@ angular.module('starter.agendaevents')
 
 
         $scope.initActivityEvent = function (){
-            $scope.initList().then (function (){
-                $scope.currentActivity = _.findWhere($scope.eventsList,{_id: $stateParams.activityEventId});
+            $q.all([$scope.initializeBundles(),$scope.initList()]).then (function (){
+                $scope.currentActivity = _.findWhere($scope.activitiesList,{_id: $stateParams.activityEventId});
             });
 
         };
@@ -81,7 +87,7 @@ angular.module('starter.agendaevents')
                 $scope.$broadcast('scroll.refreshComplete'); 
             }else{
                 $q.all ([ActivityService.retrieveNewItems(),AgendaService.retrieveNewItems()]).then(function (results){
-                    $scope.eventsList = results[0]; 
+                    $scope.activitiesList = results[0]; 
                     $scope.agendaList= results[1]; 
 
                 }).catch (function (error){
@@ -100,6 +106,11 @@ angular.module('starter.agendaevents')
         $scope.openExternalURL = function(url){
             navigator.app.loadUrl(url, {openExternal: true});
         };
+        
+        $scope.shareExternalURL = function(url){
+            $cordovaSocialSharing
+                .share($scope.rb.ag_share_message, $scope.rb.ag_share_subject, '' , url);
+        };
 
         $scope.initializeBundles = function(){
 
@@ -111,7 +122,14 @@ angular.module('starter.agendaevents')
                 $scope.pullText = resourceBundle['ag_list_pull'];
             }); 
         };
+        
+        $scope.emptyActivities = function (){
+            return ($scope.activitiesList === undefined || $scope.activitiesList.length === 0);
+        };
 
+        $scope.emptyAgenda = function (){
+            return ($scope.agendaList === undefined || $scope.agendaList.length === 0);
+        };
 
     }]);
 
