@@ -109,7 +109,7 @@ angular.module('starter.agendaevents')
         
         $scope.shareExternalURL = function(url){
             $cordovaSocialSharing
-                .share($scope.rb.ag_share_message, $scope.rb.ag_share_subject, '' , url);
+                .share($scope.rb.ag_share_message + ' ' + url , $scope.rb.ag_share_subject, '' , url);
         };
 
         $scope.initializeBundles = function(){
