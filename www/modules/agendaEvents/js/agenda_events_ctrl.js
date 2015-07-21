@@ -131,6 +131,13 @@ angular.module('starter.agendaevents')
             return ($scope.agendaList === undefined || $scope.agendaList.length === 0);
         };
 
-    }]);
+    }]).filter('hrefToJS', function ($sce, $sanitize) {
+    return function (text) {
+        var regex = /href="([\S]+)"/g;
+        var newString = $sanitize(text).replace(regex, "onclick=\"angular.element(this).scope().openExternalURL('$1');return false\" href=");
+        return $sce.trustAsHtml(newString);
+    }
+});
+
 
 

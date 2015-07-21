@@ -12,7 +12,7 @@
                 <p class="secondaryInfo"><i class="icon ion-clock"></i>  {{currentEvent.hour}}</p> 
             </div>
             <div class="item item-body">
-                <div ng-bind-html="currentEvent.content"></div>
+                <div ng-bind-html="currentEvent.content | hrefToJS"></div>
             </div>
         </div>
     </ion-content>
