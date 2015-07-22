@@ -21,11 +21,11 @@ angular.module('starter.agendaevents',[])
     };
 
     var queries = {
-        'CREATE_TABLE' : 'CREATE TABLE IF NOT EXISTS agenda_items (id text primary key, title text, content text, location text,period text, eventdate date,state text)',
+        'CREATE_TABLE' : 'CREATE TABLE IF NOT EXISTS agenda_items (id text primary key, title text, content text, location text,period text, eventdate datetime,state text)',
         'SELECT_ITEMS' : 'SELECT * FROM agenda_items order by eventdate',
         'INSERT_ITEM' : 'INSERT INTO agenda_items (title, content, location, period, eventdate, state, id) VALUES (?,?,?,?,?,?,?)',
         'UPDATE_ITEM' : 'UPDATE agenda_items SET title=?, content=?, location=?, period=?, eventdate=?, state=? WHERE id=?',
-        'PURGE_ITEMS' :'DELETE FROM agenda_items WHERE state=? and eventDate ',
+        'PURGE_ITEMS' :'DELETE FROM agenda_items WHERE state=? OR eventDate < ?',
         'DELETE_ALL_ITEMS' :'DELETE FROM agenda_items'
     };
     
@@ -244,24 +244,17 @@ angular.module('starter.agendaevents',[])
                         allAdds.push (agndSrv.add (agendaInfo.agendaItems[agendaIdx]));
                     }
                     
-                    //If there are changes just remove the discarded ones and update the list
-                    if (allAdds.length > 0){
-                        $q.all (allAdds).then (function(){
-                            window.localStorage.lastAgendaDate = agendaInfo.currentDate;
-                            agndSrv.retrieving = false;
-
-                            factoryObject.purgeOld().then (function (){
-                                updatedAgendaItems.resolve (agndSrv.agendaItems)
-                            }).
-                            catch (function (error){
-                                updatedAgendaItems.reject (errorCodes.ERROR_PURGING_ITEMS);
-                            });
-                        });
-                    }else{
+                    $q.all (allAdds).then (function(){
                         window.localStorage.lastAgendaDate = agendaInfo.currentDate;
                         agndSrv.retrieving = false;
-                        updatedAgendaItems.resolve (agndSrv.agendaItems);
-                    }
+
+                        factoryObject.purgeOld().then (function (){
+                            updatedAgendaItems.resolve (agndSrv.agendaItems)
+                        }).
+                        catch (function (error){
+                            updatedAgendaItems.reject (errorCodes.ERROR_PURGING_ITEMS);
+                        });
+                    });
 
                 }).error (function (status){
                     updatedAgendaItems.reject(errorCodes.ERROR_RETRIEVING_ITEMS);
@@ -277,14 +270,15 @@ angular.module('starter.agendaevents',[])
         purgeOld: function () {
             var deleted = $q.defer();
 
-            DBService.getDb().then(function (db){
+            DBService.getDb().then(function (db) {
                 db.transaction(
                     function(tx) {
-                        tx.executeSql (queries.PURGE_ITEMS,['deleted'],
+                        var today = moment().startOf('day').toISOString();
+                        tx.executeSql (queries.PURGE_ITEMS,['deleted',today],
                                        function(tx,res){ //Deletion success
                             
-                            agndSrv.agendaItems = _.reject(agndSrv.agendaItems,function (item) {
-                                return (item.state === 'deleted');
+                            agndSrv.agendaItems = _.reject(agndSrv.agendaItems, function (item) {
+                                return (item.state === 'deleted' || item.eventDate < today);
                             });
                             
                             deleted.resolve();

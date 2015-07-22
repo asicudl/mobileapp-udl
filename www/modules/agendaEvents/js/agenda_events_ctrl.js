@@ -5,13 +5,17 @@ angular.module('starter.agendaevents')
         $scope.fullEvents = false;
         $scope.activitiesList = [];
         $scope.agendaList = [];
+        $scope.waitForRefreshDelay = false;
+        
         var changeEvents = {};
         
         $scope.pullText = '';
 
         $scope.$on('$ionicView.enter', function() {
             //Load the new items
-            if ($scope.eventsViewInitialized && $location.$$url === '/app/agendaevents'){
+            
+            //In case we got updated the array of items provided by the service is another one. We must update it
+            if ($scope.eventsViewInitialized && $location.$$url === '/app/agendaevents' && !$scope.waitForRefreshDelay){
                 $scope.refreshItems();
             }
             
@@ -25,13 +29,12 @@ angular.module('starter.agendaevents')
                         }
 
                         $scope.fullEvents= !$scope.fullEvents;    
-
-                    }
-                                       };
+                        }
+                    };
+                    
                     $scope.$parent.extraButtons = [expandButton];
                 });
             }
-
         });
 
         $scope.$on('$stateChangeStart', function() {
@@ -52,7 +55,10 @@ angular.module('starter.agendaevents')
                     $scope.eventsViewInitialized = true;
 
                     //In case we got updated the array of items provided by the service is another one. We must update it
-                    $scope.refreshItems();
+                    if ($location.$$url === '/app/agendaevents' && !$scope.waitForRefreshDelay){
+                        $scope.refreshItems();
+                    }
+                    
                 }).catch (function (error){
                     //$scope.showAlert (rb.ctrl_while_stor, $scope.commonSolution);
                     initialize.reject (); //Not necessary to show an specific code
@@ -89,7 +95,13 @@ angular.module('starter.agendaevents')
                 $q.all ([ActivityService.retrieveNewItems(),AgendaService.retrieveNewItems()]).then(function (results){
                     $scope.activitiesList = results[0]; 
                     $scope.agendaList= results[1]; 
-
+                    
+                    $scope.waitForRefreshDelay = true;
+                    //Don't allow to automatic refresh until 20 minutes 
+                    $timeout (function (){
+                        $scope.waitForRefreshDelay = false;   
+                    },20 * 60 * 1000);
+                    
                 }).catch (function (error){
                     //The error code is the same so just needed one check
                     if (error !== AgendaService.errorCodes.ALREADY_RETRIEVING){
