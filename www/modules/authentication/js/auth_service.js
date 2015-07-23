@@ -1,4 +1,4 @@
-angular.module('starter.auth', ['underscore']).factory('AuthService',['$http','$q','_',function ($http,$q,_){
+angular.module('starter.auth', ['underscore']).factory('AuthService',['$http','$q','_','$cordovaDevice',function ($http,$q,_,$cordovaDevice){
    
     var authConfig = {};
     var auth = this;

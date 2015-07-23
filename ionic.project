@@ -1,6 +1,6 @@
 {
   "name": "mobileapp-udl",
-  "app_id": "",
+  "app_id": "cat.udl.asic.udlapp",
   "gulpStartupTasks": [
     "sass",
     "watch"
