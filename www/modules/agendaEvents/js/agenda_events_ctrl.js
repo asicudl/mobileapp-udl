@@ -61,7 +61,7 @@ angular.module('starter.agendaevents')
                     
                 }).catch (function (error){
                     //$scope.showAlert (rb.ctrl_while_stor, $scope.commonSolution);
-                    initialize.reject (); //Not necessary to show an specific code
+                    initialized.reject (); //Not necessary to show an specific code
                 }).finally (function (){
                     $ionicLoading.hide();  
                 });

@@ -11,8 +11,8 @@
                 <a class="activityListItem item udlapp-item item-thumbnail-left" ng-repeat="event in activitiesList | limitTo: !fullEvents ? 2 : activitiesList.length" href="#/app/activityevents/{{event._id}}">
                     <img  src="{{event.image}}" />  
                     <p class="title">{{event.title}}</p>
-                    <p class="secondaryInformation"> <i class="icon ion-pin"></i> {{event.location}}</p>
-                    <p class="otherInformation">  <i class="icon ion-calendar"></i> {{event.period}}</p>
+                    <p class="secondaryInformation"> <i class="icon ion-location"></i> {{event.location}}</p>
+                    <p class="otherInformation"><i class="icon ion-calendar"></i> {{event.period}}</p>
                 </a>
             </ion-list>
         </div>
@@ -36,7 +36,7 @@
                     <ion-item  class="item udlapp-item item-complex agendaItem btn_{{value[0].dayOfWeek}} item-thumbnail-right" ng-repeat="agendaItem in value | orderBy: 'hour'  : false" href="#/app/agendaevents/{{agendaItem._id}}">
                         <div class="agendaItemDescription">
                             <p class="title">{{agendaItem.title}}</p>
-                            <p class="secondaryInformation"><i class="icon ion-pin"></i> {{agendaItem.location}}</p>
+                            <p class="secondaryInformation"><i class="icon ion-location"></i> {{agendaItem.location}}</p>
                             <p class="secondaryInformation"><i class="icon ion-clock"></i> {{agendaItem.hour}}</p>
                         </div>
 

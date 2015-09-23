@@ -1,9 +1,31 @@
-<ion-view  class="udlapp-background" view-title="<i class='icon ion-paper-airplane'></i> {{title}}" ng-init="initList()" >
-  <ion-content>
-    <ion-list>
-      <ion-item class="udlapp-item" ng-repeat="offeredService in offeredServicesList" href="#/app/offeredservices/{{offeredService.id}}">
-        {{offeredService.title}}
-      </ion-item>
-    </ion-list>
-  </ion-content>
+<ion-view class="udlapp-background" ng-init="initList()" view-title="<i class='icon ion-social-buffer'></i> {{rb.os_list_title}}" >
+    <ion-content ng-show="offeredServicesViewInitialized">
+        <ion-refresher
+                       pulling-text="{{pullText}}"
+                       on-refresh="refreshItems()">
+        </ion-refresher>
+
+        <div ng-hide="emptyOfferedServices()" >
+            <ion-list can-swipe="true" show-delete="false"> 
+
+                <ion-item class="offeredService btn_{{($index % 7)}} item udlapp-item item-thumbnail-right" ng-repeat="offeredService in offeredServiceList" href="#/app/offeredservices/{{offeredService._id}}">
+                    
+                    <img  src="{{offeredService.image}}" />  
+                    
+                    <div class="offeredServiceDescription">
+                        <p class="title">{{offeredService.title}}</p>
+                        <p class="secondaryInformation"><i class="icon ion-location"></i> {{offeredService.location}}</p>
+                        <p class="secondaryInformation"><i class="icon ion-clock"></i> {{offeredService.attendingSchedule}}</p>
+                    </div>
+                </ion-item>
+
+            </ion-list>
+        </div>
+        <div ng-show="emptyOfferedServices()" class="udlapp-emptylist">
+            <p><i class="ion-archive" ></i><br />
+                <span>{{rb.os_list_noservices}}</span>
+            </p>
+        </div>
+        
+    </ion-content> 
 </ion-view>

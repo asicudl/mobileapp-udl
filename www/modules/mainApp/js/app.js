@@ -2,7 +2,7 @@
 
 angular.module('starter', ['ionic','ngCordova', 'starter.appcontroller','starter.config','starter.i18n','starter.db','starter.auth','starter.agendaevents','starter.offeredservices','starter.messages','starter.pushnotification','angular.filter','angularMoment'])
 
-.run(function($ionicPlatform, $ionicLoading, AppConfigService, DBService, AuthService, MessagesService, AgendaService, ActivityService, PushNotificationService, I18nService) {
+    .run(function($ionicPlatform, $ionicLoading, AppConfigService, DBService, AuthService, MessagesService, AgendaService, ActivityService,OfferedServicesService, PushNotificationService, I18nService) {
     
     $ionicPlatform.ready(function() {
 
@@ -10,6 +10,7 @@ angular.module('starter', ['ionic','ngCordova', 'starter.appcontroller','starter
         // for form inputs)
 
         AppConfigService.getConfig('dev').then (function (result){
+            
             //Configure each service with the configuration
             I18nService.init (result.i18n);
             DBService.init (result.dbService);
@@ -17,6 +18,7 @@ angular.module('starter', ['ionic','ngCordova', 'starter.appcontroller','starter
             MessagesService.init (result.messagesService);
             AgendaService.init (result.agendaService);
             ActivityService.init (result.activityService);
+            OfferedServicesService.init (result.offeredServicesService);
             PushNotificationService.init (result.pushService);
         });
         

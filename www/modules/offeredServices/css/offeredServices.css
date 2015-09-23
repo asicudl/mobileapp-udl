@@ -1,0 +1,48 @@
+.offeredService.btn_0 .item-content{
+    border-color:  #009688;
+}
+.offeredService.btn_1 .item-content{
+    border-color:  #ff9800;
+    color: #222;
+}
+.offeredService.btn_2 .item-content{
+    border-color: #4caf50;
+}
+.offeredService.btn_3 .item-content{
+    border-color: #03a9f4;
+}
+.offeredService.btn_4 .item-content{
+    border-color:  #cddc39;
+    color: #222;
+}
+.offeredService.btn_5 .item-content{
+    border-color: #ffeb3b;
+    color: #222;
+}
+.offeredService.btn_6 .item-content{
+    border-color: #9c27b0;
+}
+.offeredService.btn_7 .item-content{
+    border-color:  #e91e63;
+}
+
+.udlapp-item.offeredService{
+    padding: 0px;
+    border-top-width: 2px
+}
+
+.offeredService .item-content{
+    border-width: 0px 0px 0px 5px;
+    border-color: #830051;
+    border-style: solid;
+    padding: 0px;
+}
+
+.offeredService .offeredServiceDescription{
+    padding-top:10px;
+    padding-left: 10px;
+}
+
+.offeredServiceInformation a{
+    color: inherit;
+}

@@ -1,27 +1,29 @@
-<ion-view view-title="<i class='icon ion-paper-airplane'></i> Offered Service" ng-init="initOfferedService()">
+<ion-view view-title="<i class='icon ion-social-buffer'></i> Offered Service" ng-init="initOfferedService()">
   <ion-content>
       <div class="list card">
-        <div class="item">
-            <h2>{{currentService.title}}</h2>
+          <div class="item item-thumbnail-left">
+              <img  src="{{currentOfferedService.image}}" />  
+            <h2>{{currentOfferedService.title}}</h2>
           </div>
-          <div class="item item-body">
-              <p>{{currentService.description}}</p>
-              <h2>On trobar-nos:</h2>
-        <p>
-              <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2983.152052644041!2d0.6218014480850256!3d41.60922353787768!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x12a6e072716302b9%3A0xb3bee01a061e4b39!2sCarrer+de+Jaume+II%2C+67%2C+25001+Lleida!5e0!3m2!1sca!2ses!4v1426580314946" width="100%" min-height="300" frameborder="0" style="border:0"></iframe>
-        </p>
-              
+          <div class="item item-body offeredServiceInformation">
+              <p ng-bind-html="currentOfferedService.content | hrefToJS" />
+              <p ng-show="currentOfferedService.gmapsURL">
+                <i class="icon ion-map"></i>
+                  <iframe src="{{currentOfferedService.gmapsURL | trustGmapsURL}}" width="100%" min-height="300" frameborder="0" style="border:0"></iframe>
+              </p>
+              <p ng-show="currentOfferedService.attendingSchedule"><i class="icon ion-clock"></i> {{currentOfferedService.attendingSchedule}}</p>
+              <p ng-show="currentOfferedService.URL"><i class="icon ion-link"></i> <a class="" href="#" ng-click="openExternalURL(currentOfferedService.URL)">{{currentOfferedService.URL}}</a></p>
+              <p ng-show="currentOfferedService.email"><i class="icon ion-email"> </i> <a href="#" ng-click="openExternalURL('mailto:' + currentOfferedService.email)">{{currentOfferedService.email}}</a></p>
         </div>
-       <div class="item tabs tabs-secondary tabs-icon-left">
-           <a class="tab-item" href="tel: +34 973 70 20 00">
-                <i class="icon ion-ios7-telephone"></i>
-              973 70 20 00
+
+          <div class="item tabs tabs-secondary tabs-icon-left">
+              <a ng-show="currentOfferedService.phoneNumber" class="tab-item" ng-click="openExternalURL('tel:' + currentOfferedService.phoneNumber)">
+               <i class="icon ion-ios7-telephone"></i>{{currentOfferedService.phoneNumber}}
             </a>
            
-           <a class="tab-item" href="#">
-              
-                <i class="icon ion-share"></i>
-              Share
+            <a ng-show="currentOfferedService.URL" class="tab-item" href="#"  ng-click="shareExternalURL(currentOfferedService.URL)">
+               <i class="icon ion-share"></i>
+               {{rb.os_share_message}}
             </a>
         </div>
       </div>      
