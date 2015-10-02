@@ -19,7 +19,8 @@
     "com.ionic.keyboard",
     "aerogear-cordova-push",
     "cordova-sqlite-storage",
-    "cordova-plugin-x-socialsharing"
+    "cordova-plugin-x-socialsharing",
+    "cordova-plugin-whitelist"
   ],
   "cordovaPlatforms": [
     "android"
