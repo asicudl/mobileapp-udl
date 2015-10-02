@@ -39,8 +39,4 @@
         <splash density="port-xxxhdpi" src="resources/android/splash/drawable-port-xxxhdpi-screen.png" />
     </platform>
     <icon src="resources/android/icon/drawable-xhdpi-icon.png" />
-    <feature name="SocialSharing">
-        <param name="id" value="nl.x-services.plugins.socialsharing" />
-        <param name="url" value="https://github.com/EddyVerbruggen/SocialSharing-PhoneGap-Plugin.git" />
-    </feature>
 </widget>
