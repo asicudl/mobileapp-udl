@@ -25,7 +25,7 @@ angular.module('starter.agendaevents',[])
         'SELECT_ITEMS' : 'SELECT * FROM agenda_items order by eventdate',
         'INSERT_ITEM' : 'INSERT INTO agenda_items (title, content, location, period, eventdate, state, id) VALUES (?,?,?,?,?,?,?)',
         'UPDATE_ITEM' : 'UPDATE agenda_items SET title=?, content=?, location=?, period=?, eventdate=?, state=? WHERE id=?',
-        'PURGE_ITEMS' :'DELETE FROM agenda_items WHERE state=? OR eventDate < ?',
+        'PURGE_ITEMS' :'DELETE FROM agenda_items WHERE state=? OR eventdate < ?',
         'DELETE_ALL_ITEMS' :'DELETE FROM agenda_items'
     };
     
@@ -49,7 +49,6 @@ angular.module('starter.agendaevents',[])
                             var row = res.rows.item(i);
                            
                             var itemDate = moment(row.eventdate);
-                            
                             var item = {
                                 _id: row.id,
                                 title: row.title,
@@ -241,8 +240,19 @@ angular.module('starter.agendaevents',[])
                     var allAdds = [];
                     
                     for (agendaIdx in agendaInfo.agendaItems){
-                        allAdds.push (agndSrv.add (agendaInfo.agendaItems[agendaIdx]));
+                        var item = agendaInfo.agendaItems[agendaIdx];
+                        var itemDate = moment(item.eventDate); // en majuscules pq en mongodb es guarda eventDate amb D.
+//console.log("afegint nous elelements - AAAA" + item.eventdate + " D " + item.eventDate + "dia del mes:"+itemDate.format('D'));
+//console.log("afegint nous elelements - buscant el dia de mes d'una altra manera:"+moment(item.eventDate,'D'));
+                        item.hour = itemDate.format('HH:mm');
+                        item.month = itemDate.month();
+                        item.dayOfMonth = itemDate.format('D');
+                        item.dayOfWeek = itemDate.isoWeekday();
+                        item.eventDayStamp = itemDate.startOf('day').format ('x');
+
+                        allAdds.push (agndSrv.add(item));
                     }
+                     
                     
                     $q.all (allAdds).then (function(){
                         window.localStorage.lastAgendaDate = agendaInfo.currentDate;
