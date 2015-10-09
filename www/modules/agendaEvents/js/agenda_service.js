@@ -242,8 +242,6 @@ angular.module('starter.agendaevents',[])
                     for (agendaIdx in agendaInfo.agendaItems){
                         var item = agendaInfo.agendaItems[agendaIdx];
                         var itemDate = moment(item.eventDate); // en majuscules pq en mongodb es guarda eventDate amb D.
-//console.log("afegint nous elelements - AAAA" + item.eventdate + " D " + item.eventDate + "dia del mes:"+itemDate.format('D'));
-//console.log("afegint nous elelements - buscant el dia de mes d'una altra manera:"+moment(item.eventDate,'D'));
                         item.hour = itemDate.format('HH:mm');
                         item.month = itemDate.month();
                         item.dayOfMonth = itemDate.format('D');
