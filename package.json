@@ -20,7 +20,8 @@
     "aerogear-cordova-push",
     "cordova-sqlite-storage",
     "cordova-plugin-x-socialsharing",
-    "cordova-plugin-whitelist"
+    "cordova-plugin-whitelist",
+    "org.apache.cordova.inappbrowser"
   ],
   "cordovaPlatforms": [
     "android",
