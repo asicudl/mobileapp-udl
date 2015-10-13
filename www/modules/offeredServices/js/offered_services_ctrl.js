@@ -89,7 +89,8 @@ angular.module('starter.offeredservices').controller('OfferedServicesCtrl',['$sc
 
 
                 $scope.openExternalURL = function(url) {
-                    navigator.app.loadUrl(url, {openExternal: true});
+                    //navigator.app.loadUrl(url, { openExternal: true });
+                    window.open(url, '_system');
                 };
 
                 $scope.shareExternalURL = function(url) {
