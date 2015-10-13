@@ -1,4 +1,7 @@
-<ion-view class="udlapp-background" ng-init="initList()" view-title="<i class='icon ion-social-buffer'></i> {{rb.os_list_title}}" >
+<ion-view class="udlapp-background" ng-init="initList()">
+    <ion-nav-title>
+        <i class='icon ion-social-buffer'></i> {{rb.os_list_title}}
+    </ion-nav-title>
     <ion-content ng-show="offeredServicesViewInitialized">
         <ion-refresher
                        pulling-text="{{pullText}}"

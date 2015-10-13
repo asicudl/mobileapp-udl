@@ -202,7 +202,8 @@ angular.module('starter.messages').controller('MessagesCtrl',['$scope','$ionicPo
     };
     
     $scope.openExternalURL = function(url){
-        navigator.app.loadUrl(url, {openExternal: true});
+//            navigator.app.loadUrl(url, { openExternal: true });
+            window.open(url, '_system');
     };
     
    $scope.initializeBundles = function(){
