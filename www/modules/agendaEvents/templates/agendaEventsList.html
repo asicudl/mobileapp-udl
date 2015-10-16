@@ -8,7 +8,7 @@
         
         <div ng-hide="emptyActivities()">
             <ion-list>
-                <a class="activityListItem item udlapp-item item-thumbnail-left" ng-repeat="event in activitiesList | limitTo: !fullEvents ? 2 : activitiesList.length" href="#/app/activityevents/{{event._id}}">
+                <a class="activityListItem item udlapp-item item-thumbnail-left" ng-repeat="event in activitiesList  | filter: { published:'true'} | limitTo: !fullEvents ? 2 : activitiesList.length" href="#/app/activityevents/{{event._id}}">
                     <img  src="{{event.image}}" />  
                     <p class="title">{{event.title}}</p>
                     <p class="secondaryInformation"> <i class="icon ion-location"></i> {{event.location}}</p>
