@@ -18,7 +18,7 @@
     "pd_thisweek": "This week",
     "pd_lastweek": "Last week",
     "pd_thismonth": "This month",
-    "pd_later": "Later",
+    "pd_later": "Older messages",
     "ctrl_common_sol": "Please, stop the application and try it again. If problem persist contact with <a href='mailto:usuaris-cvirtual@llistes.udl.cat'>Support address</a> to inform about the problem",
     "ctrl_while_stor": "while getting the stored messages list",
     "ctrl_while_chang": "while changing message state to read",
