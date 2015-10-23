@@ -18,7 +18,7 @@
     "pd_thisweek": "Esta semana",
     "pd_lastweek": "La semana pasada",
     "pd_thismonth": "Este mes",
-    "pd_later": "Más tarde",
+    "pd_later": "Más antiguos",
     "ctrl_common_sol": "Detén la aplicación e inténtalo de nuevo. Si el problema persiste contacta con <a href='mailto:usuaris-cvirtual@llistes.udl.cat'>la dirección de soporte</a> para informar del problema",
     "ctrl_while_stor": "al recuperar la lista de mensajes guardados",
     "ctrl_while_chang": "al cambiar el estado de un mensaje",

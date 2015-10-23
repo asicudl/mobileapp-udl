@@ -22,7 +22,7 @@ angular.module('starter.agendaevents')
 
     var queries = {
         'CREATE_TABLE' : 'CREATE TABLE IF NOT EXISTS activity_items (id text primary key, title text, content text, location text,period text, startdate date,duedate date,published boolean,state text,image mediumtext,eventurl text)',
-        'SELECT_ITEMS' : 'SELECT * FROM activity_items ORDER BY startdate',
+        'SELECT_ITEMS' : 'SELECT * FROM activity_items ORDER BY duedate',
         'INSERT_ITEM' : 'INSERT INTO activity_items (title, content, location, period, startdate, duedate, published, image, eventurl,state, id) VALUES (?,?,?,?,?,?,?,?,?,?,?)',
         'UPDATE_ITEM' : 'UPDATE activity_items SET title=?, content=?, location=?, period=?, startdate=?, duedate=?, published=?,image=?,eventurl=?,state=? WHERE id=?',
         'PURGE_ITEMS' :'DELETE FROM activity_items WHERE state=?',

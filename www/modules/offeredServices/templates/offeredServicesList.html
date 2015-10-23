@@ -11,7 +11,7 @@
         <div ng-hide="emptyOfferedServices()" >
             <ion-list can-swipe="true" show-delete="false"> 
 
-                <ion-item class="offeredService btn_{{($index % 7)}} item udlapp-item item-thumbnail-right" ng-repeat="offeredService in offeredServiceList" href="#/app/offeredservices/{{offeredService._id}}">
+                <ion-item class="offeredService btn_{{($index % 7)}} item udlapp-item item-thumbnail-right" ng-repeat="offeredService in offeredServiceList | filter: { published:'true'}" href="#/app/offeredservices/{{offeredService._id}}">
                     
                     <img  src="{{offeredService.image}}" />  
                     

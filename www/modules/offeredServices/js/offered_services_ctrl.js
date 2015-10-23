@@ -109,7 +109,7 @@ angular.module('starter.offeredservices').controller('OfferedServicesCtrl',['$sc
                     }); 
                 };
 
-            $scope.emptyOfferedServices = function (){
+                $scope.emptyOfferedServices = function (){
                     return ($scope.offeredServiceList === undefined || $scope.offeredServiceList.length === 0);
                 };
        
