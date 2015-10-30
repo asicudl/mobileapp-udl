@@ -1,4 +1,7 @@
-<ion-view class="udlapp-background" ng-init="initList()" view-title="<i class='icon ion-calendar'></i> {{rb.ag_list_agendaTitle}}" >
+<ion-view class="udlapp-background" ng-init="initList()">
+    <ion-nav-title>
+        <i class='icon ion-calendar'></i> {{rb.ag_list_agendaTitle}}
+    </ion-nav-title>
     <ion-content ng-show="eventsViewInitialized">
         <ion-refresher
                        pulling-text="{{pullText}}"
