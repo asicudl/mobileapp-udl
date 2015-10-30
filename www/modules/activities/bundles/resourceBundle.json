@@ -1,5 +1,5 @@
 {
-    "ag_list_pull": "Pull to refresh\u2026",
+    "ag_list_pull": "Pull to refresh",
     "ag_list_activityTitle": "Activities",
     "ag_list_noactivities": "There are no activities",
     "ag_activity_title": "Activity Event",
@@ -25,7 +25,6 @@
     "ag_month_11": "DEC",
     "ag_share_message": "Take a look at ",
     "ag_share_subject": "UdL Activity",
-    "ctrl_activities_initializing" : "Updating activities\u2026",
+    "ctrl_activities_initializing" : "Updating activities",
     "ag_activities_share" : "Share"
-
 }

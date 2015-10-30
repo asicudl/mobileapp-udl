@@ -1,5 +1,5 @@
 {
-    "ag_list_pull": "Estira per actualitzar\u2026",
+    "ag_list_pull": "Estira per actualitzar",
     "ag_list_activityTitle": "Activitats",
     "ag_list_noactivities": "No hi ha activitats",
     "ag_activity_title": "Activitat",
@@ -25,6 +25,6 @@
     "ag_month_11": "DEC",
     "ag_share_message": "Fes un cop d'ull a: ",
     "ag_share_subject": "Activitat UdL",
-    "ctrl_activities_initializing" : "Inicialitzant les activitats\u2026",
+    "ctrl_activities_initializing" : "Actualitzant les activitats",
     "ag_activities_share" : "Comparteix"
 }

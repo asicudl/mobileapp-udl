@@ -1,6 +1,7 @@
 {
     "app_title":"UdL APP",
     "agenda_menu_item": "Eveniments",
+    "activities_menu_item": "",
     "oservices_menu_item": "Servicis UdL",
     "messages_menu_item": "Messatges",
     "settings_menu_item": "Configuracion",
@@ -37,7 +38,7 @@
     "ctrl_error_cleaning_desc": "I a agut un error mentre s'eliminauen es messatges. Entà assegurar-se qu'es messatges s'an eliminat, pòdes hè'c  manuaument ",
     "ctrl_login_in": "En tot accedir\u2026",
     "ctrl_setting_account": "En tot configurar eth compde\u2026",
-    "ctrl_initializing_app": "En tot iniciar era app\u2026",
+    "ctrl_initializing_app": "En tot iniciar era app",
     "ctrl_invalid_credentials": "Eth nom d'usatgèr o era clau son incorrèctes, pròva-ac d'aute còp",
     "ctrl_error_validating": "Quauquarren a anat mau mentre s'enregistraue eth dispositiu, torne a introdusir eth nòm d'usatgèr e era clau"
 }

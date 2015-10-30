@@ -1,16 +1,11 @@
 {
-    "ag_list_title": "Events",
-    "ag_list_pull": "Pull to refresh\u2026",
-    "ag_list_activityTitle": "Activities",
+    "ag_list_title": "Agenda",
+    "ag_list_pull": "Pull to refresh",
     "ag_list_agendaTitle": "Agenda",
-    "ag_list_noactivities": "There are no activities",
     "ag_list_noagenda": "There are no agenda items",
-    "ag_activity_title": "Activity Event",
     "ag_agenda_title" : "Agenda Event",
     "ag_agenda_share" : "Share",
     "ag_view_in_web" : "View in web",
-    "all_activities": "View all",
-    "collapse_activities": "Collapse",
     "ag_weekday_1": "Monday",
     "ag_weekday_2": "Tuesday",
     "ag_weekday_3": "Wednesday",
@@ -31,6 +26,6 @@
     "ag_month_10": "NOV",
     "ag_month_11": "DEC",
     "ag_share_message": "Take a look at ",
-    "ag_share_subject": "UdL event"
-
+    "ag_share_subject": "UdL event",
+    "ctrl_agenda_initializing" : "Updating the agenda"
 }
