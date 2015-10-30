@@ -26,7 +26,7 @@ angular.module('starter.activities')
         $scope.initList = function (){
             var initialized = $q.defer();
             $scope.initializeBundles().then (function () {
-                $ionicLoading.show({template: LOADING_TMPLT +  $scope.rb.ctrl_activities_initializing});
+                $ionicLoading.show({template: LOADING_TMPLT +  $scope.rb.ctrl_activities_initializing + "..."});
                 
                 $q.all ([ActivityService.getActivityItems()]).then(function (results){
 

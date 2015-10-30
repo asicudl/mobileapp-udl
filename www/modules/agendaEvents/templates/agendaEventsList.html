@@ -4,7 +4,8 @@
     </ion-nav-title>
     <ion-content ng-show="eventsViewInitialized">
         <ion-refresher
-                       pulling-text="{{pullText}}"
+                       pulling-text="{{pullText}}..."
+                       refreshing-text="{{rb.ctrl_agenda_initializing}}..."
                        on-refresh="refreshItems()">
         </ion-refresher>
         <br/>

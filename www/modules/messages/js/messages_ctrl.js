@@ -23,7 +23,7 @@ angular.module('starter.messages').controller('MessagesCtrl',['$scope','$ionicPo
         
         $scope.undoMessage = MessagesService.undoMessage;
         $scope.initializeBundles().then (function () {
-            $ionicLoading.show({template: LOADING_TMPLT +  $scope.rb.ctrl_message_initializing});    
+            $ionicLoading.show({template: LOADING_TMPLT +  $scope.rb.ctrl_message_initializing + "..."});
             
             MessagesService.getMessages().then(function (messages){
                 $scope.messagesList= messages;//Is the second promise return parameter

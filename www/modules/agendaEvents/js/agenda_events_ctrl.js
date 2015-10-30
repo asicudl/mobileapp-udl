@@ -26,7 +26,7 @@ angular.module('starter.agendaevents')
         $scope.initList = function (){
             var initialized = $q.defer();
             $scope.initializeBundles().then (function () {
-                $ionicLoading.show({template: LOADING_TMPLT +  $scope.rb.ctrl_agenda_initializing});   
+                $ionicLoading.show({template: LOADING_TMPLT +  $scope.rb.ctrl_agenda_initializing + "..."});
                 
                 $q.all ([AgendaService.getAgendaItems()]).then(function (results){
 
