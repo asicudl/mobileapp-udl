@@ -1,10 +1,8 @@
 {
-    "ag_list_title": "Agenda",
     "ag_list_pull": "Estira per actualitzar",
-    "ag_list_agendaTitle": "Agenda",
-    "ag_list_noagenda": "No hi ha elements a l'agenda",
-    "ag_agenda_title" : "Esdeveniment",
-    "ag_agenda_share" : "Comparteix",
+    "ag_list_activityTitle": "Activitats",
+    "ag_list_noactivities": "No hi ha activitats",
+    "ag_activity_title": "Activitat",
     "ag_view_in_web" : "Veure'l al web",
     "ag_weekday_1": "Dilluns",
     "ag_weekday_2": "Dimarts",
@@ -26,6 +24,7 @@
     "ag_month_10": "NOV",
     "ag_month_11": "DEC",
     "ag_share_message": "Fes un cop d'ull a: ",
-    "ag_share_subject": "Esdeveniment UdL",
-    "ctrl_agenda_initializing" : "Actualitzant l'agenda"
+    "ag_share_subject": "Activitat UdL",
+    "ctrl_activities_initializing" : "Actualitzant les activitats",
+    "ag_activities_share" : "Comparteix"
 }

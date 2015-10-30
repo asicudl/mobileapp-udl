@@ -1,6 +1,6 @@
 {
     "ms_list_title": "Mensajes",
-    "ms_list_pull": "Estira para refrescar...",
+    "ms_list_pull": "Estira para refrescar",
     "ms_list_nomessages": "No hay mensajes",
     "ms_list_undo": "Deshaz la supresión ",
     "ms_list_item_dateformat": "dd/MM/yyyy HH:mm",
@@ -27,5 +27,5 @@
     "ctrl_problem_desc": "Uups, alguna cosa ha ido mal {0} <i class='ion-sad'></i><br/>{1}",
     "ctrl_while_refreshing": "refrescando la lista de mensajes. Puede haberse producido porque no tienes connexión o bién porque el servidor de mensajes no está activo en este momento.",
     "ctrl_refreshlater":  "Asegúrate que tienes conexión y vuelve a intentarlo.",
-    "ctrl_message_initializing": "Leyendo los mensajes\u2026"
+    "ctrl_message_initializing": "Leyendo los mensajes"
 }

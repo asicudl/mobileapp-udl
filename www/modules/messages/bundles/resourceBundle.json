@@ -1,6 +1,6 @@
 {
     "ms_list_title": "Messages",
-    "ms_list_pull": "Pull to refresh\u2026",
+    "ms_list_pull": "Pull to refresh",
     "ms_list_nomessages": "There are no messages",
     "ms_list_undo": "Undo deleted message",
     "ms_list_item_dateformat": "MM/dd/yyyy HH:mm",
@@ -27,5 +27,5 @@
     "ctrl_problem_desc": "Uups, something went wrong {0} <i class='ion-sad-outline'></i><br/>{1}",
     "ctrl_while_refreshing": "refreshing the messages list. That could be produced because you don't have connection or our servers are now down.",
     "ctrl_refreshlater":  "Make sure that you have connection and try it again later",
-    "ctrl_message_initializing": "Getting messages\u2026"
+    "ctrl_message_initializing": "Getting messages"
 }

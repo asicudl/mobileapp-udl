@@ -1,9 +1,9 @@
 {
-    "ctrl_agenda_initializing" : "Initializing",
+    "ctrl_offeredService_initializing" : "Actualitzant els serveis",
     "os_view_title": "Servei UdL",
-    "os_list_pull" : "Pull",
-    "os_share_message" : "Share",
-    "os_share_subject" : "Look at this information",
+    "os_list_pull" : "Estira per actualitzar",
+    "os_share_message" : "Comparteix",
+    "os_share_subject" : "Fes un cop d'ull a: ",
     "os_list_title" : "Serveis UdL",
     "os_list_noservices": "No hi ha serveis"
 }

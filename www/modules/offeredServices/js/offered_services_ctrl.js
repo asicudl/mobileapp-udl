@@ -26,7 +26,7 @@ angular.module('starter.offeredservices').controller('OfferedServicesCtrl',['$sc
                 $scope.initList = function () {
                     var initialized = $q.defer();
                     $scope.initializeBundles().then (function () {
-                        $ionicLoading.show({template: LOADING_TMPLT +  $scope.rb.ctrl_offeredService_initializing});   
+                        $ionicLoading.show({template: LOADING_TMPLT +  $scope.rb.ctrl_offeredService_initializing + "..."});
 
                         $q.all ([OfferedServicesService.getOfferedServiceItems()]).then(function (results){
 

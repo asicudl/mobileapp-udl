@@ -1,6 +1,6 @@
 {
     "ms_list_title": "Missatges",
-    "ms_list_pull": "Estira per refrescar\u2026",
+    "ms_list_pull": "Estira per actualitzar",
     "ms_list_nomessages": "No hi ha missatges",
     "ms_list_undo": "Desfés la supressió ",
     "ms_list_item_dateformat": "dd/MM/yyyy HH:mm",
@@ -27,5 +27,5 @@
     "ctrl_problem_desc": "Uups, alguna cosa ha anat malament {0} <i class='ion-sad'></i><br/>{1}",
     "ctrl_while_refreshing": "refrescant la llista de missatges. Pot haver estat produït perque no tens connexió o bé perquè el servidor de missatges no està actiu en aquest moment.",
     "ctrl_refreshlater":  "Assegura't que tens connexió i després torna a provar-ho.",
-    "ctrl_message_initializing": "Llegint els missatges\u2026"
+    "ctrl_message_initializing": "Llegint els missatges"
 }

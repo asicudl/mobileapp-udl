@@ -1,29 +1,14 @@
-<ion-view class="udlapp-background" ng-init="initList()" view-title="<i class='icon ion-calendar'></i> {{rb.ag_list_title}}" >
+<ion-view class="udlapp-background" ng-init="initList()">
+    <ion-nav-title>
+        <i class='icon ion-calendar'></i> {{rb.ag_list_agendaTitle}}
+    </ion-nav-title>
     <ion-content ng-show="eventsViewInitialized">
         <ion-refresher
-                       pulling-text="{{pullText}}"
+                       pulling-text="{{pullText}}..."
+                       refreshing-text="{{rb.ctrl_agenda_initializing}}..."
                        on-refresh="refreshItems()">
         </ion-refresher>
-        <div class="activitiesSeparator"> <i class="icon ion-ribbon-b"></i> {{rb.ag_list_activityTitle}}</div>
-        
-        <div ng-hide="emptyActivities()">
-            <ion-list>
-                <a class="activityListItem item udlapp-item item-thumbnail-left" ng-repeat="event in activitiesList  | filter: { published:'true'} | limitTo: !fullEvents ? 2 : activitiesList.length" href="#/app/activityevents/{{event._id}}">
-                    <img  src="{{event.image}}" />  
-                    <p class="title">{{event.title}}</p>
-                    <p class="secondaryInformation"> <i class="icon ion-location"></i> {{event.location}}</p>
-                    <p class="otherInformation"><i class="icon ion-calendar"></i> {{event.period}}</p>
-                </a>
-            </ion-list>
-        </div>
-        <div ng-show="emptyActivities()" class="udlapp-emptylist">
-            <p><i class="ion-archive" ></i><br />
-                <span>{{rb.ag_list_noactivities}}</span>
-            </p>
-        </div>
-        <div class="calendarSeparator"> <i class="icon ion-calendar"></i> {{rb.ag_list_agendaTitle}}</div>
-
-
+        <br/>
         <div>
             <div ng-hide="emptyAgenda()" >
                 <ion-list can-swipe="true" show-delete="false" ng-repeat="(key, value) in agendaList | groupBy: 'eventDayStamp'  | orderBy: 'eventDayStamp' : false " class="calendarList"> 
@@ -52,5 +37,3 @@
         </div>
     </ion-content> 
 </ion-view>
-
-

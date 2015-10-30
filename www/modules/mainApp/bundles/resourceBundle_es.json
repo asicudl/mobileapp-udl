@@ -1,6 +1,7 @@
 {
     "app_title":"UdL APP",
-    "agenda_menu_item": "Eventos",
+    "agenda_menu_item": "Agenda",
+    "activities_menu_item": "Actividades",
     "oservices_menu_item": "Servicios UdL",
     "messages_menu_item": "Mensajes",
     "settings_menu_item": "Configuración",
@@ -37,7 +38,7 @@
     "ctrl_error_cleaning_desc": "Ha habido un error al eliminar los mensajes. Para asegurarte que los mensajes sean eliminados puedes hacerlo manualmente",
     "ctrl_login_in": "Accediendo\u2026",
     "ctrl_setting_account": "Configurando la cuenta\u2026",
-    "ctrl_initializing_app": "Inicializando la app\u2026",
+    "ctrl_initializing_app": "Inicializando la app",
     "ctrl_invalid_credentials": "El nombre de usuario o la contraseña son incorrectos, prueba de nuevo",
     "ctrl_error_validating": "Ha habido algún problema al registrar el dispositivo, vuelve a introducir el nombre de usuario y la contraseña"
 }

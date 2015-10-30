@@ -219,7 +219,7 @@ angular.module('starter.appcontroller',['underscore'])
         AuthService.authenticateByToken().then (function (){
 
             $rootScope.appInitialized = true;
-            $ionicLoading.show({template: LOADING_TMPLT +  $scope.rb.ctrl_initializing_app});         
+            $ionicLoading.show({template: LOADING_TMPLT +  $scope.rb.ctrl_initializing_app + "..."});         
 
             delete $rootScope.routeToServicesNotAvailable;
 

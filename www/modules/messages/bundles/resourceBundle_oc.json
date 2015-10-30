@@ -1,6 +1,6 @@
 {
     "ms_list_title": "Messatges",
-    "ms_list_pull": "Estire entà actualizar...",
+    "ms_list_pull": "Estire entà actualizar",
     "ms_list_nomessages": "Non i a messatges",
     "ms_list_undo": "Des·hè era supression ",
     "ms_list_item_dateformat": "dd/MM/yyyy HH:mm",
@@ -27,5 +27,5 @@
     "ctrl_problem_desc": "Uups, quauquarren a anat mau  {0} <i class='ion-sad'></i><br/>{1}",
     "ctrl_while_refreshing": "en tot rehèr era lista de messatges. Pòt èster pr'amor que non as connexion o ben pr'amor qu'eth servidor de messatges non ei actiu er aguesti moments.",
     "ctrl_refreshlater":  "Assegura-te qu'as connexion e torne a provà'c.",
-    "ctrl_message_initializing": "En tot liéger es messatges \u2026"
+    "ctrl_message_initializing": "En tot liéger es messatges"
 }

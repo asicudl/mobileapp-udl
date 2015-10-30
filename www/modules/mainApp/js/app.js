@@ -1,6 +1,6 @@
 // Starter App
 
-angular.module('starter', ['ionic','ngCordova', 'starter.appcontroller','starter.config','starter.i18n','starter.db','starter.auth','starter.agendaevents','starter.offeredservices','starter.messages','starter.pushnotification','angular.filter','angularMoment'])
+angular.module('starter', ['ionic','ngCordova', 'starter.appcontroller','starter.config','starter.i18n','starter.db','starter.auth','starter.agendaevents','starter.activities','starter.offeredservices','starter.messages','starter.pushnotification','angular.filter','angularMoment'])
 
     .run(function($ionicPlatform, $ionicLoading, AppConfigService, DBService, AuthService, MessagesService, AgendaService, ActivityService,OfferedServicesService, PushNotificationService, I18nService) {
     
@@ -64,8 +64,7 @@ angular.module('starter', ['ionic','ngCordova', 'starter.appcontroller','starter
       }
     }
   })
-  
-   .state('app.agendaevent', {
+  .state('app.agendaevent', {
     url: "/agendaevents/:agendaEventId",
     views: {
       'menuContent': {
@@ -74,18 +73,25 @@ angular.module('starter', ['ionic','ngCordova', 'starter.appcontroller','starter
       }
     }
   })
-  
-      .state('app.activityevent', {
+  .state('app.activities', {
+    url: "/activities",
+    views: {
+      'menuContent': {
+        templateUrl: "modules/activities/templates/activitiesList.html",
+        controller: "ActivitiesCtrl"
+      }
+    }
+  })
+.state('app.activityevent', {
       url: "/activityevents/:activityEventId",
       views: {
           'menuContent': {
-              templateUrl: "modules/agendaEvents/templates/activityEventsView.html",
-              controller: "AgendaEventsCtrl"
+              templateUrl: "modules/activities/templates/activityEventsView.html",
+              controller: "ActivitiesCtrl"
           }
       }
   })
-  
-  .state('app.messages', {
+ .state('app.messages', {
     url: "/messages",
     views: {
       'menuContent': {

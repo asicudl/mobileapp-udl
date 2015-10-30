@@ -1,0 +1,9 @@
+{
+    "ctrl_offeredService_initializing" : "Actualizando los servicios",
+    "os_view_title": "Servicio UdL",
+    "os_list_pull" : "Estira para refrescar",
+    "os_share_message" : "Comparte",
+    "os_share_subject" : "Echa un vistazo a: ",
+    "os_list_title" : "Servicios UdL",
+    "os_list_noservices": "No hay servicios"
+}

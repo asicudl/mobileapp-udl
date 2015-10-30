@@ -1,7 +1,7 @@
 {
-    "ctrl_agenda_initializing" : "Initializing",
+    "ctrl_offeredService_initializing" : "Updating services",
     "os_view_title": "UdL Service",
-    "os_list_pull" : "Pull",
+    "os_list_pull" : "Pull to refresh",
     "os_share_message" : "Share",
     "os_share_subject" : "Look at this information",
     "os_list_title" : "UdL services",

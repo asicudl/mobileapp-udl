@@ -1,6 +1,7 @@
 {
     "app_title":"UdL APP",
     "agenda_menu_item": "Agenda Events",
+    "activities_menu_item": "Activities",
     "oservices_menu_item": "UdL Services",
     "messages_menu_item": "Messages",
     "settings_menu_item": "Settings",
@@ -36,7 +37,7 @@
     "ctrl_error_cleaning_desc": "There was an error cleaning your stored messages. Please, clean data manually to ensure that messages are deleted.",
     "ctrl_login_in": "Loging in\u2026",
     "ctrl_setting_account": "Setting account\u2026",
-    "ctrl_initializing_app": "Initializing the app\u2026",
+    "ctrl_initializing_app": "Initializing the app",
     "ctrl_invalid_credentials": "Username and/or password were wrong, try it again please",
     "ctrl_error_validating": "Something went wrong while registering your device, please try to login again"
 }

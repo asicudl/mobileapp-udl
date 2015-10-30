@@ -1,6 +1,7 @@
 {
     "app_title":"UdL App",
-    "agenda_menu_item": "Esdeveniments",
+    "agenda_menu_item": "Agenda",
+    "activities_menu_item": "Activitats",
     "oservices_menu_item": "Serveis UdL",
     "messages_menu_item": "Missatges",
     "settings_menu_item": "Configuració",
@@ -37,7 +38,7 @@
     "ctrl_error_cleaning_desc": "Hi ha hagut un error a l'eliminar els missatges. Per assegurar-te que els missatges s'eliminen pots fer-ho manualment",
     "ctrl_login_in": "Accedint \u2026",
     "ctrl_setting_account": "Configurant el compte\u2026",
-    "ctrl_initializing_app": "Inicialitzant l'app\u2026",
+    "ctrl_initializing_app": "Inicialitzant l'app",
     "ctrl_invalid_credentials": "El nom d'usuari o la clau són incorrectes, prova-ho un altre cop",
     "ctrl_error_validating": "Alguna cosa ha anat malament al registrar el dispositiu, torna a introduïr el nom d'usuari i la clau"
 }
