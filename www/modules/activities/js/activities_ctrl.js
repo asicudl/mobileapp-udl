@@ -1,9 +1,9 @@
-angular.module('starter.agendaevents')  
-    .controller('AgendaEventsCtrl',['$scope','$ionicPopup','$ionicListDelegate','$ionicLoading','$timeout','AgendaService','I18nService','$stateParams','_','$location','$filter','$timeout','$q','$rootScope','$cordovaSocialSharing',function($scope, $ionicPopup,$ionicListDelegate,$ionicLoading, $timeout,AgendaService,I18nService,$stateParams,_,$location,$filter,$timeout,$q,$rootScope,$cordovaSocialSharing) {
+angular.module('starter.activities')  
+    .controller('ActivitiesCtrl',['$scope','$ionicPopup','$ionicListDelegate','$ionicLoading','$timeout','ActivityService','I18nService','$stateParams','_','$location','$filter','$timeout','$q','$rootScope','$cordovaSocialSharing',function($scope, $ionicPopup,$ionicListDelegate,$ionicLoading, $timeout,ActivityService,I18nService,$stateParams,_,$location,$filter,$timeout,$q,$rootScope,$cordovaSocialSharing) {
 
         var LOADING_TMPLT= '<i class="ion-loading-c"></i> ';
         $scope.fullEvents = false;
-        $scope.agendaList = [];
+        $scope.activitiesList = [];
         $scope.waitForRefreshDelay = false;
         
         var changeEvents = {};
@@ -14,7 +14,7 @@ angular.module('starter.agendaevents')
             //Load the new items
             
             //In case we got updated the array of items provided by the service is another one. We must update it
-            if ($scope.eventsViewInitialized && $location.$$url === '/app/agendaevents' && !$scope.waitForRefreshDelay){
+            if ($scope.eventsViewInitialized && $location.$$url === '/app/activities' && !$scope.waitForRefreshDelay){
                 $scope.refreshItems();
             }
         });
@@ -26,16 +26,17 @@ angular.module('starter.agendaevents')
         $scope.initList = function (){
             var initialized = $q.defer();
             $scope.initializeBundles().then (function () {
-                $ionicLoading.show({template: LOADING_TMPLT +  $scope.rb.ctrl_agenda_initializing});   
+                $ionicLoading.show({template: LOADING_TMPLT +  $scope.rb.ctrl_activities_initializing});
                 
-                $q.all ([AgendaService.getAgendaItems()]).then(function (results){
+                $q.all ([ActivityService.getActivityItems()]).then(function (results){
 
-                    $scope.agendaList= results[0]; 
+                    $scope.activitiesList = results[0]; 
+
                     initialized.resolve();
                     $scope.eventsViewInitialized = true;
 
                     //In case we got updated the array of items provided by the service is another one. We must update it
-                    if ($location.$$url === '/app/agendaevents' && !$scope.waitForRefreshDelay){
+                    if ($location.$$url === '/app/activities' && !$scope.waitForRefreshDelay){
                         $scope.refreshItems();
                     }
                     
@@ -51,22 +52,20 @@ angular.module('starter.agendaevents')
         };
 
 
-        $scope.initAgendaEvent = function (){
-            
-            $q.all([$scope.initializeBundles(), $scope.initList()]).then (function (){
-                $scope.currentEvent = _.findWhere($scope.agendaList,{_id: $stateParams.agendaEventId});
+        $scope.initActivityEvent = function (){
+            $q.all([$scope.initializeBundles(),$scope.initList()]).then (function (){
+                $scope.currentActivity = _.findWhere($scope.activitiesList,{_id: $stateParams.activityEventId});
             });
 
         };
-
 
         $scope.refreshItems = function (){
 
             if ($rootScope.routeToServicesNotAvailable){
                 $scope.$broadcast('scroll.refreshComplete'); 
             }else{
-                $q.all ([AgendaService.retrieveNewItems()]).then(function (results){
-                    $scope.agendaList= results[0]; 
+                $q.all ([ActivityService.retrieveNewItems()]).then(function (results){
+                    $scope.activitiesList = results[0]; 
                     
                     $scope.waitForRefreshDelay = true;
                     //Don't allow to automatic refresh until 20 minutes 
@@ -76,7 +75,7 @@ angular.module('starter.agendaevents')
                     
                 }).catch (function (error){
                     //The error code is the same so just needed one check
-                    if (error !== AgendaService.errorCodes.ALREADY_RETRIEVING){
+                    if (error !== ActivityService.errorCodes.ALREADY_RETRIEVING){
                         //$scope.showRefreshListError();
                         $rootScope.routeToServicesNotAvailable = true;
                     }
@@ -98,7 +97,7 @@ angular.module('starter.agendaevents')
 
         $scope.initializeBundles = function(){
 
-            return $q.all ([I18nService.isReady(),I18nService.getResourceBundles('agendaEvents')]).then(function (data) {
+            return $q.all ([I18nService.isReady(),I18nService.getResourceBundles('activities')]).then(function (data) {
                 var resourceBundle =  data[1];
                 $scope.rb = resourceBundle;
 
@@ -107,8 +106,8 @@ angular.module('starter.agendaevents')
             }); 
         };
         
-        $scope.emptyAgenda = function (){
-            return ($scope.agendaList === undefined || $scope.agendaList.length === 0);
+        $scope.emptyActivities = function (){
+            return ($scope.activitiesList === undefined || $scope.activitiesList.length === 0);
         };
 
     }]).filter('hrefToJS', function ($sce, $sanitize) {

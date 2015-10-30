@@ -1,4 +1,4 @@
-angular.module('starter.agendaevents')
+angular.module('starter.activities',[])
     .factory('ActivityService',function (AppConfigService, $rootScope, $q, DBService, $http) {
 
     var activityConfig = {};
