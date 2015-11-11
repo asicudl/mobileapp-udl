@@ -64,8 +64,9 @@ angular.module('starter.activities')
             if ($rootScope.routeToServicesNotAvailable){
                 $scope.$broadcast('scroll.refreshComplete'); 
             }else{
+                
                 $q.all ([ActivityService.retrieveNewItems()]).then(function (results){
-                    $scope.activitiesList = results[0]; 
+                    $scope.activitiesList = results[0];
                     
                     $scope.waitForRefreshDelay = true;
                     //Don't allow to automatic refresh until 20 minutes 

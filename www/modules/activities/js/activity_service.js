@@ -22,10 +22,10 @@ angular.module('starter.activities',[])
 
     var queries = {
         'CREATE_TABLE' : 'CREATE TABLE IF NOT EXISTS activity_items (id text primary key, title text, content text, location text,period text, startdate date,duedate date,published boolean,state text,image mediumtext,eventurl text)',
-        'SELECT_ITEMS' : 'SELECT * FROM activity_items ORDER BY duedate',
+        'SELECT_ITEMS' : 'SELECT * FROM activity_items ORDER BY date(duedate)',
         'INSERT_ITEM' : 'INSERT INTO activity_items (title, content, location, period, startdate, duedate, published, image, eventurl,state, id) VALUES (?,?,?,?,?,?,?,?,?,?,?)',
         'UPDATE_ITEM' : 'UPDATE activity_items SET title=?, content=?, location=?, period=?, startdate=?, duedate=?, published=?,image=?,eventurl=?,state=? WHERE id=?',
-        'PURGE_ITEMS' :'DELETE FROM activity_items WHERE state=?',
+        'PURGE_ITEMS' :'DELETE FROM activity_items WHERE state=? or  published = 0',
         'DELETE_ALL_ITEMS' :'DELETE FROM activity_items'
     };
 
@@ -47,7 +47,6 @@ angular.module('starter.activities',[])
 
                         for (var i=0;i < res.rows.length; i++){
                             var row = res.rows.item(i);
-
                             var itemDate = moment(row.startDate);
 
                             var item = {
@@ -112,7 +111,6 @@ angular.module('starter.activities',[])
         return defered.promise;     
     };
 
-
     this.add = function(activityItem) {
         var added = $q.defer();
 
@@ -123,31 +121,52 @@ angular.module('starter.activities',[])
 
                 //Look if already exists, so update it
                 var foundItem = _.findWhere(actService.activityItems,{_id: activityItem._id});
+                
+                //We look for items we want "unpublish" or "delete".
+                var discarded = activityItem.published === false || activityItem.state === "deleted";
+                
+                if(foundItem!==undefined && discarded){
+                    //afegim totes les propietats per defecte per tenir un objecte sencer...
+                    activityItem.created = Date.now;
+                    activityItem.lastUpdate = Date.now;
+                    activityItem.startDate = Date.now;
+                    activityItem.dueDate = {};
+                    activityItem.title = "";
+                    activityItem.period = "";
+                    activityItem.content = "";
+                    activityItem.location = "";
+                    activityItem.eventURL = "";
+                    activityItem.image = "";
+                    activityItem.published = false;
+                    activityItem.state = "deleted";
+                }
+                
+                //We don't save 'new' items that in the server are marked as "unpublished" or "deleted" items.
+                if(foundItem!==undefined || (foundItem===undefined && !discarded)){                    
+                    //Add the item into the array and save it to the db
+                    actService.saveItem (activityItem, (foundItem===undefined)).then (function (item){
+                        var itemDate = moment(item.eventDate);
 
-                //Add the item into the array and save it to the db
-                actService.saveItem (activityItem, (foundItem===undefined)).then (function (item){
-                    var itemDate = moment(item.eventDate);
+                        item.dayMonth =  itemDate.format('D');
+                        item.month = itemDate.month();
+                        item.dayOfWeek = itemDate.isoWeekday();
 
-                    item.dayMonth =  itemDate.format('D');
-                    item.month = itemDate.month();
-                    item.dayOfWeek = itemDate.isoWeekday();
-                   
-                    item.hour = itemDate.format('HH:mm');
-                    item.eventDay =  itemDate.startOf('day');
+                        item.hour = itemDate.format('HH:mm');
+                        item.eventDay =  itemDate.startOf('day');
 
-
-                    if (foundItem!==undefined){
-                        angular.extend (foundItem,item);
-                    }else if (item.state === 'active') {
-                        actService.activityItems.unshift (item);   
-                    }
-
-
+                        if (foundItem!==undefined){
+                            angular.extend (foundItem,item);
+                        }else if (!discarded) {
+                            actService.activityItems.unshift (item);   
+                        }
+                        added.resolve();
+                    }).catch (function (error){
+                        //Push up the error, nothing else to do
+                        added.reject (error);
+                    });
+                }else{
                     added.resolve();
-                }).catch (function (error){
-                    //Push up the error, nothing else to do
-                    added.reject (error);
-                });
+                }
             }).catch (function (error){
                 console.log ('Error retrieving the activityItems, so insertion can\'t be processed '); 
                 added.reject (errorCodes.ERROR_WRITING_ITEM); 
@@ -240,22 +259,20 @@ angular.module('starter.activities',[])
                 if (lastDate){
                     lastDateParam = {'lastActivityDate' : new Date(lastDate)};
                 }
-
                 $http.post (activityConfig.activity_api_url + activityConfig.activityEP, lastDateParam)
                     .success(function (data){
                     var activityInfo = data;
                     var allAdds = [];
-
                     for (activityIdx in activityInfo.activityItems){
-                        allAdds.push (actService.add (activityInfo.activityItems[activityIdx]));
+                        allAdds.push(actService.add(activityInfo.activityItems[activityIdx]));
                     }
 
                     //If there are changes just remove the discarded ones and update the list
                     if (allAdds.length > 0){
+
                         $q.all (allAdds).then (function(){
                             window.localStorage.lastActivityDate = activityInfo.currentDate;
                             actService.retrieving = false;
-
                             factoryObject.purgeOld().then (function (){
                                 updatedActivityItems.resolve (actService.activityItems)
                             }).
@@ -270,6 +287,7 @@ angular.module('starter.activities',[])
                     }
 
                 }).error (function (status){
+                    
                     updatedActivityItems.reject(errorCodes.ERROR_RETRIEVING_ITEMS);
                     actService.retrieving = false;
                 });
@@ -280,6 +298,7 @@ angular.module('starter.activities',[])
             return updatedActivityItems.promise;
         },
 
+        
         purgeOld: function () {
             var deleted = $q.defer();
 
@@ -292,7 +311,7 @@ angular.module('starter.activities',[])
                             actService.activityItems = _.reject(actService.activityItems,function (item) {
                                 return (item.state === 'deleted');
                             });
-
+                            
                             deleted.resolve();
                             $rootScope.$apply ();
                         },
