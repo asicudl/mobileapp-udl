@@ -119,28 +119,47 @@ angular.module('starter.agendaevents',[])
                 //Look if already exists, so update it
                 var foundItem = _.findWhere(agndSrv.agendaItems,{_id: agendaItem._id});
                 
-                //Add the item into the array and save it to the db
-                agndSrv.saveItem (agendaItem, (foundItem===undefined)).then (function (item){
-                    var itemDate = moment(item.eventDate);
-                    
-                    item.dayMonth =  itemDate.format('D');
-                    item.dayOfWeek = itemDate.isoWeekday();
-                    item.month = itemDate.month();
+                //We look for items we want to "delete".
+                var discarded = agendaItem.state === "deleted";
+                
+                if(foundItem!==undefined && discarded){
+                    //afegim totes les propietats per defecte per tenir un objecte sencer...
+                    agendaItem.created = Date.now;
+                    agendaItem.lastUpdate = Date.now;
+                    agendaItem.title = "";
+                    agendaItem.eventDate = Date.now;
+                    agendaItem.content = "";
+                    agendaItem.location = "";
+                    agendaItem.state = "deleted";
+                }
+                
+                //We don't save 'new' items that in the server are marked as "deleted" items.
+                if(foundItem!==undefined || (foundItem===undefined && !discarded)){                    
+                    //Add the item into the array and save it to the db
+                    agndSrv.saveItem (agendaItem, (foundItem===undefined)).then (function (item){
+                        var itemDate = moment(item.eventDate);
 
-                    item.hour = itemDate.format('HH:mm');
-                    item.eventDayStamp = itemDate.startOf('day').format ('x');
-                    
-                    if (foundItem!==undefined){
-                        angular.extend (foundItem,item);
-                    }else if (item.state === 'active') {
-                        agndSrv.agendaItems.unshift (item);   
-                    }
-                     
+                        item.dayMonth =  itemDate.format('D');
+                        item.dayOfWeek = itemDate.isoWeekday();
+                        item.month = itemDate.month();
+
+                        item.hour = itemDate.format('HH:mm');
+                        item.eventDayStamp = itemDate.startOf('day').format ('x');
+
+                        if (foundItem!==undefined){
+                            angular.extend (foundItem,item);
+                        }else if (!discarded) {
+                            agndSrv.agendaItems.unshift (item);   
+                        }
+
+                        added.resolve();
+                    }).catch (function (error){
+                        //Push up the error, nothing else to do
+                        added.reject (error);
+                    });
+                }else{
                     added.resolve();
-                }).catch (function (error){
-                    //Push up the error, nothing else to do
-                    added.reject (error);
-                });
+                }
             }).catch (function (error){
                 console.log ('Error retrieving the agendaItems, so insertion can\'t be processed '); 
                 added.reject (errorCodes.ERROR_WRITING_ITEM); 

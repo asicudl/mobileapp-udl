@@ -25,7 +25,7 @@ angular.module('starter.offeredservices',[])
              'SELECT_ITEMS' : 'SELECT * FROM offeredservices_items ORDER BY title',
              'INSERT_ITEM' : 'INSERT INTO offeredservices_items (title, content, location, attendingschedule,  published, image, url, gmapsurl, phonenumber, email, state, id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)',
              'UPDATE_ITEM' : 'UPDATE offeredservices_items SET title=?, content=?, location=?, attendingschedule=?,  published=?,image=?,url=?,gmapsurl=?,phonenumber=?, email=?,state=? WHERE id=?',
-             'PURGE_ITEMS' :'DELETE FROM offeredservices_items WHERE state=?',
+             'PURGE_ITEMS' :'DELETE FROM offeredservices_items WHERE state=? or published = 0',
              'DELETE_ALL_ITEMS' :'DELETE FROM offeredservices_items'
              };
 
@@ -119,27 +119,50 @@ this.add = function(offeredServiceItem) {
 
             //Look if already exists, so update it
             var foundItem = _.findWhere(osService.offeredServiceItems,{_id: offeredServiceItem._id});
+            
+            //We look for items we want "unpublish" or "delete".
+            var discarded = offeredServiceItem.published === false || offeredServiceItem.state === "deleted";
 
-            //Add the item into the array and save it to the db
-            osService.saveItem (offeredServiceItem, (foundItem===undefined)).then (function (item){
+            if(foundItem!==undefined && discarded){
+                //afegim totes les propietats per defecte per tenir un objecte sencer...
+                offeredServiceItem.created = Date.now;
+                offeredServiceItem.lastUpdate = Date.now;
+                offeredServiceItem.title = "";
+                offeredServiceItem.content = "";
+                offeredServiceItem.location = "";
+                offeredServiceItem.gmapsURL = "";
+                offeredServiceItem.URL = "";
+                offeredServiceItem.phoneNumber = "";
+                offeredServiceItem.attendingSchedule = "";
+                offeredServiceItem.email = "";
+                offeredServiceItem.image = "";
+                offeredServiceItem.status = "";
+                offeredServiceItem.published = false;
+                offeredServiceItem.state = "deleted";
+            }
 
-                if (foundItem!==undefined){
-                    angular.extend (foundItem,item);
-                }else if (item.state === 'active') {
-                    osService.offeredServiceItems.unshift (item);   
-                }
+            //We don't save 'new' items that in the server are marked as "unpublished" or "deleted" items.
+            if(foundItem!==undefined || (foundItem===undefined && !discarded)){                    
+                //Add the item into the array and save it to the db
+                osService.saveItem (offeredServiceItem, (foundItem===undefined)).then (function (item){
 
-                added.resolve();
-            }).catch (function (error){
-                //Push up the error, nothing else to do
-                added.reject (error);
-            });
+                    if (foundItem!==undefined){
+                        angular.extend (foundItem,item);
+                    }else if (!discarded) {
+                        osService.offeredServiceItems.unshift(item);   
+                    }
+                    added.resolve();
+                }).catch (function (error){
+                    //Push up the error, nothing else to do
+                    added.reject (error);
+                });
+            }
         }).catch (function (error){
             console.log ('Error retrieving the offeredServiceItems, so insertion can\'t be processed '); 
             added.reject (errorCodes.ERROR_WRITING_ITEM); 
         });
     }else{
-        added.reject (errorCodes.ERROR_WRITING_ITEM); 
+        added.reject (errorCodes.ERROR_WRITING_ITEM);
     }
 
     return added.promise;

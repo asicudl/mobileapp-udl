@@ -63,11 +63,11 @@ angular.module('starter.agendaevents')
         $scope.refreshItems = function (){
 
             if ($rootScope.routeToServicesNotAvailable){
+
                 $scope.$broadcast('scroll.refreshComplete'); 
             }else{
                 $q.all ([AgendaService.retrieveNewItems()]).then(function (results){
                     $scope.agendaList= results[0]; 
-                    
                     $scope.waitForRefreshDelay = true;
                     //Don't allow to automatic refresh until 20 minutes 
                     $timeout (function (){
