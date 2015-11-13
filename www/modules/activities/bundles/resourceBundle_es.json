@@ -3,7 +3,7 @@
     "ag_list_activityTitle": "Actividades",
     "ag_list_noactivities": "No hay actividades",
     "ag_activity_title": "Actividad",
-    "ag_view_in_web" : "Visualiza en web",
+    "ag_view_in_web" : "Visualiza en la web",
     "ag_weekday_1": "Lunes",
     "ag_weekday_2": "Martes",
     "ag_weekday_3": "Miércoles",
@@ -26,5 +26,5 @@
     "ag_share_message": "Echa un vistazo a ",
     "ag_share_subject": "Actividad UdL",
     "ctrl_activities_initializing" : "Actualizando las actividades",
-    "ag_activities_share" : "Comparte"
+    "ag_activities_share" : "Compartir"
 }
