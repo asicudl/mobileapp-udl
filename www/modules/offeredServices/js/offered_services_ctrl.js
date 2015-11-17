@@ -60,7 +60,13 @@ angular.module('starter.offeredservices').controller('OfferedServicesCtrl',['$sc
                     });
 
                 };
-
+    
+                $scope.existImage = function(offeredService){
+                   return offeredService.image !== null && 
+                          offeredService.image !== undefined &&
+                          offeredService.image.length > 0;
+                };
+ 
                 $scope.refreshItems = function () {
 
                     if ($rootScope.routeToServicesNotAvailable){

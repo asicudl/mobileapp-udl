@@ -156,6 +156,8 @@ this.add = function(offeredServiceItem) {
                     //Push up the error, nothing else to do
                     added.reject (error);
                 });
+            }else{
+                added.resolve();
             }
         }).catch (function (error){
             console.log ('Error retrieving the offeredServiceItems, so insertion can\'t be processed '); 

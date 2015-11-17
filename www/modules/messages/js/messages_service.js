@@ -268,7 +268,7 @@ angular.module('starter.messages', [])
             
             //First prevent executing more than one retrieves 
             if (msg.retrieving) {
-                q.reject (errorCodes.ALREADY_RETRIEVING);
+                numMessages.reject (errorCodes.ALREADY_RETRIEVING);
             }else{
                 msg.retrieving = true;
 

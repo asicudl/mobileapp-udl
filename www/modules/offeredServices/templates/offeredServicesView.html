@@ -4,17 +4,30 @@
     </ion-nav-title> 
   <ion-content>
       <div class="list card">
-          <div class="item item-thumbnail-left">
-              <img  src="{{currentOfferedService.image}}" />  
-            <h2>{{currentOfferedService.title}}</h2>
+          <div ng-show="existImage(currentOfferedService)" class="item item-thumbnail-left">
+              <img src="{{currentOfferedService.image}}" />
+              <p><h2 class="offeredServiceTitle">{{currentOfferedService.title}}</h2></p>
           </div>
+          <div ng-show="!existImage(currentOfferedService)" class="item">
+              <img src="{{currentOfferedService.image}}" />
+              <p><h2 class="offeredServiceTitle">{{currentOfferedService.title}}</h2></p>
+          </div>
+
+      
           <div class="item item-body offeredServiceInformation">
               <p ng-bind-html="currentOfferedService.content | hrefToJS" />
               <p ng-show="currentOfferedService.gmapsURL">
                 <i class="icon ion-map"></i>
                   <iframe src="{{currentOfferedService.gmapsURL | trustGmapsURL}}" width="100%" min-height="300" frameborder="0" style="border:0"></iframe>
               </p>
-              <p ng-show="currentOfferedService.attendingSchedule"><i class="icon ion-clock"></i> {{currentOfferedService.attendingSchedule}}</p>
+              
+              <p><i class="icon ion-clock"></i>Horari d'atenció:</p>
+              <p ng-show="currentOfferedService.attendingSchedule">
+              <p ng-show="currentOfferedService.attendingSchedule" ng-bind-html="currentOfferedService.attendingSchedule | hrefToJS"></p>
+              
+              <p>Localització:</p>
+              <p ng-show="currentOfferedService.location" ng-bind-html="currentOfferedService.location | hrefToJS" />
+              
               <p ng-show="currentOfferedService.URL"><i class="icon ion-link"></i> <a class="" href="#" ng-click="openExternalURL(currentOfferedService.URL)">{{currentOfferedService.URL}}</a></p>
               <p ng-show="currentOfferedService.email"><i class="icon ion-email"> </i> <a href="#" ng-click="openExternalURL('mailto:' + currentOfferedService.email)">{{currentOfferedService.email}}</a></p>
         </div>
