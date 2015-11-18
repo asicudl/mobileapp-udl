@@ -15,20 +15,18 @@
 
       
           <div class="item item-body offeredServiceInformation">
-              <p ng-bind-html="currentOfferedService.content | hrefToJS" />
+              <div ng-bind-html="currentOfferedService.content | hrefToJS"></div>
               <p ng-show="currentOfferedService.gmapsURL">
                 <i class="icon ion-map"></i>
-                  <iframe src="{{currentOfferedService.gmapsURL | trustGmapsURL}}" width="100%" min-height="300" frameborder="0" style="border:0"></iframe>
+                <iframe src="{{currentOfferedService.gmapsURL | trustGmapsURL}}" width="100%" min-height="300" frameborder="0" style="border:0"></iframe>
               </p>
               
-              <p><i class="icon ion-clock"></i>Horari d'atenció:</p>
-              <p ng-show="currentOfferedService.attendingSchedule">
-              <p ng-show="currentOfferedService.attendingSchedule" ng-bind-html="currentOfferedService.attendingSchedule | hrefToJS"></p>
-              
-              <p>Localització:</p>
-              <p ng-show="currentOfferedService.location" ng-bind-html="currentOfferedService.location | hrefToJS" />
-              
+              <div class="iconaClock" ng-show="currentOfferedService.attendingSchedule" ng-bind-html="currentOfferedService.attendingSchedule | hrefToJS"></div>
+
+              <div class="iconaLocation" ng-show="currentOfferedService.location" ng-bind-html="currentOfferedService.location | hrefToJS"/></div>
+
               <p ng-show="currentOfferedService.URL"><i class="icon ion-link"></i> <a class="" href="#" ng-click="openExternalURL(currentOfferedService.URL)">{{currentOfferedService.URL}}</a></p>
+    
               <p ng-show="currentOfferedService.email"><i class="icon ion-email"> </i> <a href="#" ng-click="openExternalURL('mailto:' + currentOfferedService.email)">{{currentOfferedService.email}}</a></p>
         </div>
 
