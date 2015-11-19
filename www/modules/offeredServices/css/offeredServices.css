@@ -31,6 +31,10 @@
     border-top-width: 2px
 }
 
+.offeredService .item-content-padding-right{
+    padding-right: 95px;
+}
+
 .offeredService .item-content{
     border-width: 0px 0px 0px 5px;
     border-color: #830051;
@@ -45,4 +49,42 @@
 
 .offeredServiceInformation a{
     color: inherit;
+}
+
+.item h2.offeredServiceTitle{
+    white-space: normal;
+}
+
+.espai:before {
+    content: "&nbsp;";
+}
+
+.iconaClock > :nth-child(1):before {
+    content: "\f26e";
+    display: inline-block;
+    font-family: "Ionicons";
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    text-rendering: auto;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    margin-right: 5px;
+}
+
+.iconaLocation > p:nth-child(1):before {
+    content: "\f1ff";
+    display: inline-block;
+    font-family: "Ionicons";
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    text-rendering: auto;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    margin-right: 5px;
 }
