@@ -4,6 +4,7 @@ angular.module('starter.appcontroller',['underscore'])
     $scope.loginData = {};
     $scope.localeData = {};
 
+
     $scope.authStatus = AuthService.authStatus;
     var loginModal = $q.defer();
     var localeModal = $q.defer();    
