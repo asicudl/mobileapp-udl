@@ -1,7 +1,7 @@
 {
     "app_title":"UdL APP",
-    "agenda_menu_item": "Eveniments",
-    "activities_menu_item": "",
+    "agenda_menu_item": "Agenda",
+    "activities_menu_item": "Activitats",
     "oservices_menu_item": "Servicis UdL",
     "messages_menu_item": "Messatges",
     "settings_menu_item": "Configuracion",
