@@ -1,4 +1,4 @@
-angular.module('starter.messages').controller('MessagesCtrl',['$scope','$ionicPopup','$ionicListDelegate','$ionicLoading','$timeout','AuthService','MessagesService','I18nService','$stateParams','_','$location','$filter','$timeout','$q','$rootScope',function($scope, $ionicPopup,$ionicListDelegate,$ionicLoading, $timeout,AuthService,MessagesService,I18nService,$stateParams,_,$location,$filter,$timeout,$q,$rootScope) {
+angular.module('starter.messages').controller('MessagesCtrl',['$scope','$ionicPopup','$ionicListDelegate','$ionicLoading','AuthService','MessagesService','I18nService','$stateParams','_','$location','$filter','$timeout','$q','$rootScope',function($scope, $ionicPopup,$ionicListDelegate,$ionicLoading, AuthService,MessagesService,I18nService,$stateParams,_,$location,$filter,$timeout,$q,$rootScope) {
     
     
     var LOADING_TMPLT= '<i class="ion-loading-c"></i> ';
@@ -6,13 +6,15 @@ angular.module('starter.messages').controller('MessagesCtrl',['$scope','$ionicPo
     $scope.popover = {};
     $scope.undoAnimated = '';
     $scope.commonSolution = '';
-   
     
     $scope.pullText = 'pull';
     
+    
+    
+    
     $scope.$on('$ionicView.enter', function() {
         //Load the new messages
-        if ($scope.messagesInitialized && $stateParams.location === '/app/messages'){
+        if ($scope.messagesInitialized && !$stateParams.messageId){
             $scope.refreshMessages();
         }
     });
@@ -174,18 +176,20 @@ angular.module('starter.messages').controller('MessagesCtrl',['$scope','$ionicPo
             }).catch (function (){
                 $scope.showRefreshListError();          
             }).finally (function (){
-                $scope.$broadcast('scroll.refreshComplete'); 
+                $scope.$broadcast('scroll.refreshComplete');
+                recalculateDates ();
             });
         }else{
             MessagesService.retrieveNewMessages().then (function (numMessages){
                 $scope.newMessages = numMessages;
             }).catch (function (error){
-                if (error !== MessageService.errorCodes.ALREADY_RETRIEVING){
+                if (error !== MessagesService.errorCodes.ALREADY_RETRIEVING){
                     $scope.showRefreshListError();
                     $rootScope.routeToServicesNotAvailable = true;
                 }
             }).finally(function (){
                 $scope.$broadcast('scroll.refreshComplete'); 
+                recalculateDates();
             });
         }
     };
@@ -218,5 +222,22 @@ angular.module('starter.messages').controller('MessagesCtrl',['$scope','$ionicPo
 
        }); 
    };
+    
+    var recalculateDates = function (){
+        //Recalculate pretty Dates
+        var now = new Date()
+
+        if (!localStorage.lastViewAccess){
+            localStorage.lastViewAccess = now;
+        }
+
+        var lastViewAccess = localStorage.lastViewAccess;
+
+        if (!moment(lastViewAccess).isSame(now,'day')){
+            localStorage.lastViewAccess = now;
+            MessagesService.recalculateDates();
+        }
+
+    };
   
 }]);

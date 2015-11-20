@@ -120,6 +120,12 @@ angular.module('starter.messages', [])
         
         return prettyDates[period];
     };
+    
+    var updatePrettyDate = function (message) {
+        var pdate = getPrettyDate(message.date);
+        message.prettyDateFormat = pdate.name;
+        message.prettyDateOrder = pdate.order;
+    };
   
     this.createMessage = function (data){
        
@@ -416,6 +422,14 @@ angular.module('starter.messages', [])
                 this.undoMessage.currentMessage = undefined;
                 this.undoMessage.show= false;
             }
+        },
+        recalculateDates : function () {
+            factoryObject.getMessages().then (function (messages) {
+                var now = new Date();
+                for (var idx in messages) {
+                    updatePrettyDate(messages[idx]);
+                }
+            });
         },
         errorCodes: errorCodes
     };
