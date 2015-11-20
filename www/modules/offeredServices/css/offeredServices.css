@@ -55,11 +55,38 @@
     white-space: normal;
 }
 
-.espai:before {
-    content: "&nbsp;";
+h2.offeredServiceTitle {
+    font-size:16px;
 }
 
-.iconaClock > :nth-child(1):before {
+
+
+.offeredServiceInformation ul{
+    list-style: disc;
+    margin-left: 15px;
+    list-style-position: inside; 
+}
+
+.offeredServiceInformation ol{
+   margin-left: 15px;
+   list-style-type: decimal; 
+   list-style-position: inside; 
+}
+
+.offeredServiceInformation p, .offeredServiceInformation li, .offeredServiceInformation a  {
+    font-size:14px;
+    color:#666;
+}
+
+.offeredServiceInformation h1, .offeredServiceInformation h2, .offeredServiceInformation h3, .offeredServiceInformation h4, .offeredServiceInformation h5, .offeredServiceInformation h6, .offeredServiceInformation * {
+    color:#666;    
+}
+
+.offeredServiceInformation i{
+    font-style: italic;
+}
+
+.offeredServiceInformation .iconaClock > :nth-child(1):before {
     content: "\f26e";
     display: inline-block;
     font-family: "Ionicons";
@@ -74,7 +101,7 @@
     margin-right: 5px;
 }
 
-.iconaLocation > p:nth-child(1):before {
+.offeredServiceInformation .iconaLocation > :nth-child(1):before {
     content: "\f1ff";
     display: inline-block;
     font-family: "Ionicons";
@@ -87,4 +114,22 @@
     line-height: 1;
     -webkit-font-smoothing: antialiased;
     margin-right: 5px;
+}
+
+.offeredServiceInformation .map{
+    overflow:hidden;
+    position:relative;
+    overflow:hidden;
+    height:120px;
+    width:480px;
+    resize:none;
+    max-width:100%;
+}
+
+.offeredServiceInformation .iframeposition{
+    border: 0;
+    position: absolute;
+    top: -35px;
+    left: 0px;
+    height: 170px;
 }

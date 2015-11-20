@@ -12,18 +12,18 @@
               <img src="{{currentOfferedService.image}}" />
               <p><h2 class="offeredServiceTitle">{{currentOfferedService.title}}</h2></p>
           </div>
-
       
           <div class="item item-body offeredServiceInformation">
-              <div ng-bind-html="currentOfferedService.content | hrefToJS"></div>
-              <p ng-show="currentOfferedService.gmapsURL">
-                <i class="icon ion-map"></i>
-                <iframe src="{{currentOfferedService.gmapsURL | trustGmapsURL}}" width="100%" min-height="300" frameborder="0" style="border:0"></iframe>
-              </p>
-              
+              <div class="itemService" ng-bind-html="currentOfferedService.content | hrefToJS"></div>
+
               <div class="iconaClock" ng-show="currentOfferedService.attendingSchedule" ng-bind-html="currentOfferedService.attendingSchedule | hrefToJS"></div>
 
               <div class="iconaLocation" ng-show="currentOfferedService.location" ng-bind-html="currentOfferedService.location | hrefToJS"/></div>
+    
+              <div ng-show="currentOfferedService.gmapsURL"  class="map">
+                <i class="icon ion-map"></i>
+                <iframe src="{{currentOfferedService.gmapsURL | trustGmapsURL}}"  class="iframeposition" frameborder="0"></iframe>
+              </div>
 
               <p ng-show="currentOfferedService.URL"><i class="icon ion-link"></i> <a class="" href="#" ng-click="openExternalURL(currentOfferedService.URL)">{{currentOfferedService.URL}}</a></p>
     
