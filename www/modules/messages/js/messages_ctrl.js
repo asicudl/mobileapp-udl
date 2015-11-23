@@ -13,8 +13,9 @@ angular.module('starter.messages').controller('MessagesCtrl',['$scope','$ionicPo
     
     
     $scope.$on('$ionicView.enter', function() {
+
         //Load the new messages
-        if ($scope.messagesInitialized && !$stateParams.messageId){
+        if ($scope.messagesInitialized && $location.$$url === '/app/messages'){
             $scope.refreshMessages();
         }
     });
@@ -172,7 +173,7 @@ angular.module('starter.messages').controller('MessagesCtrl',['$scope','$ionicPo
         
         if ($rootScope.routeToServicesNotAvailable){
             $rootScope.authenticate().then (function (){
-                $scope.refreshMessage();    
+                $scope.refreshMessages();    
             }).catch (function (){
                 $scope.showRefreshListError();          
             }).finally (function (){

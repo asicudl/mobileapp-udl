@@ -58,7 +58,7 @@ angular.module('starter.activities',[])
                                 state: row.state,
                                 published: row.published,
                                 startDate: row.startDate,
-                                dueDate: row.dueDateDate,
+                                dueDate: row.duedate,
                                 image: row.image,
                                 eventURL: row.eventurl,
                                 hour: itemDate.format('HH:mm'),
