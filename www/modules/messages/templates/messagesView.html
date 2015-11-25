@@ -12,7 +12,7 @@
        </div>
        <div class="item item-body">
            <h2>{{currentMessage.subject}}</h2>
-           <p ng-bind-html="currentMessage.body" />
+           <p ng-bind-html="currentMessage.body | hrefToJS"  />
            <p> {{rb.ms_view_fullmessage_desc}} <a href="" ng-click="openExternalURL(currentMessage.url)"
                > {{rb.ms_view_fullmessage_link}}</a></p> 
            

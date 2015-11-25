@@ -241,4 +241,10 @@ angular.module('starter.messages').controller('MessagesCtrl',['$scope','$ionicPo
 
     };
   
-}]);
+}]).filter('hrefToJS', function ($sce, $sanitize) {
+    return function (text) {
+        var regex = /href="([\S]+)"/g;
+        var newString = $sanitize(text).replace(regex, "onclick=\"angular.element(this).scope().openExternalURL('$1');return false\" href=");
+        return $sce.trustAsHtml(newString);
+    }
+});
