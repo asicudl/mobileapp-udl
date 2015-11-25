@@ -90,9 +90,7 @@
     
 }
 
-.udlapp .date.udlapp-date-av.btn_0 {
-    background:  #009688;
-}
+
 .udlapp .date.udlapp-date-av.btn_1 {
     background:  #ff9800;
     color: #222;
@@ -108,24 +106,20 @@
     color: #222;
 }
 .udlapp .date.udlapp-date-av.btn_5{
-    background: #ffeb3b;
-    color: #222;
+    background: #e91e63;
 }
 .udlapp .date.udlapp-date-av.btn_6{
     background: #9c27b0;
 }
 .udlapp .date.udlapp-date-av.btn_7 {
-    background:  #e91e63;
+    background:  #009688;
 }
 
 
 
-.agendaItem.btn_0 .item-content{
-    border-color:  #009688;
-}
+
 .agendaItem.btn_1 .item-content{
     border-color:  #ff9800;
-    color: #222;
 }
 .agendaItem.btn_2 .item-content{
     border-color: #4caf50;
@@ -135,18 +129,17 @@
 }
 .agendaItem.btn_4 .item-content{
     border-color:  #cddc39;
-    color: #222;
 }
 .agendaItem.btn_5 .item-content{
-    border-color: #ffeb3b;
-    color: #222;
+    border-color: #e91e63;
 }
 .agendaItem.btn_6 .item-content{
     border-color: #9c27b0;
 }
 .agendaItem.btn_7 .item-content{
-    border-color:  #e91e63;
+    border-color:  #009688;
 }
+
 
 .date.left{
     left: 15px;
@@ -211,16 +204,16 @@
 }
 
 .dateText.btn_5 span{
-    color:   #4caf50;
+    color:   #e91e63;
 }
 
 .dateText.btn_6 span{
-    color:  #ffeb3b;
+    color:  #9c27b0;
+}
+.dateText.btn_7 span{
+    color:  #009688;
 }
 
-.dateText.btn_7 span{
-    color:    #e91e63;
-}
 
 .calendarList{
     top: -15px;
