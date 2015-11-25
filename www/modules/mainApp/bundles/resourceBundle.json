@@ -1,6 +1,6 @@
 {
     "app_title":"UdL APP",
-    "agenda_menu_item": "Agenda Events",
+    "agenda_menu_item": "Agenda",
     "activities_menu_item": "Activities",
     "oservices_menu_item": "UdL Services",
     "messages_menu_item": "Messages",
@@ -14,7 +14,7 @@
     "settings_disconnect_button": "Disconnect account",
     "settings_login_button": "Login",
     "settings_language": "Language",
-    "settings_selected_language": "You selected <b>{0}</b> as your app language. If you want to change it click on the followin button",
+    "settings_selected_language": "You selected <b>{0}</b> as your app language. If you want to change it click on the following button",
     "settings_change_language_button": "Choose another language",
     "login_title": "Login",
     "login_close": "Close",
