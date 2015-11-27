@@ -84,7 +84,6 @@ angular.module('starter.pushnotification', [])
 
                     // We delegate the registration to the cordova plugin ...
                     push.register(onNotification, successRegisterHandler, errorRegisterHandler, pushConfig);
-
                 }catch (err) {
                     console.log ('Push service undefined or invalid, can\'t register: ' + err);
                     //Something went wrong

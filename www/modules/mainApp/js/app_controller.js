@@ -92,8 +92,9 @@ angular.module('starter.appcontroller',['underscore'])
     $scope.logout = function() {
 
         //Unassociate the device
-        PushNotificationService.unassociateDevice().then (function (){
-            $scope.showUnassocieatedOk();
+        /*PushNotificationService.unassociateDevice().then (function (){
+            //No necessary to show anything
+            //$scope.showUnassocieatedOk();
         }).catch (function (error){
             //Actually we just can inform to user about it
             $scope.showUnassocieatedFail();
@@ -102,6 +103,20 @@ angular.module('starter.appcontroller',['underscore'])
             MessagesService.deleteAll().catch (function (error){
                 $scope.showDeletingError();
             });
+        });*/
+        
+        PushNotificationService.unassociateDevice().then (function (){
+            //No necessary to show anything
+            //$scope.showUnassocieatedOk();
+        }).catch (function (error){
+            //Actually we just can inform to user about it
+            $scope.showUnassocieatedFail();
+        });
+        
+        AuthService.logout ();
+        
+        MessagesService.deleteAll().catch (function (error){
+            $scope.showDeletingError();
         });
 
     };

@@ -356,7 +356,9 @@ angular.module('starter.messages', [])
                     function(tx) {
                         tx.executeSql (queries.DELETE_ALL_MESSAGES,[],
                             function(tx,res){ //Deletion success
-                                msg.messages.splice(0,msg.messages.length);
+                                if (msg && msg.messages){
+                                    msg.messages.splice(0,msg.messages.length);
+                                }
                             
                                 if (window.localStorage.lastMessageDate){
                                     delete window.localStorage.lastMessageDate;   
