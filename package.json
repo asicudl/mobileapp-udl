@@ -23,7 +23,8 @@
     "cordova-sqlite-storage",
     "cordova-plugin-x-socialsharing",
     "cordova-plugin-whitelist",
-    "org.apache.cordova.inappbrowser"
+    "org.apache.cordova.inappbrowser",
+    "cordova-plugin-splashscreen"
   ],
   "cordovaPlatforms": [
     "android",
