@@ -284,7 +284,7 @@ angular.module('starter.messages', [])
                 if (lastDate){
                     lastDateParam = {'lastMessageDate' : new Date(lastDate)};
                 }
-
+                
                 AuthService.hasApiToken().then (function() {
                     $http.post (messagesConfig.msg_api_url + messagesConfig.messagesEP, lastDateParam)
                     .success(function (data){
@@ -294,7 +294,12 @@ angular.module('starter.messages', [])
                         }
 
                         window.localStorage['lastMessageDate'] = messagesInfo.currentDate;
-                        msg.retrieving = false;
+                        
+                        //Let's give some time to ensure that time is below in all backend servers (triky)
+                        setTimeout (function (){
+                            msg.retrieving = false;
+                        },3000);
+                       
 
                         var messagNum = messagesInfo.messages ? messagesInfo.messages.length : 0;
                         numMessages.resolve(messagNum);
