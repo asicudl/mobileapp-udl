@@ -23,8 +23,8 @@
     "ag_month_9": "OCT",
     "ag_month_10": "NOV",
     "ag_month_11": "DEC",
-    "ag_share_message": "Take a look at ",
-    "ag_share_subject": "UdL Activity",
+    "ag_share_message": "",
+    "ag_share_subject": "UdL - Take a look at this activity:",
     "ctrl_activities_initializing" : "Updating activities",
     "ag_activities_share" : "Share"
 }

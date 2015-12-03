@@ -5,5 +5,7 @@
     "os_share_message" : "Compartís",
     "os_share_subject" : "Hè un còp d'uelh a: ",
     "os_list_title" : "Servicis UdL",
-    "os_list_noservices": "Non i a servicis"
+    "os_list_noservices": "Non i a servicis",
+    "ag_share_message": "",
+    "ag_share_subject": "UdL - Hè un còp d'uelh a aguest servici:"
 }

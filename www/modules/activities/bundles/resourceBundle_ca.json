@@ -23,8 +23,8 @@
     "ag_month_9": "OCT",
     "ag_month_10": "NOV",
     "ag_month_11": "DES",
-    "ag_share_message": "Fes un cop d'ull a: ",
-    "ag_share_subject": "Activitat UdL",
+    "ag_share_message": "",
+    "ag_share_subject": "UdL - Fes un cop d'ull a aquesta activitat: ",
     "ctrl_activities_initializing" : "Actualitzant les activitats",
     "ag_activities_share" : "Comparteix"
 }

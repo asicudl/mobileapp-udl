@@ -5,5 +5,7 @@
     "os_share_message" : "Share",
     "os_share_subject" : "Look at this information",
     "os_list_title" : "UdL services",
-    "os_list_noservices": "There are no services"
+    "os_list_noservices": "There are no services",
+    "ag_share_message": "",
+    "ag_share_subject": "UdL - Take a look at this service:"
 }

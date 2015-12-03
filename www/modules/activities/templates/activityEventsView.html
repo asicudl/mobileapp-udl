@@ -18,7 +18,7 @@
             <div class="item tabs tabs-secondary tabs-icon-left">
                 <a href="#" class="tab-item" ng-click="openExternalURL(currentActivity.eventURL)"><i class="icon ion-forward"></i> {{rb.ag_view_in_web}} </a>
 
-                <a class="tab-item" href="#"  ng-click="shareExternalURL(currentActivity.eventURL)">
+                <a class="tab-item" href="#"  ng-click="shareExternalURL(currentActivity.title, currentActivity.eventURL)">
                     <i class="icon ion-share"></i>
                     {{rb.ag_activities_share}}
                 </a>
