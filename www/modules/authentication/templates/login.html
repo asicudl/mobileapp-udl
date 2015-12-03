@@ -9,11 +9,14 @@
   <ion-content>
     <form ng-submit="doLogin()">
       <div class="list">
-        <div class="item item-body" ng-show="loginError">
-            <button class="button button-outline button-assertive button-alert-message">
+
+        <div class="item item-body" >
+            <button class="button button-outline button-assertive button-alert-message" ng-show="loginError">
                 <i class="icon ion-alert-circled"></i> {{loginError}}
             </button>
+            <p>{{rb.login_intro_udl}}</p>
         </div>
+        
         <label class="item item-input">
           <span class="input-label">{{rb.login_username}}</span>
           <input type="text" ng-model="loginData.username" autocapitalize="none" autocorrect="off">

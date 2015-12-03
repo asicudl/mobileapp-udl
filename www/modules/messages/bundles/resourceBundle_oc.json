@@ -1,11 +1,11 @@
 {
-    "ms_list_title": "Messatges",
+    "ms_list_title": "Notificacions",
     "ms_list_pull": "Estire entà actualizar",
-    "ms_list_nomessages": "Non i a messatges",
+    "ms_list_nomessages": "Non i a notificacions",
     "ms_list_undo": "Des·hè era supression ",
     "ms_list_item_dateformat": "dd/MM/yyyy HH:mm",
     "ms_list_whattodo": "Qué vòs hèr? ",
-    "ms_view_title": "Messatge",
+    "ms_view_title": "Notificacion",
     "ms_view_fullmessage_desc":"Hè clic entà veir eth mensaje complèt ath ",
     "ms_view_fullmessage_link":"Campus Virtual",
     "ms_view_dateformat": "dd/MM/yyyy HH:mm",
@@ -20,12 +20,12 @@
     "pd_thismonth": "Aguest mes",
     "pd_later": "Mès tard",
     "ctrl_common_sol": "Arture era aplicacion i torne a provà'c. S'eth problèma persistís contacte damb <a href='mailto:usuaris-cvirtual@llistes.udl.cat'>era adreça de supòrt</a> entà informar deth problèma",
-    "ctrl_while_stor": "en tot recuperar era lista de messatges plegadi",
-    "ctrl_while_chang": "en tot cambiar er estat d'un messatge",
-    "ctrl_while_deleting": "en tot eliminar un messatge",
+    "ctrl_while_stor": "en tot recuperar era lista de notificacions plegadi",
+    "ctrl_while_chang": "en tot cambiar er estat d'ua notificacion",
+    "ctrl_while_deleting": "en tot eliminar ua notificacion",
     "ctrl_problem_ocurred": "A agut un problèma",
     "ctrl_problem_desc": "Uups, quauquarren a anat mau  {0} <i class='ion-sad'></i><br/>{1}",
-    "ctrl_while_refreshing": "en tot rehèr era lista de messatges. Pòt èster pr'amor que non as connexion o ben pr'amor qu'eth servidor de messatges non ei actiu er aguesti moments.",
+    "ctrl_while_refreshing": "en tot rehèr era lista de notificacions. Pòt èster pr'amor que non as connexion o ben pr'amor qu'eth servidor de notificacions non ei actiu er aguesti moments.",
     "ctrl_refreshlater":  "Assegura-te qu'as connexion e torne a provà'c.",
-    "ctrl_message_initializing": "En tot liéger es messatges"
+    "ctrl_message_initializing": "En tot liéger es notificacions"
 }
