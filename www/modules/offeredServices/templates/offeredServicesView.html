@@ -35,7 +35,7 @@
                <i class="icon ion-ios7-telephone"></i>{{currentOfferedService.phoneNumber}}
             </a>
            
-            <a ng-show="currentOfferedService.URL" class="tab-item" href="#"  ng-click="shareExternalURL(currentOfferedService.URL)">
+            <a ng-show="currentOfferedService.URL" class="tab-item" href="#"  ng-click="shareExternalURL(currentOfferedService.title, currentOfferedService.URL)">
                <i class="icon ion-share"></i>
                {{rb.os_share_message}}
             </a>

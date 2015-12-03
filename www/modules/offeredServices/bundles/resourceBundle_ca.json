@@ -5,5 +5,7 @@
     "os_share_message" : "Comparteix",
     "os_share_subject" : "Fes un cop d'ull a: ",
     "os_list_title" : "Serveis UdL",
-    "os_list_noservices": "No hi ha serveis"
+    "os_list_noservices": "No hi ha serveis",
+    "ag_share_subject": "UdL - Fes un cop d'ull a aquest servei: ",
+    "ag_share_message": ""
 }

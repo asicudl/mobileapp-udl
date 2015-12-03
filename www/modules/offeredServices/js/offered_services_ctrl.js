@@ -99,9 +99,9 @@ angular.module('starter.offeredservices').controller('OfferedServicesCtrl',['$sc
                     window.open(url, '_system');
                 };
 
-                $scope.shareExternalURL = function(url) {
+                $scope.shareExternalURL = function(title, url) {
                     $cordovaSocialSharing
-                        .share($scope.rb.os_share_message + ' ' + url , $scope.rb.os_share_subject, '' , url);
+                        .share(title, $scope.rb.ag_share_subject, '' , url);
                 };
 
                 $scope.initializeBundles = function(){

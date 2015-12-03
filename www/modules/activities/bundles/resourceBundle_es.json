@@ -23,8 +23,8 @@
     "ag_month_9": "OCT",
     "ag_month_10": "NOV",
     "ag_month_11": "DIC",
-    "ag_share_message": "Echa un vistazo a ",
-    "ag_share_subject": "Actividad UdL",
+    "ag_share_message": "",
+    "ag_share_subject": "UdL - Echa un vistazo a esta actividad:",
     "ctrl_activities_initializing" : "Actualizando las actividades",
     "ag_activities_share" : "Compartir"
 }
