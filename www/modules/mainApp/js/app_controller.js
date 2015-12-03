@@ -241,10 +241,10 @@ angular.module('starter.appcontroller',['underscore'])
 
             PushNotificationService.registerDevice().catch (function (error){
                 $scope.showErrorOnRegistration();
-            }).finally (function (){
-                //Whatever happens with the registration we hide the loading panel
-                $ionicLoading.hide();  
             });
+            
+            //Whatever happens with the registration we hide the loading panel
+            $ionicLoading.hide();  
             
             defered.resolve();
 
