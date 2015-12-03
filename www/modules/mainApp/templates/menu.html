@@ -7,17 +7,16 @@
         <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
         </button>
       </ion-nav-buttons>
-      <ion-nav-buttons   side="right">
+      <ion-nav-buttons  side="right">
         <button class="button button-outline button-positive" ng-repeat="extraButton in extraButtons" ng-click="extraButton.onclick()">{{extraButton.text}}
         </button>
       </ion-nav-buttons>
     </ion-nav-bar>
     <ion-nav-view name="menuContent"></ion-nav-view>
   </ion-side-menu-content>
-  <ion-side-menu enable-menu-with-back-views="true" side="left">
+    <ion-side-menu enable-menu-with-back-views="true" side="left">
     <ion-header-bar class="bar-stable">
         <img src="img/logo-fons.png" style="float:left; margin-right:10px;"/>
-        <!-- <h2 class="title" style="float:left; left: 50px; margin-right:10px;">{{rb.app_title}}</h2>-->
     </ion-header-bar>
     <ion-content>
       <ion-list>
@@ -40,9 +39,11 @@
     </ion-content>
     <ion-footer-bar class="bar-stable udl-menu-footer" >
         <ion-list >
+            <div class="list">
             <ion-item class="udlapp-item" nav-clear menu-close href="#/app/settings">
               <i class="icon ion-gear-a"></i> {{rb.settings_menu_item}}
             </ion-item>
+            </div>
         </ion-list>
     </ion-footer-bar>
   </ion-side-menu>
