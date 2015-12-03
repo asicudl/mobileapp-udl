@@ -174,8 +174,6 @@ angular.module('starter.messages').controller('MessagesCtrl',['$scope','$ionicPo
         if ($rootScope.routeToServicesNotAvailable){
             $rootScope.authenticate().then (function (){
                 $scope.refreshMessages();    
-            }).catch (function (){
-                $scope.showRefreshListError();          
             }).finally (function (){
                 $scope.$broadcast('scroll.refreshComplete');
                 recalculateDates ();
@@ -183,6 +181,7 @@ angular.module('starter.messages').controller('MessagesCtrl',['$scope','$ionicPo
         }else{
             MessagesService.retrieveNewMessages().then (function (numMessages){
                 $scope.newMessages = numMessages;
+                
             }).catch (function (error){
                 if (error !== MessagesService.errorCodes.ALREADY_RETRIEVING){
                     $scope.showRefreshListError();
