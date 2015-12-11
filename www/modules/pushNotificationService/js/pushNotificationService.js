@@ -1,5 +1,5 @@
 angular.module('starter.pushnotification', [])
-.factory('PushNotificationService', function (AuthService, $rootScope, $q, MessagesService,$location) {
+.factory('PushNotificationService', function (AuthService, $rootScope, $q, MessagesService,$location,$ionicHistory) {
 
     var pushConfig = {};
     
@@ -40,6 +40,10 @@ angular.module('starter.pushnotification', [])
         
             //We always try and go to messages 
             MessagesService.retrieveNewMessages().finally (function (){
+                $ionicHistory.nextViewOptions({
+                    disableAnimate: true,
+                    disableBack: true
+                });
                 $location.path('/app/messages');
             });
     };

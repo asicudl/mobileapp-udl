@@ -1,6 +1,6 @@
 {
   "name": "mobileapp-udl",
-  "version": "0.0.5",
+  "version": "0.0.7",
   "description": "mobileapp-udl: An Ionic project",
   "dependencies": {
     "gulp": "^3.5.6",
@@ -24,7 +24,8 @@
     "cordova-plugin-x-socialsharing",
     "cordova-plugin-whitelist",
     "org.apache.cordova.inappbrowser",
-    "cordova-plugin-splashscreen"
+    "cordova-plugin-splashscreen",
+    "aerogear-cordova-push@2.0.3"
   ],
   "cordovaPlatforms": [
     "android",

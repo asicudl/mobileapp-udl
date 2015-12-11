@@ -1,6 +1,6 @@
 angular.module('starter.appcontroller',['underscore'])
 
-    .controller('AppCtrl', function($scope, $ionicModal, $ionicPlatform, $ionicPopup,$ionicHistory, $cordovaDevice, $ionicLoading, $timeout, AuthService, AppConfigService, MessagesService ,PushNotificationService, I18nService, $location, $q,_, $window, $rootScope){ 
+    .controller('AppCtrl', function($scope, $ionicModal, $ionicPlatform, $ionicPopup,$ionicHistory, $cordovaDevice, $ionicLoading, $timeout, AuthService, AppConfigService, MessagesService ,PushNotificationService, I18nService, $location, $q,_, $window, $rootScope,$ionicSideMenuDelegate){ 
     $scope.loginData = {};
     $scope.localeData = {};
 
@@ -280,10 +280,6 @@ angular.module('starter.appcontroller',['underscore'])
         return defered.promise;
     };
 
-
-    $scope.initApp = function (){
-        $rootScope.authenticate();
-    };
 
     $scope.initSettings =function (){
         $ionicLoading.hide();   
