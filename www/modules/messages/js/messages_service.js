@@ -24,7 +24,7 @@ angular.module('starter.messages', [])
     
        var queries = {
         'CREATE_TABLE' : 'CREATE TABLE IF NOT EXISTS messages (id text primary key, subject text, body text, site text, sitename text,author text, date date,category text,url text,state text)',
-        'SELECT_MESSAGES' : 'SELECT * FROM messages',
+        'SELECT_MESSAGES' : 'SELECT * FROM messages order by date asc',
         'INSERT_MESSAGE' : 'INSERT INTO messages (id,subject,body,site,sitename,author,date,category,url,state) VALUES (?,?,?,?,?,?,?,?,?,?)',
         'DELETE_MESSAGE' :'DELETE FROM messages WHERE id=?',
         'DELETE_ALL_MESSAGES' :'DELETE FROM messages',
@@ -78,7 +78,7 @@ angular.module('starter.messages', [])
                                     state: row.state
                                 };
 
-                                messages.unshift (message);
+                                messages.push (message);
                             }
                             defered.resolve (messages);
                     },function (error){
@@ -138,7 +138,7 @@ angular.module('starter.messages', [])
         var pdate = getPrettyDate(data.created);
         
         var message = {
-            id: '' + Math.floor(Math.random()* 10000),
+            id: '' + Math.floor(Math.random()* 100000000000),
             subject: data.subject,
             body: data.content,
             site: data.siteId,
@@ -183,7 +183,7 @@ angular.module('starter.messages', [])
             
                 //Add the message into the array and save it to the db
                 msg.createMessage (messageIn).then (function (message){
-                    msg.messages.unshift (message);
+                    msg.messages.push (message);
                     added.resolve();
                 }).catch (function (error){
                     //Push up the error, nothing else to do

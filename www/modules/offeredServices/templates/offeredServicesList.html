@@ -13,7 +13,7 @@
             <ion-list can-swipe="true" show-delete="false"> 
 
                 <ion-item class="offeredService btn_{{($index % 7)}} item udlapp-item item-thumbnail-right" ng-repeat="offeredService in offeredServiceList | filter: { published:'true'}" href="#/app/offeredservices/{{offeredService._id}}">
-                    <img ng-show="existImage(offeredService)" src="{{offeredService.image}}" />
+                    <img ng-show="existImage(offeredService)" ng-src="{{offeredService.image}}" />
                     <div ng-show="existImage(offeredService)" class="offeredServiceDescription item-content-padding-right">
                         <p class="title">{{offeredService.title}}</p>
                     </div>

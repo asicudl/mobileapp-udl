@@ -11,12 +11,13 @@
   </ion-refresher>
     
     <div ng-hide="emptyList()" >
-        <ion-list can-swipe="true" show-delete="false" ng-repeat="(key, value) in messagesList | groupBy: 'prettyDateOrder'" > 
+        <ion-list can-swipe="true" show-delete="false" ng-repeat="(key, value) in messagesList | orderBy: prettyDateOrder : true |limitTo: showElements | groupBy: 'prettyDateOrder'" > 
 
             <div ng-show="value[0]" class="item item-divider">
                 <h2>{{rb[value[0].prettyDateFormat]}}</h2>
             </div>
 
+            
             <ion-item on-hold="openOptions(message)" ng-hide="message.hide" class="item udlapp-item item-avatar" ng-repeat="message in value | orderBy: 'date':true" href="#/app/messages/{{message.id}}">
 
              <div class="udlapp-category-av udlapp-category-av-cv {{buttonClassNumber(message.sitename)}}"><span>{{message.sitename.substr(0,1)}}</span></div>
@@ -34,8 +35,13 @@
                     <div class="udlapp-inlist-message-option"><i class="ion-eye-disabled"></i></div>
                </ion-option-button>
             </ion-item>
-
         </ion-list>
+        <ion-infinite-scroll
+                             ng-if="hasMoreElements()"
+                             icon="ion-loading-c"
+                             on-infinite="showMoreElements()">
+        </ion-infinite-scroll>
+        
     </div>
     <div ng-show="emptyList()" class="udlapp-emptymessages">
         <p><i class="ion-archive" ></i><br />

@@ -8,7 +8,7 @@ angular.module('starter.messages').controller('MessagesCtrl',['$scope','$ionicPo
     $scope.commonSolution = '';
     
     $scope.pullText = 'pull';
-    
+    $scope.showElements = 10;
     
     
     
@@ -63,6 +63,15 @@ angular.module('starter.messages').controller('MessagesCtrl',['$scope','$ionicPo
     $scope.emptyList = function (){
         return ($scope.messagesList === undefined || $scope.messagesList.length === 0);
     };
+    
+    $scope.showMoreElements = function (){
+        $scope.showElements+=20;
+        $scope.$broadcast('scroll.infiniteScrollComplete');
+    };
+    
+    $scope.hasMoreElements = function (){
+        return $scope.messagesList ? ($scope.showElements < $scope.messagesList.length) : false;
+    }
     
     $scope.deleteMessage = function (message){
 

@@ -3,13 +3,13 @@
         <i class='icon ion-social-buffer'></i> {{rb.os_view_title}}
     </ion-nav-title> 
   <ion-content>
-      <div class="list card">
+      <div class="list card" ng-if="currentOfferedService">
           <div ng-show="existImage(currentOfferedService)" class="item item-thumbnail-left">
-              <img src="{{currentOfferedService.image}}" />
+              <img ng-src="{{currentOfferedService.image}}" />
               <p><h2 class="offeredServiceTitle">{{currentOfferedService.title}}</h2></p>
           </div>
           <div ng-show="!existImage(currentOfferedService)" class="item">
-              <img src="{{currentOfferedService.image}}" />
+              <img ng-src="{{currentOfferedService.image}}" />
               <p><h2 class="offeredServiceTitle">{{currentOfferedService.title}}</h2></p>
           </div>
       
@@ -31,8 +31,8 @@
         </div>
 
           <div class="item tabs tabs-secondary tabs-icon-left">
-              <a ng-show="currentOfferedService.phoneNumber" class="tab-item" ng-click="openExternalURL('tel:' + currentOfferedService.phoneNumber)">
-               <i class="icon ion-ios7-telephone"></i>{{currentOfferedService.phoneNumber}}
+              <a ng-show="currentOfferedService.phoneNumber && currentOfferedService.phoneNumber!=='undefined'" class="tab-item" ng-click="openExternalURL('tel:' + currentOfferedService.phoneNumber)">
+                  <i class="icon ion-ios-telephone"></i>{{currentOfferedService.phoneNumber}}
             </a>
            
             <a ng-show="currentOfferedService.URL" class="tab-item" href="#"  ng-click="shareExternalURL(currentOfferedService.title, currentOfferedService.URL)">
