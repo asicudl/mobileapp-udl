@@ -5,6 +5,11 @@ angular.module('starter.agendaevents')
         $scope.fullEvents = false;
         $scope.agendaList = [];
         $scope.waitForRefreshDelay = false;
+        var waitForDelayExecution;
+        
+        if (localStorage.newAgendaItems===undefined){
+            localStorage.newAgendaItems=0;
+        }
         
         var changeEvents = {};
         
@@ -16,6 +21,16 @@ angular.module('starter.agendaevents')
             //In case we got updated the array of items provided by the service is another one. We must update it
             if ($scope.eventsViewInitialized && $location.$$url === '/app/agendaevents' && !$scope.waitForRefreshDelay){
                 $scope.refreshItems();
+            }
+        });
+        
+        $scope.$on('$ionicView.leave', function() {
+            //Load the new items
+
+            //In case we got updated the array of items provided by the service is another one. We must update it
+            if ($scope.eventsViewInitialized && $location.$$url !== '/app/agendaevents'){
+                $rootScope.newAgendaItems=0;
+                localStorage.newAgendaItems=0;
             }
         });
 
@@ -58,7 +73,14 @@ angular.module('starter.agendaevents')
             });
 
         };
-
+        
+        //Call the refresh manually
+        $scope.askForRefreshItems = function (){
+            if (waitForDelayExecution){
+                $timeout.cancel(waitForDelayExecution);
+            }
+            $scope.waitForRefreshDelay = false;      
+        }
 
         $scope.refreshItems = function (){
 
@@ -66,11 +88,16 @@ angular.module('starter.agendaevents')
 
                 $scope.$broadcast('scroll.refreshComplete'); 
             }else{
-                $q.all ([AgendaService.retrieveNewItems()]).then(function (results){
-                    $scope.agendaList= results[0]; 
+                AgendaService.retrieveNewItems().then(function (newAgendaList){
                     $scope.waitForRefreshDelay = true;
+                    
+                    $scope.agendaList = newAgendaList.agendaItems;
+                    
+                    $rootScope.newAgendaItems = parseInt(localStorage.newAgendaItems,10) + newAgendaList.numNewItems;
+                    localStorage.newAgendaItems = $rootScope.newAgendaItems;
+                    
                     //Don't allow to automatic refresh until 20 minutes 
-                    $timeout (function (){
+                    waitForDelayExecution = $timeout (function (){
                         $scope.waitForRefreshDelay = false;   
                     },20 * 60 * 1000);
                     

@@ -11,7 +11,7 @@
         <br/>
         <div>
             <div ng-hide="emptyAgenda()" >
-                <ion-list can-swipe="true" show-delete="false" ng-repeat="(key, value) in agendaList | groupBy: 'eventDayStamp'  | orderBy: 'eventDayStamp' : false " class="calendarList"> 
+                <ion-list can-swipe="true" show-delete="false" ng-repeat="(key, value) in agendaList |  orderBy: 'eventDayStamp' : false | groupBy: 'eventDayStamp'  " class="calendarList"> 
 
                     <div ng-show="value[0]" class="dateText btn_{{value[0].dayOfWeek}}">
                         <span class="icon ion-stop"></span>

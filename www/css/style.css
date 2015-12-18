@@ -1,6 +1,6 @@
 /* Empty. Add your own CSS if you like */
 
-.udlapp-background{
+.udlapp-background {
    //background: url(../img/back-halos.png) no-repeat center center fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;
@@ -8,32 +8,53 @@
     background-size: cover;
 }
 
-.udlapp-item{
+.udlapp-item {
     margin: 6px;
     opacity: 0.90;
     border-radius: 5px;
-    
-/*background: rgba(237,237,237,1);
-background: -moz-linear-gradient(top, rgba(237,237,237,1) 0%, rgba(246,246,246,1) 47%, rgba(255,255,255,1) 100%);
-background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(237,237,237,1)), color-stop(47%, rgba(246,246,246,1)), color-stop(100%, rgba(255,255,255,1)));
-background: -webkit-linear-gradient(top, rgba(237,237,237,1) 0%, rgba(246,246,246,1) 47%, rgba(255,255,255,1) 100%);
-background: -o-linear-gradient(top, rgba(237,237,237,1) 0%, rgba(246,246,246,1) 47%, rgba(255,255,255,1) 100%);
-background: -ms-linear-gradient(top, rgba(237,237,237,1) 0%, rgba(246,246,246,1) 47%, rgba(255,255,255,1) 100%);
-background: linear-gradient(to bottom, rgba(237,237,237,1) 0%, rgba(246,246,246,1) 47%, rgba(255,255,255,1) 100%);
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ededed', endColorstr='#ffffff', GradientType=0 );*/
-
 }
-.udlapp-item h2{
+    
+.udlapp-item .newsCounter, .udlapp-item .newsMark {
+    float: right;
+    right: -25px;
+    position: relative;
+    font-size: 0.9em;
+    background-color: #EC2B2B;
+    color: #FFF;
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    text-align: center;
+    padding-top: 3px;
+}
+
+.udlapp-item .newsMark {
+    width: 10px;
+    height: 10px; 
+    top: 5px;
+}
+
+.udlapp .left-buttons .notification {
+    width: 10px;
+    height: 10px;
+    background-color: #EC2B2B;
+    border-radius: 100%;
+    position: relative;
+    left: -10px;
+    /* top: 20px; */
+}
+
+.udlapp-item h2 {
     display:block;
     font-size: 1.1em;
 }
 
 
-.udlapp-item h2.new, .udlapp-item h2.unread{
+.udlapp-item h2.new, .udlapp-item h2.unread {
     font-weight: bolder
 }
 
-.udlapp-item p.secondaryInformation{
+.udlapp-item p.secondaryInformation {
     text-transform: uppercase;
 }
 

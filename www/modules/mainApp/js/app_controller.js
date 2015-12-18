@@ -3,8 +3,17 @@ angular.module('starter.appcontroller',['underscore'])
     .controller('AppCtrl', function($scope, $ionicModal, $ionicPlatform, $ionicPopup,$ionicHistory, $cordovaDevice, $ionicLoading, $timeout, AuthService, AppConfigService, MessagesService ,PushNotificationService, I18nService, $location, $q,_, $window, $rootScope,$ionicSideMenuDelegate){ 
     $scope.loginData = {};
     $scope.localeData = {};
-
-
+    $rootScope.newMessages = 0;
+    $rootScope.newAgendaItems =0;
+    
+    if (localStorage.newMessages===undefined){
+        localStorage.newMessages=0;
+    }
+    
+    if (localStorage.newAgendaItems===undefined){
+        localStorage.newAgendaItems=0;
+    }
+    
     $scope.authStatus = AuthService.authStatus;
     var loginModal = $q.defer();
     var localeModal = $q.defer();    
@@ -22,7 +31,7 @@ angular.module('starter.appcontroller',['underscore'])
         return loginModal.promise;
     };
 
-    $scope.getLocaleModal = function (){
+    $scope.getLocaleModal = function () {
 
         // Create the login modal that we will use later
         $ionicModal.fromTemplateUrl('modules/mainApp/templates/locale.html', {
@@ -36,7 +45,7 @@ angular.module('starter.appcontroller',['underscore'])
 
     // Triggered in the login modal to close it
     $scope.closeLogin = function() {
-        $scope.getLoginModal().then (function (modal){
+        $scope.getLoginModal().then (function (modal) {
             modal.hide();
         });
     };
@@ -193,9 +202,6 @@ angular.module('starter.appcontroller',['underscore'])
                     $ionicLoading.hide();
                 });
 
-
-
-
             }).catch (function (error){
                 if (error === AuthService.errorCodes.NO_VALID_CREDENTIALS){
                     $scope.loginError = $scope.rb.ctrl_invalid_credentials;       
@@ -242,6 +248,32 @@ angular.module('starter.appcontroller',['underscore'])
             PushNotificationService.registerDevice().catch (function (error){
                 $scope.showErrorOnRegistration();
             });
+            
+            //First load of messages
+            MessagesService.retrieveNewMessages().then (function (numMessages){
+                $rootScope.newMessages = parseInt(localStorage.newMessages,10)   + numMessages;
+                localStorage.newMessages = $rootScope.newMessages;
+            }).catch (function (error){
+                if (error !== MessagesService.errorCodes.ALREADY_RETRIEVING){
+                    $rootScope.routeToServicesNotAvailable = true;
+                }
+            });
+            
+            
+            //Not necessari to do it for agenda because it's the first one we call
+            
+            /*AgendaService.retrieveNewItems().then(function (numNewAgenda){
+                $rootScope.newAgendaItems = parseInt(localStorage.newAgendaItems,10) + numNewAgenda;
+                localStorage.newAgendaItems = $rootScope.newAgendaItems;
+
+            }).catch (function (error){
+                //The error code is the same so just needed one check
+                if (error !== AgendaService.errorCodes.ALREADY_RETRIEVING){
+                    //$scope.showRefreshListError();
+                    $rootScope.routeToServicesNotAvailable = true;
+                }
+            });*/
+            
             
             //Whatever happens with the registration we hide the loading panel
             $ionicLoading.hide();  

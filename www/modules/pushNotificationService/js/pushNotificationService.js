@@ -1,5 +1,5 @@
 angular.module('starter.pushnotification', [])
-.factory('PushNotificationService', function (AuthService, $rootScope, $q, MessagesService,$location,$ionicHistory) {
+.factory('PushNotificationService', function (AuthService, $rootScope, $q, MessagesService,$location,$ionicHistory,$rootScope) {
 
     var pushConfig = {};
     
@@ -39,11 +39,16 @@ angular.module('starter.pushnotification', [])
     var onNotification = function(event) {
         
             //We always try and go to messages 
-            MessagesService.retrieveNewMessages().finally (function (){
+            MessagesService.retrieveNewMessages().
+            then(function (numMessages){
+                $rootScope.newMessages = parseInt(localStorage.newMessages,10) + numMessages;
+                localStorage.newMessages = $rootScope.newMessages;
+            }).finally (function (){
                 $ionicHistory.nextViewOptions({
                     disableAnimate: true,
                     disableBack: true
                 });
+                
                 $location.path('/app/messages');
             });
     };

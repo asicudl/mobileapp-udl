@@ -151,14 +151,15 @@ angular.module('starter.agendaevents',[])
                         }else if (!discarded) {
                             agndSrv.agendaItems.unshift (item);   
                         }
-
-                        added.resolve();
+                        
+                        //true if new false if updated
+                        added.resolve(foundItem===undefined);
                     }).catch (function (error){
                         //Push up the error, nothing else to do
                         added.reject (error);
                     });
                 }else{
-                    added.resolve();
+                    added.resolve(false);
                 }
             }).catch (function (error){
                 console.log ('Error retrieving the agendaItems, so insertion can\'t be processed '); 
@@ -271,14 +272,20 @@ angular.module('starter.agendaevents',[])
                     }
                      
                     
-                    $q.all (allAdds).then (function(){
+                    $q.all (allAdds).then (function(results){
                         window.localStorage.lastAgendaDate = agendaInfo.currentDate;
                         agndSrv.retrieving = false;
 
+                        var updateStatus = _.countBy(results, function(isNew) {
+                            return isNew ? 'new': 'updated';
+                        });
+                        
+                        updateStatus.new = updateStatus.new ? updateStatus.new : 0;
+                        
                         factoryObject.purgeOld().then (function (){
-                            updatedAgendaItems.resolve (agndSrv.agendaItems)
-                        }).
-                        catch (function (error){
+                            updatedAgendaItems.resolve ({'agendaItems': agndSrv.agendaItems,'numNewItems': updateStatus.new});
+
+                        }).catch (function (error){
                             updatedAgendaItems.reject (errorCodes.ERROR_PURGING_ITEMS);
                         });
                     });

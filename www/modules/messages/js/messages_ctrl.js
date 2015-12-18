@@ -10,7 +10,9 @@ angular.module('starter.messages').controller('MessagesCtrl',['$scope','$ionicPo
     $scope.pullText = 'pull';
     $scope.showElements = 10;
     
-    
+    if (localStorage.newMessages===undefined){
+        localStorage.newMessages=0;
+    }
     
     $scope.$on('$ionicView.enter', function() {
 
@@ -19,8 +21,18 @@ angular.module('starter.messages').controller('MessagesCtrl',['$scope','$ionicPo
             $scope.refreshMessages();
         }
     });
+    
+    $scope.$on('$ionicView.leave', function() {
 
-    $scope.initList = function (){
+        //Load the new messages
+        if ($scope.messagesInitialized && $location.$$url !== '/app/messages'){
+            $rootScope.newMessages=0;
+            localStorage.newMessages=0;
+        }
+    });
+
+
+    $scope.initList = function () {
         //Clear any undo action
         var initialized = $q.defer();
         
@@ -189,7 +201,8 @@ angular.module('starter.messages').controller('MessagesCtrl',['$scope','$ionicPo
             });
         }else{
             MessagesService.retrieveNewMessages().then (function (numMessages){
-                $scope.newMessages = numMessages;
+                $rootScope.newMessages = parseInt(localStorage.newMessages,10) + numMessages;
+                localStorage.newMessages = $rootScope.newMessages;
                 
             }).catch (function (error){
                 if (error !== MessagesService.errorCodes.ALREADY_RETRIEVING){
