@@ -6,7 +6,7 @@
       <ion-nav-buttons side="left">
         <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
         </button>
-        <span ng-show="newMessages > 0 || newAgendaItems > 0 " class="notification"></span>
+          <span ng-show="newMessages > 0 || newAgendaItems > 0 || newActivityItems >0" class="notification"></span>
       </ion-nav-buttons>
       
       <ion-nav-buttons  side="right">
@@ -22,16 +22,17 @@
     </ion-header-bar>
     <ion-content>
       <ion-list>
-        <ion-item class="udlapp-item" nav-clear menu-close href="#/app/agendaevents">
+          <ion-item  ng-click="resetAgendaItemsCounter()" class="udlapp-item" nav-clear menu-close href="#/app/agendaevents">
             <i class="icon ion-calendar"></i> {{rb.agenda_menu_item}} <span ng-show="newAgendaItems > 0" class="newsMark" ></span>
         </ion-item>
-        <ion-item class="udlapp-item" nav-clear menu-close href="#/app/activities">
-          <i class="icon ion-ribbon-b"></i> {{rb.activities_menu_item}}
+          <ion-item ng-click="resetActivityItemsCounter()" class="udlapp-item" nav-clear menu-close href="#/app/activities">
+            <i class="icon ion-ribbon-b"></i> {{rb.activities_menu_item}} <span ng-show="newActivityItems > 0" class="newsMark" ></span>
+
         </ion-item>
         <ion-item class="udlapp-item"  nav-clear menu-close href="#/app/offeredservices">
             <i class="icon ion-social-buffer"></i> {{rb.oservices_menu_item}}
         </ion-item>
-        <ion-item ng-show="authStatus.hasToken" class="udlapp-item" nav-clear menu-close href="#/app/messages">
+          <ion-item ng-click="resetMessagesCounter()" ng-show="authStatus.hasToken" class="udlapp-item" nav-clear menu-close href="#/app/messages">
             <i class="icon ion-android-mail"></i> {{rb.messages_menu_item}} <span ng-show="newMessages > 0" class="newsCounter" > {{newMessages}} </span>
         </ion-item>
         

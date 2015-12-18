@@ -145,13 +145,15 @@ angular.module('starter.activities',[])
                         }else if (!discarded) {
                             actService.activityItems.unshift (item);   
                         }
-                        added.resolve();
+                        
+                        //true if new item, false if updated or deleted
+                        added.resolve(foundItem===undefined);
                     }).catch (function (error){
                         //Push up the error, nothing else to do
                         added.reject (error);
                     });
                 }else{
-                    added.resolve();
+                    added.resolve(false);
                 }
             }).catch (function (error){
                 console.log ('Error retrieving the activityItems, so insertion can\'t be processed '); 
@@ -178,11 +180,7 @@ angular.module('starter.activities',[])
                             function (tx,res) {
                                     console.log (activityDef.name + ' initialized');
                                     localStorage.activityTableSchemaVersion = activityTableSchemaVersion;
-                                    
-                                    //Delete the date to force all items reload
-                                    if (localStorage.lastActivityDate){
-                                        delete localStorage.lastActivityDate;
-                                    }
+                                   
                                     actService.ready.resolve();
                                     
                             },
@@ -199,6 +197,10 @@ angular.module('starter.activities',[])
                             console.log (activityDef.name + ' table dropped');
                             //We trigger the table creation
                             createTable();
+                            //Delete the date to force all items reload
+                            if (localStorage.lastActivityDate){
+                                delete localStorage.lastActivityDate;
+                            }
                         },
                         function (tx,err){
                             console.log ('Error dropping the table' + err.message);
@@ -286,11 +288,19 @@ angular.module('starter.activities',[])
                     //If there are changes just remove the discarded ones and update the list
                     if (allAdds.length > 0){
 
-                        $q.all (allAdds).then (function(){
+                        $q.all (allAdds).then (function(results){
                             window.localStorage.lastActivityDate = activityInfo.currentDate;
                             actService.retrieving = false;
+                            
+                            var updateStatus = _.countBy(results, function(isNew) {
+                                return isNew ? 'new': 'updated';
+                            });
+
+                            updateStatus.new = updateStatus.new ? updateStatus.new : 0;
+
+                            
                             factoryObject.purgeOld().then (function (){
-                                updatedActivityItems.resolve (actService.activityItems)
+                                updatedActivityItems.resolve ({'activityItems': actService.activityItems,'numNewItems': updateStatus.new});
                             }).
                             catch (function (error){
                                 updatedActivityItems.reject (errorCodes.ERROR_PURGING_ITEMS);
@@ -299,7 +309,7 @@ angular.module('starter.activities',[])
                     }else{
                         window.localStorage.lastActivityDate = activityInfo.currentDate;
                         actService.retrieving = false;
-                        updatedActivityItems.resolve (actService.activityItems);
+                        updatedActivityItems.resolve ({'activityItems': actService.activityItems,'numNewItems': 0});
                     }
 
                 }).error (function (status){

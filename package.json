@@ -1,6 +1,6 @@
 {
   "name": "mobileapp-udl",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "mobileapp-udl: An Ionic project",
   "dependencies": {
     "gulp": "^3.5.6",

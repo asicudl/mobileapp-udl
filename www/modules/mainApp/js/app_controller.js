@@ -1,10 +1,11 @@
 angular.module('starter.appcontroller',['underscore'])
 
-    .controller('AppCtrl', function($scope, $ionicModal, $ionicPlatform, $ionicPopup,$ionicHistory, $cordovaDevice, $ionicLoading, $timeout, AuthService, AppConfigService, MessagesService ,PushNotificationService, I18nService, $location, $q,_, $window, $rootScope,$ionicSideMenuDelegate){ 
+    .controller('AppCtrl', function($scope, $ionicModal, $ionicPlatform, $ionicPopup,$ionicHistory, $cordovaDevice, $ionicLoading, $timeout, AuthService, AppConfigService, MessagesService, ActivityService,PushNotificationService, I18nService, $location, $q,_, $window, $rootScope,$ionicSideMenuDelegate){ 
     $scope.loginData = {};
     $scope.localeData = {};
     $rootScope.newMessages = 0;
-    $rootScope.newAgendaItems =0;
+    $rootScope.newAgendaItems = 0;
+    $rootScope.newActivityItems = 0;
     
     if (localStorage.newMessages===undefined){
         localStorage.newMessages=0;
@@ -12,6 +13,10 @@ angular.module('starter.appcontroller',['underscore'])
     
     if (localStorage.newAgendaItems===undefined){
         localStorage.newAgendaItems=0;
+    }
+    
+    if (localStorage.newActivityItems===undefined){
+        localStorage.newActivityItems=0;
     }
     
     $scope.authStatus = AuthService.authStatus;
@@ -98,6 +103,19 @@ angular.module('starter.appcontroller',['underscore'])
         }
     };
 
+
+    $scope.resetMessagesCounter = function (){
+        $scope.safeApply (function (){$rootScope.newMessages = 0;});
+    };
+    
+    $scope.resetActivityItemsCounter = function (){
+        $scope.safeApply (function (){$rootScope.newActivityItems = 0;});
+    }
+    
+    $scope.resetAgendaItemsCounter = function (){
+            $scope.safeApply (function (){$rootScope.newAgendaItems = 0;});
+    }
+    
     $scope.logout = function() {
 
         //Unassociate the device
@@ -251,16 +269,34 @@ angular.module('starter.appcontroller',['underscore'])
             
             //First load of messages
             MessagesService.retrieveNewMessages().then (function (numMessages){
-                $rootScope.newMessages = parseInt(localStorage.newMessages,10)   + numMessages;
-                localStorage.newMessages = $rootScope.newMessages;
+                $scope.safeApply(function (){
+                    $rootScope.newMessages = parseInt(localStorage.newMessages,10)   + numMessages;
+                    localStorage.newMessages = $rootScope.newMessages;
+                });
             }).catch (function (error){
                 if (error !== MessagesService.errorCodes.ALREADY_RETRIEVING){
                     $rootScope.routeToServicesNotAvailable = true;
                 }
             });
+   
+            
+            //Load the new Activities
+            ActivityService.retrieveNewItems().then(function (newActivities){
+                $scope.safeApply(function (){
+                    $rootScope.newActivityItems = parseInt(localStorage.newActivityItems,10) + newActivities.numNewItems;
+                    localStorage.newActivityItems = $rootScope.newActivityItems;
+                });
+
+            }).catch (function (error){
+                //The error code is the same so just needed one check
+                if (error !== ActivityService.errorCodes.ALREADY_RETRIEVING){
+                    //$scope.showRefreshListError();
+                    $rootScope.routeToServicesNotAvailable = true;
+                }
+            });
             
             
-            //Not necessari to do it for agenda because it's the first one we call
+            //It's not necessary to do it for agenda because it's the first one we call
             
             /*AgendaService.retrieveNewItems().then(function (numNewAgenda){
                 $rootScope.newAgendaItems = parseInt(localStorage.newAgendaItems,10) + numNewAgenda;
@@ -315,6 +351,17 @@ angular.module('starter.appcontroller',['underscore'])
 
     $scope.initSettings =function (){
         $ionicLoading.hide();   
+    };
+    
+    $scope.safeApply = function(fn) {
+        var phase = this.$root.$$phase;
+        if(phase == '$apply' || phase == '$digest') {
+            if(fn && (typeof(fn) === 'function')) {
+                fn();
+            }
+        } else {
+            this.$apply(fn);
+        }
     };
 
     $ionicPlatform.ready(function() {

@@ -152,7 +152,7 @@ angular.module('starter.agendaevents',[])
                             agndSrv.agendaItems.unshift (item);   
                         }
                         
-                        //true if new false if updated
+                        //true if new item, false if updated or deleted
                         added.resolve(foundItem===undefined);
                     }).catch (function (error){
                         //Push up the error, nothing else to do

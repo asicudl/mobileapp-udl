@@ -79,7 +79,8 @@ angular.module('starter.agendaevents')
             if (waitForDelayExecution){
                 $timeout.cancel(waitForDelayExecution);
             }
-            $scope.waitForRefreshDelay = false;      
+            $scope.waitForRefreshDelay = false;
+            $scope.refreshItems();
         }
 
         $scope.refreshItems = function (){

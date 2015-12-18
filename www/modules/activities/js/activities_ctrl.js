@@ -5,6 +5,11 @@ angular.module('starter.activities')
         $scope.fullEvents = false;
         $scope.activitiesList = [];
         $scope.waitForRefreshDelay = false;
+        var waitForDelayExecution;
+
+        if (localStorage.newActivityItems===undefined){
+            localStorage.newActivityItems=0;
+        }
         
         var changeEvents = {};
         
@@ -16,6 +21,16 @@ angular.module('starter.activities')
             //In case we got updated the array of items provided by the service is another one. We must update it
             if ($scope.eventsViewInitialized && $location.$$url === '/app/activities' && !$scope.waitForRefreshDelay){
                 $scope.refreshItems();
+            }
+        });
+        
+        $scope.$on('$ionicView.leave', function() {
+            //Load the new items
+
+            //In case we got updated the array of items provided by the service is another one. We must update it
+            if ($scope.eventsViewInitialized && $location.$$url !== '/app/activities'){
+                $rootScope.newActivityItems=0;
+                localStorage.newActivityItems=0;
             }
         });
 
@@ -59,16 +74,28 @@ angular.module('starter.activities')
 
         };
 
+        $scope.askForRefreshItems = function (){
+            if (waitForDelayExecution){
+                $timeout.cancel(waitForDelayExecution);
+            }
+            $scope.waitForRefreshDelay = false;
+            $scope.refreshItems();
+        }
+        
         $scope.refreshItems = function (){
 
             if ($rootScope.routeToServicesNotAvailable){
                 $scope.$broadcast('scroll.refreshComplete'); 
             }else{
                 
-                $q.all ([ActivityService.retrieveNewItems()]).then(function (results){
-                    $scope.activitiesList = results[0];
+                ActivityService.retrieveNewItems().then(function (newActivitiesList){
+                    $scope.activitiesList = newActivitiesList.activityItems;
                     
                     $scope.waitForRefreshDelay = true;
+                    
+                    $rootScope.newActivityItems = parseInt(localStorage.newActivityItems,10) + newActivitiesList.numNewItems;
+                    localStorage.newActivityItems = $rootScope.newActivityItems;
+                    
                     //Don't allow to automatic refresh until 20 minutes 
                     $timeout (function (){
                         $scope.waitForRefreshDelay = false;   
