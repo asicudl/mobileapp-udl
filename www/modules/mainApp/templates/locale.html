@@ -12,10 +12,12 @@
                 </div>
                 <label class="item item-radio" ng-repeat="locale in supportedLocales">
                     <input type="radio" name="localeGroup" ng-model="localeData.locale" value="{{locale.code}}" ng-change="loadLocale()">
-                    <div class="item-content">
-                        {{locale.name}}
+                    <div class="radio-content">
+                        <div class="item-content">
+                            {{locale.name}}
+                        </div>
+                        <i class="radio-icon ion-checkmark"></i>
                     </div>
-                    <i class="radio-icon ion-checkmark"></i>
                 </label>
                 <label class="item">
                     <button ng-show="firstLocale" class="button button-block button-positive" type="submit">{{rb.locale_next_button}}</button>
