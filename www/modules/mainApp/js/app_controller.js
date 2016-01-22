@@ -1,6 +1,6 @@
 angular.module('starter.appcontroller',['underscore'])
 
-    .controller('AppCtrl', function($scope, $ionicModal, $ionicPlatform, $ionicPopup,$ionicHistory, $cordovaDevice, $ionicLoading, $timeout, AuthService, AppConfigService, MessagesService, ActivityService,PushNotificationService, I18nService, $location, $q,_, $window, $rootScope,$ionicSideMenuDelegate){ 
+    .controller('AppCtrl', function($scope, $ionicModal, $ionicPlatform, $ionicPopup,$ionicHistory, $cordovaDevice, $ionicLoading, $timeout, AuthService, AppConfigService, MessagesService, ActivityService, AgendaService, PushNotificationService, I18nService, $location, $q,_, $window, $rootScope,$ionicSideMenuDelegate){ 
     $scope.loginData = {};
     $scope.localeData = {};
     $rootScope.newMessages = 0;
@@ -94,8 +94,67 @@ angular.module('starter.appcontroller',['underscore'])
             $scope.rb = resourceBundles;
         });  
     };
+    
+    $scope.retrievePrivateInfo = function (){
+        
+        PushNotificationService.registerDevice().catch (function (error){
+            $scope.showErrorOnRegistration();
+        });
 
-    $scope.getLangMessage= function (){
+        //First load of messages
+        MessagesService.retrieveNewMessages().then (function (numMessages){
+            $scope.safeApply(function (){
+                $rootScope.newMessages = parseInt(localStorage.newMessages,10)   + numMessages;
+                localStorage.newMessages = $rootScope.newMessages;
+            });
+        }).catch (function (error){
+            if (error !== MessagesService.errorCodes.ALREADY_RETRIEVING){
+                $rootScope.routeToServicesNotAvailable = true;
+            }
+        });   
+        
+    }
+    
+    $scope.retrievePublicInfo = function (){
+        delete $rootScope.routeToServicesNotAvailable;
+
+
+        //Load the new Activities
+        ActivityService.retrieveNewItems().then(function (newActivities){
+            $scope.safeApply(function (){
+                $rootScope.newActivityItems = parseInt(localStorage.newActivityItems,10) + newActivities.numNewItems;
+                localStorage.newActivityItems = $rootScope.newActivityItems;
+            });
+
+        }).catch (function (error){
+            //The error code is the same so just needed one check
+            if (error !== ActivityService.errorCodes.ALREADY_RETRIEVING){
+                //$scope.showRefreshListError();
+                $rootScope.routeToServicesNotAvailable = true;
+            }
+        });
+
+
+        //It's not necessary to do it for agenda because it's the first one we call
+        /*AgendaService.retrieveNewItems().then(function (numNewAgenda){
+                $rootScope.newAgendaItems = parseInt(localStorage.newAgendaItems,10) + numNewAgenda;
+                localStorage.newAgendaItems = $rootScope.newAgendaItems;
+
+            }).catch (function (error){
+                //The error code is the same so just needed one check
+                if (error !== AgendaService.errorCodes.ALREADY_RETRIEVING){
+                    //$scope.showRefreshListError();
+                    $rootScope.routeToServicesNotAvailable = true;
+                }
+            });*/
+
+
+        //Whatever happens with the registration we hide the loading panel
+        $ionicLoading.hide();     
+        
+    }
+
+    $scope.getLangMessage= function () {
         var foundLocale = _.find (I18nService.getSupportedLocales(),{"code": I18nService.getCurrentLocale()});
         if (foundLocale && $scope.rb){
             var locName = foundLocale ? foundLocale.name : "Desconegut";
@@ -119,19 +178,6 @@ angular.module('starter.appcontroller',['underscore'])
     $scope.logout = function() {
 
         //Unassociate the device
-        /*PushNotificationService.unassociateDevice().then (function (){
-            //No necessary to show anything
-            //$scope.showUnassocieatedOk();
-        }).catch (function (error){
-            //Actually we just can inform to user about it
-            $scope.showUnassocieatedFail();
-        }).finally (function (){
-            AuthService.logout ();
-            MessagesService.deleteAll().catch (function (error){
-                $scope.showDeletingError();
-            });
-        });*/
-        
         PushNotificationService.unassociateDevice().then (function (){
             //No necessary to show anything
             //$scope.showUnassocieatedOk();
@@ -210,15 +256,12 @@ angular.module('starter.appcontroller',['underscore'])
                     template: LOADING_TMPLT+  $scope.rb.ctrl_setting_account
                 });
 
+                $scope.retrievePrivateInfo();
+                
                 delete $scope.loginError;
                 $scope.closeLogin();
 
-                //Lets call to registration to the PUSH service
-                PushNotificationService.registerDevice().catch (function (error){
-                    $scope.showErrorOnRegistration();
-                }).finally (function (){
-                    $ionicLoading.hide();
-                });
+              
 
             }).catch (function (error){
                 if (error === AuthService.errorCodes.NO_VALID_CREDENTIALS){
@@ -261,58 +304,7 @@ angular.module('starter.appcontroller',['underscore'])
             $rootScope.appInitialized = true;
             $ionicLoading.show({template: LOADING_TMPLT +  $scope.rb.ctrl_initializing_app + "..."});         
 
-            delete $rootScope.routeToServicesNotAvailable;
-
-            PushNotificationService.registerDevice().catch (function (error){
-                $scope.showErrorOnRegistration();
-            });
-            
-            //First load of messages
-            MessagesService.retrieveNewMessages().then (function (numMessages){
-                $scope.safeApply(function (){
-                    $rootScope.newMessages = parseInt(localStorage.newMessages,10)   + numMessages;
-                    localStorage.newMessages = $rootScope.newMessages;
-                });
-            }).catch (function (error){
-                if (error !== MessagesService.errorCodes.ALREADY_RETRIEVING){
-                    $rootScope.routeToServicesNotAvailable = true;
-                }
-            });
-   
-            
-            //Load the new Activities
-            ActivityService.retrieveNewItems().then(function (newActivities){
-                $scope.safeApply(function (){
-                    $rootScope.newActivityItems = parseInt(localStorage.newActivityItems,10) + newActivities.numNewItems;
-                    localStorage.newActivityItems = $rootScope.newActivityItems;
-                });
-
-            }).catch (function (error){
-                //The error code is the same so just needed one check
-                if (error !== ActivityService.errorCodes.ALREADY_RETRIEVING){
-                    //$scope.showRefreshListError();
-                    $rootScope.routeToServicesNotAvailable = true;
-                }
-            });
-            
-            
-            //It's not necessary to do it for agenda because it's the first one we call
-            
-            /*AgendaService.retrieveNewItems().then(function (numNewAgenda){
-                $rootScope.newAgendaItems = parseInt(localStorage.newAgendaItems,10) + numNewAgenda;
-                localStorage.newAgendaItems = $rootScope.newAgendaItems;
-
-            }).catch (function (error){
-                //The error code is the same so just needed one check
-                if (error !== AgendaService.errorCodes.ALREADY_RETRIEVING){
-                    //$scope.showRefreshListError();
-                    $rootScope.routeToServicesNotAvailable = true;
-                }
-            });*/
-            
-            
-            //Whatever happens with the registration we hide the loading panel
-            $ionicLoading.hide();  
+            $scope.retrievePrivateInfo();
             
             defered.resolve();
 
@@ -379,9 +371,13 @@ angular.module('starter.appcontroller',['underscore'])
 
                 I18nService.getResourceBundles('mainApp').then(function (resourceBundles){
                     $scope.rb = resourceBundles;
+                    
+                    //We get Activities and Agenda items
+                    $scope.retrievePublicInfo();
 
                     //Better do it when resource Bundles are received in order to show write error message if needed
                     if (!$scope.appInitialized){
+                        
                         $rootScope.authenticate();
                     }
                 });
