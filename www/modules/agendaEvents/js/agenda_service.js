@@ -134,7 +134,7 @@ angular.module('starter.agendaevents',[])
                 }
                 
                 //We don't save 'new' items that in the server are marked as "deleted" items.
-                if(foundItem!==undefined || (foundItem===undefined && !discarded)){                    
+                if(foundItem!==undefined || (foundItem===undefined && !discarded)){
                     //Add the item into the array and save it to the db
                     agndSrv.saveItem (agendaItem, (foundItem===undefined)).then (function (item){
                         var itemDate = moment(item.eventDate);

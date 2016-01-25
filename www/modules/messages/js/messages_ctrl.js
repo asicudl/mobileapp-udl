@@ -69,7 +69,6 @@ angular.module('starter.messages').controller('MessagesCtrl',['$scope','$ionicPo
                 $scope.showAlert ($scope.rb.ctrl_while_changing, $scope.commonSolution);
             });
         });
-        
     };
     
     $scope.emptyList = function (){

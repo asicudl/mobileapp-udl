@@ -302,7 +302,6 @@ angular.module('starter.appcontroller',['underscore'])
         AuthService.authenticateByToken().then (function (){
 
             $rootScope.appInitialized = true;
-            $ionicLoading.show({template: LOADING_TMPLT +  $scope.rb.ctrl_initializing_app + "..."});         
 
             $scope.retrievePrivateInfo();
             
@@ -372,6 +371,8 @@ angular.module('starter.appcontroller',['underscore'])
                 I18nService.getResourceBundles('mainApp').then(function (resourceBundles){
                     $scope.rb = resourceBundles;
                     
+                    
+                    $ionicLoading.show({template: LOADING_TMPLT +  $scope.rb.ctrl_initializing_app + "..."});
                     //We get Activities and Agenda items
                     $scope.retrievePublicInfo();
 

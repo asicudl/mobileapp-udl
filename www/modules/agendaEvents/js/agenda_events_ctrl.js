@@ -115,6 +115,18 @@ angular.module('starter.agendaevents')
         }; 
 
         
+        $scope.dateRangeFilter = function (property) {
+            return function (item) {
+                if (item[property] === null) return false;
+                var itemDate = moment(item[property]);
+                
+                if (moment().startOf('day').isBefore(itemDate)){
+                    return true;
+                }
+                return false;
+            }
+        };
+        
         $scope.openExternalURL = function(url){
             window.open(url, '_system');
         };
