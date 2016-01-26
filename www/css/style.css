@@ -1,5 +1,11 @@
 /* Empty. Add your own CSS if you like */
 
+ion-nav-view[nav-view-transition][nav-view-direction]{
+  background-color: transparent; }
+
+[nav-view-transition="ios"] [nav-view] {
+  box-shadow: none !important; }
+
 .udlapp-background {
    //background: url(../img/back-halos.png) no-repeat center center fixed;
     -webkit-background-size: cover;
